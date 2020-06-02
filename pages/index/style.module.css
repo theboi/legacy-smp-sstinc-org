@@ -1,0 +1,68 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+}
+
+.content {
+  padding: 5px;
+  margin: 0 10px;
+  border: solid rgb(201, 201, 201) 1px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  width: 90vw;
+  max-width: 600px;
+}
+
+.header {
+  text-align: center;
+  max-width: 300px;
+  margin-top: 20px;
+}
+
+.desc {
+  text-align: center;
+  margin: 10px 0;
+  max-width: 90%;
+}
+
+.button {
+  background-color: white;
+  transition: all 250ms ease-in-out;
+  padding: 10px 20px;
+  margin: 20px 0;
+  border: solid rgb(201, 201, 201) 1px;
+  border-radius: 10px;
+  text-align: center;
+  width: 150px;
+}
+
+.button:hover {
+  background-color: rgb(245, 245, 245);
+}
+
+.button:active {
+  background-color: rgb(235, 235, 235);
+}
+
+.about {
+  margin: 25px 0;
+  text-align: center;
+}
+
+.link {
+  color: blue;
+}
+
+.link:hover {
+  color: rgb(0, 0, 75);
+  background-color: #d7e9ff;
+  text-decoration: underline;
+}
+
+.inputFields {
+  display: flex;
+  flex-direction: column;
+}
