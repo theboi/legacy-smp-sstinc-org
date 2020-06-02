@@ -11,30 +11,6 @@ import style from "./style.module.css";
 export default function App() {
   const [isLoggedin, setLogin] = useState(``);
 
-  const postNewLink = () => {
-    const data = {
-      dynamicLinkInfo: {
-        domainUriPrefix: "https://go.sstinc.org",
-        link: linkField,
-      },
-      suffix: {
-        customSuffix: "Hello",
-        option: "OPTION_UNSPECIFIED",
-      }
-    };
-    axios
-      .post(
-        `https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${process.env.GOOGLE_API_KEY}`,
-        data
-      )
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  };
-
   let linkField: String;
   let suffixField: String;
 
@@ -50,7 +26,7 @@ export default function App() {
       measurementId: "G-SPL13C4C16",
     };
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-
+    
     firebase
       .auth()
       .getRedirectResult()
@@ -81,7 +57,7 @@ export default function App() {
         height={100}
       />
       <div className={style.content}>
-        <h3 className={style.header}>SST Inc URL Shortener</h3>
+        <h3 className={style.header}>SST Inc URL Shortener Admin Console</h3>
         <p className={style.desc}>
           Only for use by SST Inc. EXCO. Please sign in.
         </p>
@@ -103,7 +79,22 @@ export default function App() {
                 }}
               />
             </div>
-            <div className={style.button} onClick={postNewLink}>
+            <div className={style.button} onClick={() => {
+              firebase.firestore().collection(`links`)
+              .add({
+                link: linkField,
+                suffix: suffixField,
+                date: firebase.firestore.Timestamp.fromDate(new Date()),
+              })
+              .then((docRef) => {
+                // updateDebugMessage(`Success: ${docRef.id}`);
+                console.log(`Successful document written with ID: ${docRef.id}`);
+              })
+              .catch((error) => {
+                // updateDebugMessage(`Error: ${error}`);
+                console.error(`Error adding document: ${error}`);
+              });
+            }}>
               Add
             </div>
           </div>
