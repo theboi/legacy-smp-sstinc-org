@@ -18,7 +18,6 @@
 
 .header {
   text-align: center;
-  max-width: 300px;
   margin-top: 20px;
 }
 
@@ -36,7 +35,6 @@
   border: solid rgb(201, 201, 201) 1px;
   border-radius: 10px;
   text-align: center;
-  width: 150px;
 }
 
 .button:hover {
@@ -47,6 +45,23 @@
   background-color: rgb(235, 235, 235);
 }
 
+.inputFields {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputFields input {
+  width: 70vw;
+  font-size: 16px;
+  background-color: white;
+  transition: all 250ms ease-in-out;
+  padding: 10px 20px;
+  margin: 1px 0;
+  border: solid rgb(201, 201, 201) 1px;
+  border-radius: 10px;
+}
+
+/* About */
 .about {
   margin: 25px 0;
   text-align: center;
@@ -62,7 +77,3 @@
   text-decoration: underline;
 }
 
-.inputFields {
-  display: flex;
-  flex-direction: column;
-}

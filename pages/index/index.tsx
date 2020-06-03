@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import axios from "axios";
 import * as firebase from "firebase/app";
-import "firebase/analytics";
 import "firebase/auth";
 import "firebase/firestore";
 
@@ -11,8 +9,9 @@ import style from "./style.module.css";
 export default function App() {
   const [isLoggedin, setLogin] = useState(``);
 
-  let linkField: String;
+  let deepLinkField: String;
   let suffixField: String;
+  let nameField: String;
 
   useEffect(() => {
     const firebaseConfig = {
@@ -59,11 +58,25 @@ export default function App() {
       <div className={style.content}>
         <h3 className={style.header}>SST Inc URL Shortener Admin Console</h3>
         <p className={style.desc}>
-          Only for use by SST Inc. EXCO. Please sign in.
+          {isLoggedin ? "" : "Only for use by SST Inc. EXCO. Please sign in."}
         </p>
         {isLoggedin ? (
           <div className={style.form}>
             <div className={style.inputFields}>
+            <input
+                type="text"
+                placeholder="Name"
+                onChange={(event) => {
+                  nameField = event.target.value;
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Deep Link"
+                onChange={(event) => {
+                  deepLinkField = event.target.value;
+                }}
+              />
               <input
                 type="text"
                 placeholder="Suffix"
@@ -71,18 +84,11 @@ export default function App() {
                   suffixField = event.target.value;
                 }}
               />
-              <input
-                type="text"
-                placeholder="Link"
-                onChange={(event) => {
-                  linkField = event.target.value;
-                }}
-              />
             </div>
             <div className={style.button} onClick={() => {
               firebase.firestore().collection(`links`)
               .add({
-                link: linkField,
+                link: deepLinkField,
                 suffix: suffixField,
                 date: firebase.firestore.Timestamp.fromDate(new Date()),
               })
