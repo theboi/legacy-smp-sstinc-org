@@ -2,73 +2,122 @@
   display: flex;
   flex-direction: column;
   place-items: center;
+  text-align: left;
 }
 
-.content {
-  padding: 5px;
+.contentDiv {
+  padding: 30px 10px;
   margin: 0 10px;
-  border: solid rgb(201, 201, 201) 1px;
+  border: solid #fefefe 1px;
   border-radius: 10px;
+  box-shadow: 0 0 10px 5px #eeeeee;
   display: flex;
   flex-direction: column;
   place-items: center;
   width: 90vw;
-  max-width: 600px;
+  max-width: 700px;
+  position: relative;
 }
 
-.header {
-  text-align: center;
-  margin-top: 20px;
+.content {
+  width: 70%;
 }
 
-.desc {
-  text-align: center;
-  margin: 10px 0;
-  max-width: 90%;
-}
-
-.button {
-  background-color: white;
-  transition: all 250ms ease-in-out;
-  padding: 10px 20px;
+.content > * {
   margin: 20px 0;
-  border: solid rgb(201, 201, 201) 1px;
+}
+
+/* Global */
+.activeButton {
+  transition: all 250ms ease-in-out;
+  padding: 10px;
+  width: 100%;
   border-radius: 10px;
-  text-align: center;
+  border: solid #eeeeee 1px;
+  color: #fff;
+  background: linear-gradient(90deg, #00a4ff 0%, #0088ff 50%, #00a4ff 100%);
+  background-size: 200% 100%;
+  background-position: left top;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-.button:hover {
-  background-color: rgb(245, 245, 245);
+.activeButton:hover {
+  background-position: right top;
 }
 
-.button:active {
-  background-color: rgb(235, 235, 235);
+/* Login */
+.loadingOverlay {
+  background-color: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
 }
 
-.inputFields {
+/* Admin */
+.logoutButton {
+  position: absolute;
+  font-size: 12px;
+  left: 10px;
+  top: -40px;
+  cursor: pointer;
+}
+
+.logoutButton:hover {
+  text-decoration: underline;
+}
+
+.newFieldDiv {
   display: flex;
   flex-direction: column;
 }
 
-.inputFields input {
-  width: 70vw;
-  font-size: 16px;
-  background-color: white;
-  transition: all 250ms ease-in-out;
-  padding: 10px 20px;
-  margin: 1px 0;
-  border: solid rgb(201, 201, 201) 1px;
+.newFieldDiv input {
+  padding: 10px;
+  margin: 5px 0 20px 0;
   border-radius: 10px;
+  border: solid #888888 1px;
+}
+
+.shortUrlDiv {
+  display: flex;
+  flex-direction: row;
+}
+
+.shortUrlDiv p {
+  margin-top: 15px;
+}
+
+.shortUrlDiv input {
+  width: 100%;
+  margin-left: 5px;
+}
+
+/* Success */
+.linkArea {
+  border: solid #fefefe 1px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 5px #eeeeee;
+  padding: 10px;
+}
+
+.suffixBold {
+  font-weight: 500;
 }
 
 /* About */
+
 .about {
   margin: 25px 0;
   text-align: center;
 }
 
 .link {
-  color: blue;
+  color: #0088ff;
 }
 
 .link:hover {
@@ -76,4 +125,3 @@
   background-color: #d7e9ff;
   text-decoration: underline;
 }
-
