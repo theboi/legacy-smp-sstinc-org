@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Head from "next/head";
+import Link from "next/link";
+import { FaClipboard } from "react-icons/fa";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
@@ -43,8 +45,8 @@ export default function App() {
     "pang_hee_tee_robin@sst.edu.sg",
   ];
 
-  let loadingOverlay = useRef(null);
-
+  let loadingOverlayRef = useRef(null);
+  let copiedPopupRef = useRef(null);
   useEffect(() => {
     console.log("Loading login...");
     const firebaseConfig = {
@@ -63,7 +65,7 @@ export default function App() {
       .auth()
       .getRedirectResult()
       .then(function (result) {
-        loadingOverlay.current.style.display = "none";
+        loadingOverlayRef.current.style.display = "none";
 
         console.log(firebase.auth().currentUser);
 
@@ -89,12 +91,14 @@ export default function App() {
       <Head>
         <title>SST Inc. URL Shortener</title>
       </Head>
-      <img
-        src="/assets/sstinc-icon.png"
-        alt="SST Inc Icon"
-        width={100}
-        height={100}
-      />
+      <a href="https://sstinc.org" rel="noreferrer noopener">
+        <img
+          src="/assets/sstinc-icon.png"
+          alt="SST Inc Icon"
+          width={100}
+          height={100}
+        />
+      </a>
       <div className={style.contentDiv}>
         {(() => {
           switch (screen) {
@@ -126,8 +130,9 @@ export default function App() {
                   >
                     Sign In With Google
                   </button>
-                  <div className={style.loadingOverlay} ref={loadingOverlay}>
+                  <div className={style.loadingOverlay} ref={loadingOverlayRef}>
                     <svg
+                      className={style.loadingCircle}
                       width="100"
                       height="100"
                       viewBox="0 0 100 100"
@@ -171,16 +176,18 @@ export default function App() {
                   </p>
                   <h3>Create a new Link</h3>
                   <div className={style.newFieldDiv}>
-                    <label htmlFor="suffix">NAME</label>
+                    <label htmlFor="name">NAME</label>
                     <input
+                      id="name"
                       type="text"
                       placeholder="SST Inc Website"
                       onChange={(event) => {
                         nameField = event.target.value;
                       }}
                     />
-                    <label htmlFor="suffix">LONG URL</label>
+                    <label htmlFor="link">LONG URL</label>
                     <input
+                      id="link"
                       type="text"
                       placeholder="https://sstinc.org"
                       onChange={(event) => {
@@ -211,7 +218,9 @@ export default function App() {
                           .collection(`links`)
                           .add({
                             link: deepLinkField ?? "hello polis",
-                            suffix: suffixField ?? "this is illegal you didnt add anyth",
+                            suffix:
+                              suffixField ??
+                              "this is illegal you didnt add anyth",
                             date: firebase.firestore.Timestamp.fromDate(
                               new Date()
                             ),
@@ -240,10 +249,25 @@ export default function App() {
                 <div className={style.content}>
                   <h3>Link created!</h3>
                   <p>Here's your new shortened link:</p>
-                  <div className={style.linkArea}>
+                  <div
+                    className={style.linkArea}
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        `${window.location.href}${suffixField ?? ""}`
+                      );
+                      copiedPopupRef.current.className = `${style.copiedPopup} ${style.show}`;
+                      setTimeout(() => {
+                        copiedPopupRef.current.className = `${style.copiedPopup}`;
+                      }, 5000);
+                    }}
+                  >
+                    <div ref={copiedPopupRef} className={style.copiedPopup}>
+                      Copied!
+                    </div>
                     <p>
                       {window.location.href}
                       <span className={style.suffixBold}>{suffixField}</span>
+                      <FaClipboard className={style.clipboardIcon} />
                     </p>
                   </div>
                   <p>Copy this link and share it!</p>
