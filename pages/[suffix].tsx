@@ -49,6 +49,7 @@ export default function SuffixPage() {
   return (
     <>
       <Head>
+        <title>{shareDesc.title}</title>
         <meta property="og:title" content={shareDesc.title} />
         <meta property="og:image" content={shareDesc.image} />
         <meta property="og:description" content={shareDesc.desc} />

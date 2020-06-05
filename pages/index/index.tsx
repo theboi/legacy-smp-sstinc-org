@@ -396,9 +396,7 @@ export default function App() {
                       className={style.activeButton}
                       style={{ marginBottom: 10, marginTop: 30 }}
                       onClick={() => {
-                        window.location.replace(
-                          `${window.location.href}${createdSuffix ?? "ERROR"}`
-                        );
+                        window.open(`${window.location.href}${createdSuffix ?? "ERROR"}`, "_blank")
                       }}
                     >
                       Test it out
