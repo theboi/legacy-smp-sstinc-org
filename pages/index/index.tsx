@@ -1,19 +1,21 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Head from "next/head";
-import Link from "next/link";
-import { FaClipboard } from "react-icons/fa";
+import { FaClipboard, FaExclamationCircle } from "react-icons/fa";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
 import style from "./style.module.css";
 
-let deepLinkField: string;
-let nameField: string;
-let suffixField: string;
+let deepLinkField = "";
+let nameField = "";
+let suffixField = "";
+
+let createdSuffix = "ERROR";
 
 export default function App() {
   const [screen, setScreen] = useState(`login`); // login, admin, success
+  const [adminErrorMsg, setAdminErrorMsg] = useState(``);
 
   const authAdmins = [
     // as of 3 June 2020, SST Inc EXCO 2020, 2019, BOD
@@ -46,7 +48,11 @@ export default function App() {
   ];
 
   let loadingOverlayRef = useRef(null);
-  let copiedPopupRef = useRef(null);
+  let copiedPopupRef: HTMLDivElement;
+  let deepLinkFieldRef = useRef(null);
+  let suffixFieldRef = useRef(null);
+  let createLinkButtonRef = useRef(null);
+
   useEffect(() => {
     console.log("Loading login...");
     const firebaseConfig = {
@@ -67,23 +73,36 @@ export default function App() {
       .then(function (result) {
         loadingOverlayRef.current.style.display = "none";
 
-        console.log(firebase.auth().currentUser);
-
         if (authAdmins.includes(firebase.auth().currentUser?.email ?? "")) {
+          nameField = suffixField = deepLinkField = "";
           setScreen(`admin`);
         }
 
         if (authAdmins.includes(result.user.email)) {
+          nameField = suffixField = deepLinkField = "";
           setScreen(`admin`);
         } else {
           console.error(
-            "Permission denied. Only for Inc EXCO and BOD. Please use your school account to log in."
+            "Permission denied. Only for Inc EXCO and BOD. Please use your school account to log in. You have been signed out."
           );
+          firebase.auth().signOut();
         }
       })
       .catch(function (error) {
         console.warn(`${error.message} (getRedirectResult)`);
       });
+
+    if (screen === `success`) {
+      navigator.clipboard.writeText(
+        `${window.location.href}${createdSuffix ?? "ERROR"}`
+      );
+      copiedPopupRef.className = `${style.copiedPopup} ${style.show}`;
+      setTimeout(() => {
+        if (copiedPopupRef !== null) {
+          copiedPopupRef.className = `${style.copiedPopup}`;
+        }
+      }, 5000);
+    }
   });
 
   return (
@@ -91,7 +110,7 @@ export default function App() {
       <Head>
         <title>SST Inc. URL Shortener</title>
       </Head>
-      <a href="https://sstinc.org" rel="noreferrer noopener">
+      <a href="https://sstinc.org" rel="noreferrer noopener" target="_blank">
         <img
           src="/assets/sstinc-icon.png"
           alt="SST Inc Icon"
@@ -176,75 +195,167 @@ export default function App() {
                   </p>
                   <h3>Create a new Link</h3>
                   <div className={style.newFieldDiv}>
-                    <label htmlFor="name">NAME</label>
+                    <label htmlFor="shortenerName">NAME*</label>
                     <input
-                      id="name"
+                      id="shortenerName"
                       type="text"
                       placeholder="SST Inc Website"
                       onChange={(event) => {
                         nameField = event.target.value;
                       }}
+                      onKeyUp={(event) => {
+                        if (event.keyCode === 13) {
+                          event.preventDefault();
+                          deepLinkFieldRef.current.focus();
+                        }
+                      }}
                     />
-                    <label htmlFor="link">LONG URL</label>
+                    <label htmlFor="shortenerLink">LONG URL*</label>
                     <input
-                      id="link"
+                      ref={deepLinkFieldRef}
+                      id="shortenerLink"
                       type="text"
                       placeholder="https://sstinc.org"
                       onChange={(event) => {
                         deepLinkField = event.target.value;
                       }}
+                      onKeyUp={(event) => {
+                        if (event.keyCode === 13) {
+                          event.preventDefault();
+                          suffixFieldRef.current.focus();
+                        }
+                      }}
                     />
-                    <label htmlFor="suffix">SHORT URL</label>
+                    <label htmlFor="shortenerSuffix">SHORT URL</label>
                     <div className={style.shortUrlDiv}>
-                      <p>go.sstinc.org/</p>
+                      <p className={style.domain}>go.sstinc.org/</p>
                       <input
-                        id="suffix"
+                        ref={suffixFieldRef}
+                        id="shortenerSuffix"
                         type="text"
-                        placeholder="ABCD"
+                        placeholder="sstinc"
                         onChange={(event) => {
                           suffixField = event.target.value;
                         }}
+                        onKeyUp={(event) => {
+                          if (event.keyCode === 13) {
+                            event.preventDefault();
+                            createLinkButtonRef.current.click();
+                          }
+                        }}
                       />
                     </div>
+                    <p className={style.smallText}>
+                      Leaving the field empty would create a randomly generated
+                      alias.
+                    </p>
                   </div>
+                  {adminErrorMsg !== `` ? (
+                    <div className={style.errorMsg}>
+                      <FaExclamationCircle />
+                      <p>{adminErrorMsg}</p>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                   <button
+                    ref={createLinkButtonRef}
                     className={style.activeButton}
-                    onClick={() => {
+                    onClick={async () => {
+
+                      if (nameField === "" || deepLinkField === "") {
+                        setAdminErrorMsg(`Please fill in all required fields.`);
+                        return;
+                      } else if (
+                        (await firebase
+                          .firestore()
+                          .collection("links")
+                          .get()
+                          .then((col) => {
+                            for (const doc of col.docs) {
+                              if (suffixField === doc.data().suffix) {
+                                return true;
+                              }
+                            }
+                            return;
+                          })) === true
+                      ) {
+                        setAdminErrorMsg(`This link is already in use.`);
+                        return;
+                      } else if (
+                        deepLinkField.search(
+                          /(http|https):\/\/([a-zA-Z0-9][a-zA-Z0-9-]{0,}\.){1,}[a-zA-Z0-9]{2,}/
+                        )
+                      ) {
+                        setAdminErrorMsg(`Invalid deep/long link provided`);
+                        return;
+                      } else if (
+                        deepLinkField.includes(window.location.href) ||
+                        deepLinkField.includes("bit.ly") ||
+                        deepLinkField.includes("tinyurl.com") ||
+                        deepLinkField.includes("goo.gl")
+                      ) {
+                        setAdminErrorMsg(`Site blacklisted`);
+                        return;
+                      }
+
+                      const genRandAlias = () => {
+                        const characters =
+                          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
+                        let randomAlias = "";
+                        for (var i = 0; i < 4; i++) {
+                          randomAlias += characters.charAt(
+                            Math.floor(Math.random() * characters.length)
+                          );
+                        }
+                        firebase
+                          .firestore()
+                          .collection("links")
+                          .get()
+                          .then((col) => {
+                            col.docs.map((doc) => {
+                              if (randomAlias === doc.data().suffix) {
+                                return genRandAlias();
+                              }
+                            });
+                          });
+                        return randomAlias;
+                      };
+
                       if (
                         authAdmins.includes(firebase.auth().currentUser.email)
                       ) {
+                        const newRandomAlias = genRandAlias();
                         firebase
                           .firestore()
                           .collection(`links`)
                           .add({
-                            link: deepLinkField ?? "hello polis",
-                            suffix:
-                              suffixField ??
-                              "this is illegal you didnt add anyth",
+                            name: nameField ?? "ERROR",
+                            link: deepLinkField ?? "ERROR",
+                            suffix: suffixField || newRandomAlias,
                             date: firebase.firestore.Timestamp.fromDate(
                               new Date()
                             ),
                           })
                           .then((docRef) => {
+                            createdSuffix = suffixField || newRandomAlias;
                             console.log(
                               `Successful document written with ID: ${docRef.id}`
                             );
                             setScreen(`success`);
                           })
                           .catch((error) => {
-                            // updateDebugMessage(`Error: ${error}`);
                             console.error(`Error adding document: ${error}`);
                           });
                       }
                     }}
                   >
-                    Create new Link
+                    Create
                   </button>
                   <div className={style.statusOverlay}></div>
                 </div>
               );
             case `success`:
-              console.log(suffixField);
               return (
                 <div className={style.content}>
                   <h3>Link created!</h3>
@@ -253,36 +364,55 @@ export default function App() {
                     className={style.linkArea}
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        `${window.location.href}${suffixField ?? ""}`
+                        `${window.location.href}${createdSuffix ?? "ERROR"}`
                       );
-                      copiedPopupRef.current.className = `${style.copiedPopup} ${style.show}`;
+                      copiedPopupRef.className = `${style.copiedPopup} ${style.show}`;
                       setTimeout(() => {
-                        copiedPopupRef.current.className = `${style.copiedPopup}`;
+                        copiedPopupRef.className = `${style.copiedPopup}`;
                       }, 5000);
                     }}
                   >
-                    <div ref={copiedPopupRef} className={style.copiedPopup}>
+                    <div
+                      className={style.copiedPopup}
+                      ref={(el) => {
+                        copiedPopupRef = el;
+                      }}
+                    >
                       Copied!
                     </div>
                     <p>
                       {window.location.href}
-                      <span className={style.suffixBold}>{suffixField}</span>
+                      <span className={style.suffixBold}>{createdSuffix}</span>
                       <FaClipboard className={style.clipboardIcon} />
                     </p>
                   </div>
                   <p>Copy this link and share it!</p>
                   <p>
                     You may remove links by requesting at
-                    ryan.theodore.2006@gmail.com (Ryan The - SST Inc 2020)
+                    ryan.theodore.2006@gmail.com.
                   </p>
-                  <button
-                    className={style.activeButton}
-                    onClick={() => {
-                      setScreen(`admin`);
-                    }}
-                  >
-                    Great! Another one!
-                  </button>
+                  <div>
+                    <button
+                      className={style.activeButton}
+                      style={{ marginBottom: 10, marginTop: 30 }}
+                      onClick={() => {
+                        window.location.replace(
+                          `${window.location.href}${createdSuffix ?? "ERROR"}`
+                        );
+                      }}
+                    >
+                      Test it out
+                    </button>
+                    <button
+                      className={style.finalButton}
+                      onClick={() => {
+                        nameField = suffixField = deepLinkField = "";
+                        setScreen(`admin`);
+                      }}
+                    >
+                      Great! Another one
+                    </button>
+                  </div>
                 </div>
               );
           }
@@ -298,31 +428,3 @@ export default function App() {
     </div>
   );
 }
-
-// <div className={style.content}>
-//         <h3 className={style.header}>SST Inc URL Shortener Admin Console</h3>
-//         <p className={style.desc}>
-//           {isLoggedin ? "" : "Only for use by SST Inc. EXCO. Please sign in."}
-//         </p>
-//         {isLoggedin ? (
-//           <div className={style.form}>
-
-//             <div
-//               className={style.button}
-// onClick={}
-//             >
-//               Add
-//             </div>
-//           </div>
-//         ) : (
-//           <div
-//             className={style.button}
-// onClick={() => {
-//   var provider = new firebase.auth.GoogleAuthProvider();
-//   firebase.auth().signInWithRedirect(provider);
-// }}
-//           >
-//             Sign In With Google
-//           </div>
-//         )}
-//       </div>

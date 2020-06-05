@@ -17,6 +17,7 @@
   width: 90vw;
   max-width: 700px;
   position: relative;
+  background-color: #fcfcfc;
 }
 
 .content {
@@ -29,22 +30,51 @@
 }
 
 /* Global */
+.smallText {
+  font-size: 12px;
+  margin: 10px 0;
+}
+
 .activeButton {
-  transition: all 250ms ease-in-out;
+  transition: all 100ms ease-in-out;
   padding: 10px;
   width: 100%;
   border-radius: 10px;
-  border: solid #eeeeee 1px;
+  border: none;
   color: #fff;
-  background: linear-gradient(90deg, #00a4ff 0%, #0088ff 50%, #00a4ff 100%);
-  background-size: 200% 100%;
-  background-position: left top;
+  background: linear-gradient(110deg, #030030 0%, #030030 50%, #00a4ff 50%, #0088ff 100%);
+  background-size: 250% 100%;
+  background-position: 100% 0%;
   cursor: pointer;
   font-size: 16px;
 }
 
 .activeButton:hover {
-  background-position: right top;
+  filter: brightness(95%);
+}
+
+.activeButton:active {
+  filter: brightness(90%);
+  background-position: 0% 0%;
+}
+
+.finalButton {
+  transition: all 100ms ease-in-out;
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #f4f4f4;
+}
+
+.finalButton:hover {
+  filter: brightness(95%);
+}
+
+.finalButton:active {
+  filter: brightness(90%);
 }
 
 /* Login */
@@ -77,19 +107,26 @@
   flex-direction: column;
 }
 
+.newFieldDiv label {
+  margin: 20px 0 5px 2px;
+  font-weight: 500;
+  width: fit-content;
+}
+
 .newFieldDiv input {
+  font-size: 16px;
   transition: all 250ms ease-in-out;
   padding: 10px;
-  margin: 5px 0 20px 0;
+  margin-top: 5px;
   border-radius: 10px;
   border: solid #eeeeee 1px;
-  box-shadow: inset 0 0 3px 1px #e4e4e4;
-  background-color: #eeeeee;
+  box-shadow: inset 0 0 7px 0px #88888811;
+  background-color: #f9f9f9;
 }
 
 .newFieldDiv input:focus {
   background-color: #fff;
-  box-shadow: 0 0 3px 1px #eeeeee;
+  box-shadow: none;
 }
 
 .shortUrlDiv {
@@ -104,6 +141,22 @@
 .shortUrlDiv input {
   width: 100%;
   margin-left: 5px;
+}
+
+.domain {
+  font-size: 18px;
+}
+
+.errorMsg {
+  background-color: #ffd4d4;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  place-items: center;
+}
+
+.errorMsg p {
+  margin-left: 10px;
 }
 
 /* Success */
@@ -172,6 +225,7 @@
 .about {
   margin: 25px 0;
   text-align: center;
+  font-size: 13px;
 }
 
 .link {

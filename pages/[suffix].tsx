@@ -1,11 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
+
 import * as firebase from "firebase/app";
 import "firebase/firestore";
-import "firebase/auth"
+import "firebase/auth";
 
 export default function SuffixPage() {
   const suffixQuery = useRouter().query.suffix;
+  const [shareDesc, setShareDesc] = useState({
+    title: ``,
+    image: ``,
+    desc: ``,
+    url: ``,
+  });
 
   useEffect(() => {
     const firebaseConfig = {
@@ -30,5 +38,23 @@ export default function SuffixPage() {
     });
   });
 
-  return <div></div>;
+  // fetch(`https://crossorigin.me/${url}`)
+  //   .then((response) => response.text())
+  //   .then((html) => {
+  //     const doc = new DOMParser().parseFromString(html, "text/html");
+  //     const title = doc.querySelectorAll("title")[0];
+  //     return title.innerText;
+  //   });
+
+  return (
+    <>
+      <Head>
+        <meta property="og:title" content={shareDesc.title} />
+        <meta property="og:image" content={shareDesc.image} />
+        <meta property="og:description" content={shareDesc.desc} />
+        <meta property="og:url" content={shareDesc.url} />
+        <meta name="twitter:card" content={shareDesc.image} />
+      </Head>
+    </>
+  );
 }
