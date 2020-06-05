@@ -408,7 +408,7 @@ export default function App() {
                         setScreen(`admin`);
                       }}
                     >
-                      Great! Another one
+                      Great! Another one!
                     </button>
                   </div>
                 </div>
@@ -421,7 +421,11 @@ export default function App() {
         <a className={style.link} href="https://ryanthe.com">
           Ryan The
         </a>{" "}
-        from SST Inc | 2020 | v2.0
+        from SST Inc | 2020 | v2.0 <br/>
+        v1.0 by{" "}
+        <a className={style.link} href="https://www.linkedin.com/in/jia-chen-yee/">
+          Jia Chen
+        </a>{" "}
       </p>
     </div>
   );
