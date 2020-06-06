@@ -112,7 +112,7 @@ export default function App() {
         <meta property="og:title" content="SST Inc URL Shortener" />
         <meta property="og:image" content="/assets/sstinc-icon.png" />
         <meta property="og:description" content="SST Inc URL Shortener Admin Console" />
-        <meta property="og:url" content={window.location.href} />
+        <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
       <a href="https://sstinc.org" rel="noreferrer noopener" target="_blank">
