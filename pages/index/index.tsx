@@ -267,7 +267,6 @@ export default function App() {
                     ref={createLinkButtonRef}
                     className={style.activeButton}
                     onClick={async () => {
-
                       if (nameField === "" || deepLinkField === "") {
                         setAdminErrorMsg(`Please fill in all required fields.`);
                         return;
