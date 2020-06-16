@@ -111,7 +111,10 @@ export default function App() {
         <title>SST Inc URL Shortener</title>
         <meta property="og:title" content="SST Inc URL Shortener" />
         <meta property="og:image" content="/assets/sstinc-icon.png" />
-        <meta property="og:description" content="SST Inc URL Shortener Admin Console" />
+        <meta
+          property="og:description"
+          content="SST Inc URL Shortener Admin Console"
+        />
         <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
@@ -300,6 +303,17 @@ export default function App() {
                       ) {
                         setAdminErrorMsg(`Site blacklisted`);
                         return;
+                      } else if (
+                        deepLinkField.includes(
+                          "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                        ) ||
+                        deepLinkField.includes(
+                          "https://www.youtube.com/watch?v=ub82Xb1C8os"
+                        )
+                      ) {
+                        window.location.href =
+                          "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+                        return;
                       }
 
                       const genRandAlias = () => {
@@ -332,7 +346,7 @@ export default function App() {
                         firebase
                           .firestore()
                           .collection(`links`)
-                          .doc(suffixField)
+                          .doc(suffixField || newRandomAlias)
                           .set({
                             name: nameField ?? "ERROR",
                             link: deepLinkField ?? "ERROR",
@@ -393,14 +407,18 @@ export default function App() {
                   <p>Copy this link and share it!</p>
                   <p>
                     You may remove links by requesting at
-                    ryan.theodore.2006@gmail.com. (Until I find time to implement it in the admin console...)
+                    ryan.theodore.2006@gmail.com. (Until I find time to
+                    implement it in the admin console...)
                   </p>
                   <div>
                     <button
                       className={style.activeButton}
                       style={{ marginBottom: 10, marginTop: 30 }}
                       onClick={() => {
-                        window.open(`${window.location.href}${createdSuffix ?? "ERROR"}`, "_blank")
+                        window.open(
+                          `${window.location.href}${createdSuffix ?? "ERROR"}`,
+                          "_blank"
+                        );
                       }}
                     >
                       Test it out
@@ -425,9 +443,12 @@ export default function App() {
         <a className={style.link} href="https://ryanthe.com">
           Ryan The
         </a>{" "}
-        from SST Inc | 2020 | v2.0 <br/>
+        from SST Inc | 2020 | v2.0 <br />
         v1.0 by{" "}
-        <a className={style.link} href="https://www.linkedin.com/in/jia-chen-yee/">
+        <a
+          className={style.link}
+          href="https://www.linkedin.com/in/jia-chen-yee/"
+        >
           Jia Chen
         </a>{" "}
       </p>
