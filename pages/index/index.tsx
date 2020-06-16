@@ -22,7 +22,7 @@ export default function App() {
     "koh_jie_ming_xavier@s2019.ssts.edu.sg",
     "ryan_theodore_the@s2019.ssts.edu.sg",
     "leong_yu_xuan_thaddeus@s2019.ssts.edu.sg",
-    "oshua_lim_zhe_kai@s2019.ssts.edu.sg",
+    "joshua_lim_zhe_kai@s2019.ssts.edu.sg",
     "joe_wong@s2019.ssts.edu.sg",
     "granwyn_tan@s2019.ssts.edu.sg",
     "jayachandran_tanish@s2019.ssts.edu.sg",
