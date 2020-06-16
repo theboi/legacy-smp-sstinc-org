@@ -393,7 +393,7 @@ export default function App() {
                   <p>Copy this link and share it!</p>
                   <p>
                     You may remove links by requesting at
-                    ryan.theodore.2006@gmail.com.
+                    ryan.theodore.2006@gmail.com. (Until I find time to implement it in the admin console...)
                   </p>
                   <div>
                     <button
