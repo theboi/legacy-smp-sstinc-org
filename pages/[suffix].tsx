@@ -65,7 +65,7 @@ export default function SuffixPage() {
       </Head>
       {hasFailed ? (
         <div className={style.main}>
-        <a href="https://sstinc.org" rel="noreferrer noopener" target="_blank">
+        <a href="https://sstinc.org" rel="noreferrer noopener">
           <img
             src="/assets/sstinc-icon.png"
             alt="SST Inc Icon"
