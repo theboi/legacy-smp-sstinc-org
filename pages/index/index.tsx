@@ -156,7 +156,6 @@ export default function App() {
                   </button>
                   <div className={style.loadingOverlay} ref={loadingOverlayRef}>
                     <svg
-                      className={style.loadingCircle}
                       width="100"
                       height="100"
                       viewBox="0 0 100 100"
@@ -333,7 +332,8 @@ export default function App() {
                         firebase
                           .firestore()
                           .collection(`links`)
-                          .add({
+                          .doc(suffixField)
+                          .set({
                             name: nameField ?? "ERROR",
                             link: deepLinkField ?? "ERROR",
                             suffix: suffixField || newRandomAlias,
@@ -341,10 +341,10 @@ export default function App() {
                               new Date()
                             ),
                           })
-                          .then((docRef) => {
+                          .then(() => {
                             createdSuffix = suffixField || newRandomAlias;
                             console.log(
-                              `Successful document written with ID: ${docRef.id}`
+                              `Successful document written with ID: ${suffixField}`
                             );
                             setScreen(`success`);
                           })
