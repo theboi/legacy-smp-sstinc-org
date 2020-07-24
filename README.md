@@ -27,4 +27,4 @@ npm i
 
 ## License
 
-This repository is licensed under the GNU General Public License v3.0. Feel free to open any pull requests, or fork this project openly.
+This open sourced repository is licensed under the GNU General Public License v3.0.
