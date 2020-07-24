@@ -304,12 +304,9 @@ export default function App() {
                         setAdminErrorMsg(`Site blacklisted`);
                         return;
                       } else if (
-                        deepLinkField.includes(
-                          "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                        ) ||
-                        deepLinkField.includes(
-                          "https://www.youtube.com/watch?v=ub82Xb1C8os"
-                        )
+                        deepLinkField.includes("dQw4w9WgXcQ") ||
+                        deepLinkField.includes("ub82Xb1C8os") ||
+                        deepLinkField.includes("8ybW48rKBME")
                       ) {
                         window.location.href =
                           "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
