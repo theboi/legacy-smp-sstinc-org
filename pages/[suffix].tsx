@@ -7,13 +7,17 @@ import "firebase/firestore";
 import "firebase/auth";
 
 import style from "./style.module.css";
+import { CreateContextOptions } from "vm";
+import { AppContextType } from "next/dist/next-server/lib/utils";
+import { NextPage } from "next";
 
 export default function SuffixPage() {
-  const suffixQuery = useRouter().query.suffix;
+  const router = useRouter();
 
   useEffect(() => {
-    window.location.href = `/api/${suffixQuery}`
-  })
+    router.replace(`/api/${router.query.suffix}`);
+  });
+
   // const [shareDesc, setShareDesc] = useState({
   //   title: ``,
   //   image: ``,
