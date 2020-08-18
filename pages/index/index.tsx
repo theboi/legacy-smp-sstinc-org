@@ -435,20 +435,37 @@ export default function App() {
           }
         })()}
       </div>
-      <p className={style.about}>
-        Created by{" "}
-        <a className={style.link} href="https://ryanthe.com">
-          Ryan The
-        </a>{" "}
-        from SST Inc | 2020 | v2.0 <br />
-        v1.0 by{" "}
-        <a
-          className={style.link}
-          href="https://www.linkedin.com/in/jia-chen-yee/"
-        >
-          Jia Chen
-        </a>{" "}
-      </p>
+
+      <div className={style.credits}>
+        <p>
+          Made with ♥ by{" "}
+          <a
+            href="https://www.ryanthe.com"
+            target="_blank"
+            className={style.link}
+          >
+            Ryan The
+          </a> and {" "}
+          <a
+            className={style.link}
+            href="https://www.linkedin.com/in/jia-chen-yee/"
+          >
+            Jia Chen
+          </a>{" "}
+          from SST Inc, 2020, v2.0.
+        </p>
+        <p>
+          Open sourced on{" "}
+          <a
+            href="https://github.com/theboi/go-sstinc-org"
+            target="_blank"
+            className={style.link}
+          >
+            GitHub
+          </a>
+          .{" "}
+        </p>
+      </div>
     </div>
   );
 }

@@ -222,10 +222,11 @@
 
 /* About */
 
-.about {
+.credits {
   margin: 25px 0;
   text-align: center;
   font-size: 13px;
+  color: rgb(75, 75, 75);
 }
 
 .link {
