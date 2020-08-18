@@ -445,14 +445,16 @@ export default function App() {
             className={style.link}
           >
             Ryan The
-          </a> and {" "}
+          </a>{" "}
+          and{" "}
           <a
-            className={style.link}
             href="https://www.linkedin.com/in/jia-chen-yee/"
+            target="_blank"
+            className={style.link}
           >
             Jia Chen
           </a>{" "}
-          from SST Inc, 2020, v2.0.
+          from SST Inc, 2020, v1.0.1.
         </p>
         <p>
           Open sourced on{" "}
