@@ -16,14 +16,13 @@ An open sourced, URL Shortener Portal that makes use of firebase to store links 
 - Create a new shortened link, filling in a Title, Long Link, and New Link.
 - Share the new shortened link.
 
-## Installation (for development by SST Inc members)
+## Development
 
 - Clone (or download) the project from GitHub.
-- In the terminal, navigate to the project directory and run (you will need npm):
-```shell
-npm i
-```
-- Contact me to give you access to the Firebase project (you will need to be a member of SST Inc. to do this, obviously).
+- Create a new Firebase project (console.firebase.google.com).
+- Create a `.env.local` file.
+- Set `GOOGLE_API_KEY='YOUR_API_KEY'`.
+- Run the project with `npm run dev` via CLI.
 
 ## License
 
