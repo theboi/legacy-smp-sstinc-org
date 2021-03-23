@@ -1,0 +1,29 @@
+.button {
+  transition: all 100ms ease-in-out;
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button:hover {
+  filter: brightness(95%);
+}
+
+.button:active {
+  filter: brightness(90%);
+  background-position: 0% 0%;
+}
+
+.primary {
+  color: #fff;
+  background: linear-gradient(110deg, #030030 0%, #030030 50%, #00a4ff 50%, #0088ff 100%);
+  background-size: 250% 100%;
+  background-position: 100% 0%;
+}
+
+.tertiary {
+  background-color: #fff;
+}
