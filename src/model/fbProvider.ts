@@ -24,21 +24,20 @@ class FBProvider {
     console.log("Init Auth");
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
-    /// Updates currentUser on login/logout
+    /** Updates currentUser on login/logout */
     firebase.auth().onIdTokenChanged((user) => {
       this.currentUser = user === null ? null : new User(user)
     })
   }
 
+  /** Helper method to allow external files such as for useState to be updated */
   addIdTokenChangedListener(callback: (v) => void) {
     firebase.auth().onIdTokenChanged((v) => callback(v))
   }
 
   currentUser: User
 
-  /**
-   * Call method when sign in, remember to call checkForAuth when loading page from redirect.
-   */
+  /** Call method when sign in, remember to call checkForAuth when loading page from redirect. */
   async signIn() {
     let provider = new firebase.auth.GoogleAuthProvider();
     await firebase
@@ -63,7 +62,6 @@ class FBProvider {
   
   async signOut() {
     await firebase.auth().signOut()
-    console.log("Logged out")
   }
 
   static get instance(): FBProvider {
