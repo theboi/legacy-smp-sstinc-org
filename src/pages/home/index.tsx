@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 let createdSuffix = "ERROR";
 
-export default function IndexPage() {
+export default function HomePage() {
   return (
     <div className={style.content}>
       <h3>SST Inc Management Process (SMP)</h3>
