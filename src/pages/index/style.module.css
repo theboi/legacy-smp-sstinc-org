@@ -1,0 +1,95 @@
+.content {
+  width: 90%;
+  max-width: 600px;
+}
+
+.content > * {
+  margin: 20px 0;
+}
+
+/* Global */
+.smallText {
+  font-size: 12px;
+  margin: 10px 0;
+}
+
+
+.finalButton {
+  transition: all 100ms ease-in-out;
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #f4f4f4;
+}
+
+.finalButton:hover {
+  filter: brightness(95%);
+}
+
+.finalButton:active {
+  filter: brightness(90%);
+}
+
+/* Success */
+.linkArea {
+  border: solid #fefefe 1px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 5px #eeeeee;
+  padding: 10px 12px;
+  position: relative;
+}
+
+.suffixBold {
+  font-weight: 500;
+}
+
+.copiedPopup {
+  transition: all 100ms ease-in-out;
+  font-size: 15px;
+  position: absolute;
+  top: -50px;
+  right: 0;
+  width: auto;
+  height: auto;
+  padding: 10px 15px;
+  background-color: #fff;
+  border: solid #fefefe 1px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 5px #eeeeee;
+  transform: scale(0, 0);
+  transform-origin: bottom;
+}
+
+.copiedPopup::after {
+  content: '';
+  position: absolute;
+  width: 0; 
+  height: 0;
+  bottom: -14px;
+  right: 10px;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-top: 7px solid #fff;
+}
+
+.copiedPopup.show {
+  transform: scale(1, 1);
+}
+
+.clipboardIcon {
+  position: absolute;
+  right: 10px;
+  color: #cccccc;
+}
+
+.linkArea:hover .clipboardIcon {
+  color: #333333;
+}
+
+.linkArea:active .clipboardIcon {
+  color: #000;
+}
