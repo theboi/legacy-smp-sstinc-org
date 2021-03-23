@@ -32,20 +32,19 @@ const admins = [
 
 export enum UserRole {
   Admin,
-  Member
+  Member,
+  
 }
 
 export class User {
 
   constructor(fbUser: firebase.User) {
-    console.log(fbUser)
     this._fbUser = fbUser
   }
 
   private _fbUser: firebase.User
 
   get role(): UserRole {
-    console.log(this._fbUser)
     switch (true) {
       case admins.includes(this._fbUser?.email): return UserRole.Admin
       default: return UserRole.Member

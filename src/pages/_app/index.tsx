@@ -10,14 +10,13 @@ import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-
   let loadingOverlayRef = useRef(null);
 
-  const [user, setUser] = useState<User>(null)
+  const [user, setUser] = useState<User>(null);
 
   fbProvider.addIdTokenChangedListener((user) => {
-    setUser(user)
-  })
+    setUser(user);
+  });
 
   useEffect(() => {
     (async () => {
@@ -25,14 +24,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
       loadingOverlayRef.current.style.display = "none";
 
-      console.log(fbProvider.currentUser)
-      if (fbProvider.currentUser?.role === UserRole.Admin) {
-        console.log("admin")
-      } else {
+      switch (fbProvider.currentUser?.role) {
+        case UserRole.Admin:
+        default: 
         console.error(
-          "Permission denied. Only for Inc EXCO and BOD. Please use your school account to log in. You have been signed out."
+          "Permission denied. Only for members of SST. Please use your school account to log in. You have been signed out."
         );
       }
+      
     })();
   });
 
@@ -91,13 +90,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           <nav className={style.shadowBox}>
             <ThemeButton
               style={ButtonStyle.Tertiary}
-              onClick={
-                user === null
-                  ? fbProvider.signIn
-                  : fbProvider.signOut
-              }
+              onClick={user === null ? fbProvider.signIn : fbProvider.signOut}
             >
-              {user === null ? <FaSignInAlt />:<FaSignOutAlt />}
+              {user === null ? <FaSignInAlt /> : <FaSignOutAlt />}
             </ThemeButton>
           </nav>
         </div>
