@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { HtmlHTMLAttributes, useEffect, useRef, useState } from "react";
 import { AppProps } from "next/app";
 import "./styles.css";
 import style from "./style.module.css";
@@ -8,8 +8,13 @@ import ThemeButton, { ButtonStyle } from "../../components/button";
 import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
+import { useRouter } from "next/router";
+import ErrorPage from "../404";
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
+
+  const router = useRouter()
+
   let loadingOverlayRef = useRef(null);
 
   const [user, setUser] = useState<User>(null);
@@ -23,17 +28,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       await fbProvider.checkForAuth();
 
       loadingOverlayRef.current.style.display = "none";
-
-      switch (fbProvider.currentUser?.role) {
-        case UserRole.Admin:
-        default: 
-        console.error(
-          "Permission denied. Only for members of SST. Please use your school account to log in. You have been signed out."
-        );
-      }
-      
     })();
-  });
+  }, [user]);
+
+  function isAuth(): boolean {
+    if (router.pathname !== '/url') return true
+    switch (fbProvider.currentUser?.role) {
+      case UserRole.Admin: return true
+      default: return false
+    }
+  }
 
   return (
     <>
@@ -56,36 +60,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         </a>
         <div className={style.sideSplit}>
           <div className={`${style.shadowBox} ${style.contentDiv}`}>
-            <Component {...pageProps} />
-            <div className={style.loadingOverlay} ref={loadingOverlayRef}>
-              <svg
-                width="100"
-                height="100"
-                viewBox="0 0 100 100"
-                preserveAspectRatio="xMidYMid"
-                display="block"
-              >
-                <circle
-                  cx="50"
-                  cy="50"
-                  fill="none"
-                  stroke="#00a4ff"
-                  strokeWidth="10"
-                  r="35"
-                  strokeDasharray="164.93361431346415 56.97787143782138"
-                  transform="rotate(287.844 50 50)"
-                >
-                  <animateTransform
-                    attributeName="transform"
-                    type="rotate"
-                    repeatCount="indefinite"
-                    dur="1s"
-                    values="0 50 50;360 50 50"
-                    keyTimes="0;1"
-                  />
-                </circle>
-              </svg>
-            </div>
+            {isAuth() ? (
+              <Component {...pageProps} user={user} />
+            ) : (
+              <ErrorPage status={403}/>
+            )}
+            <LoadingOverlay ref={loadingOverlayRef} />
           </div>
           <nav className={style.shadowBox}>
             <ThemeButton
@@ -124,3 +104,37 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     </>
   );
 }
+
+const LoadingOverlay = React.forwardRef(
+  (_, ref: React.MutableRefObject<HTMLDivElement>) => (
+    <div className={style.loadingOverlay} ref={ref}>
+      <svg
+        width="100"
+        height="100"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid"
+        display="block"
+      >
+        <circle
+          cx="50"
+          cy="50"
+          fill="none"
+          stroke="#00a4ff"
+          strokeWidth="10"
+          r="35"
+          strokeDasharray="164.93361431346415 56.97787143782138"
+          transform="rotate(287.844 50 50)"
+        >
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            repeatCount="indefinite"
+            dur="1s"
+            values="0 50 50;360 50 50"
+            keyTimes="0;1"
+          />
+        </circle>
+      </svg>
+    </div>
+  )
+);
