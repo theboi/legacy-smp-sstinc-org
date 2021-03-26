@@ -1,18 +1,13 @@
-.content {
+.main {
   width: 90%;
   max-width: 600px;
 }
 
-.content > * {
+.main > * {
   margin: 20px 0;
 }
 
 /* Global */
-.smallText {
-  font-size: 12px;
-  margin: 10px 0;
-}
-
 
 .finalButton {
   transition: all 100ms ease-in-out;
