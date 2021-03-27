@@ -15,7 +15,6 @@ export default function NavBar(props: { links: NavLink[] }) {
   return (
     <nav className={style.main}>
       {props.links.map((link, i) => {
-        console.log(typeof link.icon)
         return (
           <button
             key={i}

@@ -1,10 +1,10 @@
-import React, { HtmlHTMLAttributes, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AppProps } from "next/app";
 import "./styles.css";
 import style from "./style.module.css";
 import Head from "next/head";
 
-import { FaClipboardCheck, FaClipboardList, FaHome, FaLink, FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaClipboardCheck, FaClipboardList, FaHome, FaLink, FaSignInAlt } from "react-icons/fa";
 import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
 import { useRouter } from "next/router";
