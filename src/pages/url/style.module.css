@@ -1,29 +1,9 @@
-.newFieldDiv {
-  display: flex;
-  flex-direction: column;
+.main {
+  width: 90%;
+  max-width: 600px;
 }
 
-.newFieldDiv label {
-  margin: 20px 0 5px 2px;
-  font-weight: 500;
-  width: fit-content;
-}
-
-.newFieldDiv input {
-  font-size: 16px;
-  transition: all 250ms ease-in-out;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 10px;
-  border: solid #eeeeee 1px;
-  box-shadow: inset 0 0 7px 0px #88888811;
-  background-color: #f9f9f9;
-}
-
-.newFieldDiv input:focus {
-  background-color: #fff;
-  box-shadow: none;
-}
+/* 
 
 .shortUrlDiv {
   display: flex;
@@ -54,7 +34,7 @@
 .errorMsg p {
   margin-left: 10px;
 }
-/* 
+
 .smallText {
   font-size: 12px;
   margin: 10px 0;
