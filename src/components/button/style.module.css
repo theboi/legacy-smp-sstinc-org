@@ -14,14 +14,24 @@
 
 .button:active {
   filter: brightness(90%);
+}
+
+.button:not(.plain):active {
   background-position: 0% 0%;
 }
 
-.primary {
+.button:not(.plain) {
   color: #fff;
-  background: linear-gradient(110deg, #030030 0%, #030030 50%, #00a4ff 50%, #0088ff 100%);
   background-size: 250% 100%;
   background-position: 100% 0%;
+}
+
+.primary {
+  background: linear-gradient(110deg, #030030 0%, #030030 50%, #00a4ff 50%, #0088ff 100%);
+}
+
+.destructive {
+  background: linear-gradient(110deg, #300000 0%, #300000 50%, #ff3c00 50%, #ff0000 100%);
 }
 
 .tertiary {

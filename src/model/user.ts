@@ -33,7 +33,6 @@ const admins = [
 export enum UserRole {
   Admin,
   Member,
-  
 }
 
 export class User {
@@ -49,5 +48,13 @@ export class User {
       case admins.includes(this._fbUser?.email): return UserRole.Admin
       default: return UserRole.Member
     }
+  }
+
+  get email(): string {
+    return this._fbUser?.email
+  }
+
+  get photoURL(): string {
+    return this._fbUser.photoURL
   }
 }

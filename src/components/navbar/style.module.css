@@ -1,5 +1,4 @@
 .main {
-  background-color: red;
   display: flex;
   flex-direction: column;
 }
@@ -12,6 +11,6 @@
   background-color: green;
 }
 
-.icon {
+.navLink svg {
   font-size: 30px;
 }
