@@ -1,19 +1,20 @@
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react'
+import { FaClipboard } from 'react-icons/fa';
 
 import style from './style.module.css';
-
-let createdSuffix = "ERROR";
 
 export default function SuccessPage(props: {}) {
   let copiedPopupRef: HTMLDivElement;
 
   const router = useRouter();
 
+  const { suffix } = router.query
+
   useEffect(() => {
     // if (screen === `success`) {
     navigator.clipboard.writeText(
-      `${window.location.href}${createdSuffix ?? "ERROR"}`
+      `${router.basePath}${suffix ?? "ERROR"}`
     );
     copiedPopupRef.className = `${style.copiedPopup} ${style.show}`;
     setTimeout(() => {
@@ -32,7 +33,7 @@ export default function SuccessPage(props: {}) {
         className={style.linkArea}
         onClick={() => {
           navigator.clipboard.writeText(
-            `${window.location.href}${createdSuffix ?? "ERROR"}`
+            `${router.basePath}${suffix ?? "ERROR"}`
           );
           copiedPopupRef.className = `${style.copiedPopup} ${style.show}`;
           setTimeout(() => {
@@ -49,8 +50,8 @@ export default function SuccessPage(props: {}) {
           Copied!
         </div>
         <p>
-          {window.location.href}
-          <span className={style.suffixBold}>{createdSuffix}</span>
+          {router.basePath}
+          <span className={style.suffixBold}>{suffix}</span>
           <FaClipboard className={style.clipboardIcon} />
         </p>
       </div>
@@ -65,7 +66,7 @@ export default function SuccessPage(props: {}) {
           style={{ marginBottom: 10, marginTop: 30 }}
           onClick={() => {
             window.open(
-              `${window.location.href}${createdSuffix ?? "ERROR"}`,
+              `${router.basePath}${suffix ?? "ERROR"}`,
               "_blank"
             );
           }}
@@ -75,7 +76,6 @@ export default function SuccessPage(props: {}) {
         <button
           className={style.finalButton}
           onClick={() => {
-            nameField = suffixField = deepLinkField = "";
             router.push(`/admin`);
           }}
         >

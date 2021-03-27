@@ -14,6 +14,8 @@ let deepLinkField = "";
 let nameField = "";
 let suffixField = "";
 
+let createdSuffix = "ERROR";
+
 export default function UrlPage(props: { user: User }) {
   const router = useRouter();
 
@@ -21,7 +23,6 @@ export default function UrlPage(props: { user: User }) {
 
   let deepLinkFieldRef = useRef(null);
   let suffixFieldRef = useRef(null);
-  let createLinkButtonRef = useRef(null);
 
   nameField = suffixField = deepLinkField = "";
 
@@ -97,7 +98,7 @@ export default function UrlPage(props: { user: User }) {
         return randomAlias;
       };
 
-      if (authAdmins.includes(firebase.auth().currentUser.email)) {
+      if (props.user.role === UserRole.Admin) {
         const newRandomAlias = genRandAlias();
         firebase
           .firestore()
@@ -160,7 +161,7 @@ export default function UrlPage(props: { user: User }) {
           onKeyUp={(event) => {
             if (event.keyCode === 13) {
               event.preventDefault();
-              createLinkButtonRef.current.click();
+              createUrl()
             }
           }}
           leftDetail={<p className={style.domain}>go.sstinc.org/</p>}
@@ -177,7 +178,7 @@ export default function UrlPage(props: { user: User }) {
       ) : (
         <></>
       )}
-      <ThemeButton onClick={createUrl} ref={createLinkButtonRef}>
+      <ThemeButton onClick={createUrl}>
         Create
       </ThemeButton>
       <div className={style.statusOverlay}></div>
