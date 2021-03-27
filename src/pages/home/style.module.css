@@ -1,9 +1,4 @@
-.main {
-  width: 90%;
-  max-width: 600px;
-}
-
-.main > * {
+.main > p {
   margin: 20px 0;
 }
 

@@ -5,7 +5,7 @@ import { IconType } from "react-icons";
 import style from "./style.module.css";
 
 interface NavLink {
-  icon: IconType;
+  icon: React.ReactNode; // Allows for any FontAwesome icon or other React element like images
   action: (() => void) | string;
 }
 
@@ -15,6 +15,7 @@ export default function NavBar(props: { links: NavLink[] }) {
   return (
     <nav className={style.main}>
       {props.links.map((link, i) => {
+        console.log(typeof link.icon)
         return (
           <button
             key={i}
@@ -25,7 +26,7 @@ export default function NavBar(props: { links: NavLink[] }) {
             }
             className={style.navLink}
           >
-            <link.icon className={style.icon} />
+            {link.icon}       
           </button>
         );
       })}

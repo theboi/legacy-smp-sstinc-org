@@ -4,7 +4,6 @@ import "./styles.css";
 import style from "./style.module.css";
 import Head from "next/head";
 
-import ThemeButton, { ButtonStyle } from "../../components/button";
 import { FaClipboardCheck, FaClipboardList, FaHome, FaLink, FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
@@ -60,7 +59,7 @@ export default function App({ Component, pageProps }: AppProps) {
           />
         </a>
         <div className={style.sideSplit}>
-          <div className={`${style.shadowBox} ${style.contentDiv}`}>
+          <div className={`${style.shadowBox} ${style.content}`}>
             {isAuth() ? (
               <Component {...pageProps} user={user} />
             ) : (
@@ -70,24 +69,20 @@ export default function App({ Component, pageProps }: AppProps) {
           </div>
           <NavBar links={[
             {
-              icon: user === null ? FaSignInAlt : FaSignOutAlt,
-              action: user === null ? fbProvider.signIn : fbProvider.signOut
+              icon: user === null ? <FaSignInAlt /> : <img src={user.photoURL} height={40} style={{borderRadius: 10}}/>,
+              action: user === null ? fbProvider.signIn : '/profile'
             },
             {
-              icon: FaHome,
+              icon: <FaHome />,
               action: '/home'
             },
             {
-              icon: FaLink,
+              icon: <FaLink />,
               action: '/url'
             },
             {
-              icon: FaClipboardList,
-              action: '/url'
-            },
-            {
-              icon: FaClipboardCheck,
-              action: '/url'
+              icon: <FaClipboardList /> /* <FaClipboardCheck /> */,
+              action: '/attendance'
             },
           ]}/>
         </div>
