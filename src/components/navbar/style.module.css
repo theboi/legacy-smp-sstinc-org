@@ -1,0 +1,17 @@
+.main {
+  background-color: red;
+  display: flex;
+  flex-direction: column;
+}
+
+.navLink {
+  padding: 10px;
+}
+
+.navLink:hover {
+  background-color: green;
+}
+
+.icon {
+  font-size: 30px;
+}

@@ -5,11 +5,12 @@ import style from "./style.module.css";
 import Head from "next/head";
 
 import ThemeButton, { ButtonStyle } from "../../components/button";
-import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaClipboardCheck, FaClipboardList, FaHome, FaLink, FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
 import { useRouter } from "next/router";
 import ErrorPage from "../404";
+import NavBar from "../../components/navbar";
 
 export default function App({ Component, pageProps }: AppProps) {
 
@@ -67,14 +68,28 @@ export default function App({ Component, pageProps }: AppProps) {
             )}
             <LoadingOverlay ref={loadingOverlayRef} />
           </div>
-          <nav className={style.shadowBox}>
-            <ThemeButton
-              style={ButtonStyle.Tertiary}
-              onClick={user === null ? fbProvider.signIn : fbProvider.signOut}
-            >
-              {user === null ? <FaSignInAlt /> : <FaSignOutAlt />}
-            </ThemeButton>
-          </nav>
+          <NavBar links={[
+            {
+              icon: user === null ? FaSignInAlt : FaSignOutAlt,
+              action: user === null ? fbProvider.signIn : fbProvider.signOut
+            },
+            {
+              icon: FaHome,
+              action: '/home'
+            },
+            {
+              icon: FaLink,
+              action: '/url'
+            },
+            {
+              icon: FaClipboardList,
+              action: '/url'
+            },
+            {
+              icon: FaClipboardCheck,
+              action: '/url'
+            },
+          ]}/>
         </div>
         <div className={style.credits}>
           <p>
