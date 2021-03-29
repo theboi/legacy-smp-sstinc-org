@@ -2,7 +2,7 @@ import React from "react";
 
 import style from "./style.module.css";
 
-export default function ThemeField(props: {
+export default function LabelField(props: {
   label: string;
   placeholder: string;
   onChange: (e) => void;

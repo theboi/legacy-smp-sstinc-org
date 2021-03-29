@@ -1,0 +1,9 @@
+.field {
+  display: flex;
+  align-items: center;
+}
+
+.field label {
+  margin: 20px 0 5px 2px;
+  font-weight: 500;
+}

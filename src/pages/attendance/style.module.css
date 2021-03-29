@@ -8,13 +8,7 @@
 .number {
   width: 60px;
   text-align: center;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #e6e6e6;
-}
-
-.number:focus {
-  border: solid #000 1px;
+  font-size: 35px;
 }
 
 .buttons {
