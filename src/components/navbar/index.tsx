@@ -17,6 +17,7 @@ export default function NavBar(props: { links: NavLink[] }) {
       {props.links.map((link, i) => {
         return (
           <button
+            styleType="tertiary"
             key={i}
             onClick={
               typeof link.action == "string" || link.action instanceof String

@@ -3,14 +3,11 @@
   flex-direction: column;
 }
 
-.navLink {
-  padding: 10px;
-}
-
-.navLink:hover {
-  background-color: green;
-}
-
 .navLink svg {
-  font-size: 30px;
+  font-size: 25px;
+  opacity: 0.5;
+}
+
+.navLink:hover svg {
+  opacity: 1;
 }
