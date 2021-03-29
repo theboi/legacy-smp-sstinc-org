@@ -31,8 +31,8 @@ const admins = [
 ];
 
 export enum UserRole {
-  Admin,
-  Member,
+  Admin = "Admin",
+  Member = "Member",
 }
 
 export class User {
@@ -43,7 +43,7 @@ export class User {
 
   private _fbUser: firebase.User
 
-  get role(): UserRole {
+  get role(): string {
     switch (true) {
       case admins.includes(this._fbUser?.email): return UserRole.Admin
       default: return UserRole.Member
@@ -51,6 +51,7 @@ export class User {
   }
 
   get email(): string {
+    console.log(this._fbUser?.email)
     return this._fbUser?.email
   }
 

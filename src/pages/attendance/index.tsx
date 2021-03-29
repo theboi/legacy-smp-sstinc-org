@@ -1,23 +1,34 @@
-import React, { FormEventHandler, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import style from "./style.module.css";
 
 import hash from "crypto-js/sha256";
 
-import { User } from "../../model/user";
+import { User, UserRole } from "../../model/user";
 import ThemeButton, { ButtonStyle } from "../../components/button";
+import { FaLock, FaLockOpen } from "react-icons/fa";
 
 export default function AttendancePage(props: { user: User }) {
+  const [key, setKey] = useState(getKeyCode());
   const [code, setCode] = useState([...Array(4)].map(() => ""));
+  const [isLocked, setIsLocked] = useState(true);
 
   const refs = [...Array(4)].map(() => useRef(null));
+
+  useEffect(() => {
+    const interval = setInterval(() => setKey(getKeyCode()), 10_000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   function manageKeyDown(e: React.KeyboardEvent<HTMLInputElement>, i: number) {
     e.persist();
     switch (true) {
       case e.keyCode === 8: // backspace
         setCode((c) => {
-          const t = [...c]
+          const t = [...c];
           t[i] = "";
           return t;
         });
@@ -32,9 +43,10 @@ export default function AttendancePage(props: { user: User }) {
       case e.keyCode === 39: // rightArrow
         refs[i + 1]?.current.focus() ?? refs[i].current.blur();
         break;
-      case (e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90): // alphanumeric
+      case (e.keyCode >= 48 && e.keyCode <= 57) ||
+        (e.keyCode >= 65 && e.keyCode <= 90): // alphanumeric
         setCode((c) => {
-          const t = [...c]
+          const t = [...c];
           t[i] = String.fromCharCode(e.keyCode);
           return t;
         });
@@ -43,11 +55,21 @@ export default function AttendancePage(props: { user: User }) {
     }
   }
 
+  function getKeyCode() {
+    const epochSeconds = new Date().getTime() / 1000;
+    return hash("sstinc" + (epochSeconds - (epochSeconds % 10)))
+      .toString()
+      .slice(0, 4)
+      .toUpperCase();
+  }
+
   function confirmCode() {
-    console.log(code.join(""))
-    const epochSeconds = new Date().getTime() / 1000
-    const hashed = hash("sstinc" + (epochSeconds - epochSeconds%10)).toString().slice(0,4).toUpperCase()
-    if (code.join("") === hashed) console.log("Yay")
+    console.log(code.join(""));
+    if (code.join("") === getKeyCode()) console.log("Yay");
+  }
+
+  function toggleLock() {
+    setIsLocked((e) => !e);
   }
 
   return (
@@ -55,19 +77,30 @@ export default function AttendancePage(props: { user: User }) {
       <h3>Attendance</h3>
       <p>Kindly enter the 4 digit code provided to check-in to SST Inc.</p>
       <div className={style.code}>
-        {code.map((n, i) => (
+        {(isLocked ? code : key.split("")).map((n, i) => (
           <input
             type="text"
             className={style.number}
             key={i}
             value={n}
             readOnly
-            onKeyDown={(e) => manageKeyDown(e,i)}
+            onKeyDown={(e) => manageKeyDown(e, i)}
             ref={refs[i]}
           />
         ))}
       </div>
-      <ThemeButton style={ButtonStyle.Primary} onClick={confirmCode}>Confirm</ThemeButton>
+      <div className={style.buttons}>
+        <ThemeButton style={ButtonStyle.Primary} onClick={confirmCode}>
+          Confirm
+        </ThemeButton>
+        {props.user?.role === UserRole.Admin ? (
+          <div className={style.lock}>
+            <ThemeButton style={ButtonStyle.Secondary} onClick={toggleLock}>
+              {isLocked ? <FaLock /> : <FaLockOpen />}
+            </ThemeButton>
+          </div>
+        ) : null}
+      </div>
       {/* <ThemeButton style={ButtonStyle.Tertiary}>Scan the QR Code instead</ThemeButton> */}
     </div>
   );

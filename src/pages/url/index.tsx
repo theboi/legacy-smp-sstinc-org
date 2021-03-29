@@ -98,7 +98,7 @@ export default function UrlPage(props: { user: User }) {
         return randomAlias;
       };
 
-      if (props.user.role === UserRole.Admin) {
+      if (props.user?.role === UserRole.Admin) {
         const newRandomAlias = genRandAlias();
         firebase
           .firestore()

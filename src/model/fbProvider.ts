@@ -31,8 +31,8 @@ class FBProvider {
   }
 
   /** Helper method to allow external files such as for useState to be updated */
-  addIdTokenChangedListener(callback: (v) => void) {
-    firebase.auth().onIdTokenChanged((v) => callback(v))
+  addIdTokenChangedListener(callback: (user: User) => void) {
+    firebase.auth().onIdTokenChanged((user) => callback(user === null ? null : new User(user)))
   }
 
   currentUser: User
