@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "crypto-js": "^4.0.0",
     "dotenv": "^8.2.0",
     "firebase": "^8.3.1",
     "next": "^10.0.9",
