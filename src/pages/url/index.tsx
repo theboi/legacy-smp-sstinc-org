@@ -8,7 +8,7 @@ import "firebase/firestore";
 import style from "./style.module.css";
 import { User, UserRole } from "../../model/user";
 import ThemeButton from "../../components/button";
-import ThemeField from "../../components/field";
+import LabelField from "../../components/labelField";
 
 let deepLinkField = "";
 let nameField = "";
@@ -126,7 +126,7 @@ export default function UrlPage(props: { user: User }) {
     <div className={style.main}>
       <h3>Create a new Link</h3>
       <div className={style.newFieldDiv}>
-        <ThemeField
+        <LabelField
           label="NAME*"
           placeholder="SST Inc Website"
           onChange={(event) => {
@@ -139,7 +139,7 @@ export default function UrlPage(props: { user: User }) {
             }
           }}
         />
-        <ThemeField
+        <LabelField
           label="LONG URL*"
           placeholder="https://sstinc.org"
           onChange={(event) => {
@@ -152,7 +152,7 @@ export default function UrlPage(props: { user: User }) {
             }
           }}
         />
-        <ThemeField
+        <LabelField
           label="SHORT URL"
           placeholder="sstinc"
           onChange={(event) => {
