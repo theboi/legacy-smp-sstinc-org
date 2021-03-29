@@ -5,7 +5,6 @@ import style from "./style.module.css";
 import hash from "crypto-js/sha256";
 
 import { User, UserRole } from "../../model/user";
-import ThemeButton, { ButtonStyle } from "../../components/button";
 import { FaLock, FaLockOpen } from "react-icons/fa";
 
 export default function AttendancePage(props: { user: User }) {
@@ -90,18 +89,18 @@ export default function AttendancePage(props: { user: User }) {
         ))}
       </div>
       <div className={style.buttons}>
-        <ThemeButton style={ButtonStyle.Primary} onClick={confirmCode}>
+        <button styleType="primary" onClick={confirmCode}>
           Confirm
-        </ThemeButton>
+        </button>
         {props.user?.role === UserRole.Admin ? (
           <div className={style.lock}>
-            <ThemeButton style={ButtonStyle.Secondary} onClick={toggleLock}>
+            <button styleType="secondary" onClick={toggleLock}>
               {isLocked ? <FaLock /> : <FaLockOpen />}
-            </ThemeButton>
+            </button>
           </div>
         ) : null}
       </div>
-      {/* <ThemeButton style={ButtonStyle.Tertiary}>Scan the QR Code instead</ThemeButton> */}
+      <button styleType="tertiary">Scan a QR Code instead</button>
     </div>
   );
 }

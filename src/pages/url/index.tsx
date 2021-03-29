@@ -7,7 +7,6 @@ import "firebase/firestore";
 
 import style from "./style.module.css";
 import { User, UserRole } from "../../model/user";
-import ThemeButton from "../../components/button";
 import LabelField from "../../components/labelField";
 
 let deepLinkField = "";
@@ -178,9 +177,7 @@ export default function UrlPage(props: { user: User }) {
       ) : (
         <></>
       )}
-      <ThemeButton onClick={createUrl}>
-        Create
-      </ThemeButton>
+      <button onClick={createUrl}>Create</button>
       <div className={style.statusOverlay}></div>
     </div>
   );

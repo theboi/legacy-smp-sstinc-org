@@ -95,6 +95,7 @@ body {
 Defaults
 //////////////////////////////////////////////////////////////////////////////*/
 
+/* input */
 input {
   font-size: 16px;
   transition: all 250ms ease-in-out;
@@ -111,6 +112,45 @@ input:focus {
   background-color: #fff;
   box-shadow: none;
 	border-color: #ebebeb;
+}
+
+/* button */
+
+button {
+  transition: all 100ms ease-in-out;
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: #f3f3f3;
+
+	background-size: 250% 100% !important;
+  background-position: 100% 0% !important;
+}
+
+button:hover {
+  filter: brightness(95%);
+}
+
+button:active {
+  filter: brightness(90%);
+	background-position: 0% 0% !important;
+}
+
+button[styleType=primary] {
+	color: #fff;
+  background: linear-gradient(110deg, #030030 0%, #030030 50%, #00a4ff 50%, #0088ff 100%);
+}
+
+button[styleType=destructive] {
+	color: #fff;
+  background: linear-gradient(110deg, #300000 0%, #300000 50%, #ff3c00 50%, #ff0000 100%);
+}
+
+button[styleType=tertiary] {
+  background-color: #fff;
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
