@@ -19,9 +19,11 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const [user, setUser] = useState<User>(null);
 
-  fbProvider.addIdTokenChangedListener((user) => {
-    setUser(user);
-  });
+  useEffect(() => {
+    fbProvider.addIdTokenChangedListener((user: User) => {
+      setUser(user);
+    });
+  }, [])
 
   useEffect(() => {
     (async () => {

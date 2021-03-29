@@ -4,9 +4,10 @@ import ThemeButton, { ButtonStyle } from "../../components/button";
 import style from "./style.module.css";
 
 import { fbProvider } from "../../model/fbProvider";
-import { User } from "../../model/user";
+import { User, UserRole } from "../../model/user";
 
 export default function ProfilePage(props: { user: User }) {
+  console.log(props.user)
   return (
     <div className={style.main}>
       <p>{props.user?.email}</p>

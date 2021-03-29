@@ -16,3 +16,12 @@
 .number:focus {
   border: solid #000 1px;
 }
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.lock {
+  width: 100px;
+}
