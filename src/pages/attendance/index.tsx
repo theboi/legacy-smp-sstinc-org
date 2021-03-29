@@ -2,6 +2,8 @@ import React, { FormEventHandler, useRef, useState } from "react";
 
 import style from "./style.module.css";
 
+import hash from "crypto-js/sha256";
+
 import { User } from "../../model/user";
 import ThemeButton, { ButtonStyle } from "../../components/button";
 
@@ -10,7 +12,7 @@ export default function AttendancePage(props: { user: User }) {
 
   const refs = [...Array(4)].map(() => useRef(null));
 
-  function manageKeyDown(i) {(e) => {
+  function manageKeyDown(e: React.KeyboardEvent<HTMLInputElement>, i: number) {
     e.persist();
     switch (true) {
       case e.keyCode === 8: // backspace
@@ -30,7 +32,7 @@ export default function AttendancePage(props: { user: User }) {
       case e.keyCode === 39: // rightArrow
         refs[i + 1]?.current.focus() ?? refs[i].current.blur();
         break;
-      case e.keyCode >= 48 && e.keyCode <= 57: // numbers
+      case (e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 65 && e.keyCode <= 90): // alphanumeric
         setCode((c) => {
           const t = [...c]
           t[i] = String.fromCharCode(e.keyCode);
@@ -39,10 +41,13 @@ export default function AttendancePage(props: { user: User }) {
         refs[i + 1]?.current.focus() ?? refs[i].current.blur();
         break;
     }
-  }}
+  }
 
   function confirmCode() {
-    
+    console.log(code.join(""))
+    const epochSeconds = new Date().getTime() / 1000
+    const hashed = hash("sstinc" + (epochSeconds - epochSeconds%10)).toString().slice(0,4).toUpperCase()
+    if (code.join("") === hashed) console.log("Yay")
   }
 
   return (
@@ -57,7 +62,7 @@ export default function AttendancePage(props: { user: User }) {
             key={i}
             value={n}
             readOnly
-            onKeyDown={() => manageKeyDown(i)}
+            onKeyDown={(e) => manageKeyDown(e,i)}
             ref={refs[i]}
           />
         ))}
