@@ -124,7 +124,7 @@ button {
   border: none;
   cursor: pointer;
   font-size: 16px;
-  background-color: #f3f3f3;
+  background-color: #f9f9f9;
 
 	background-size: 250% 100% !important;
   background-position: 100% 0% !important;
@@ -151,6 +151,10 @@ button[styletype=destructive] {
 
 button[styletype=tertiary] {
   background-color: #fff;
+}
+
+button:disabled {
+  filter: brightness(70%) !important;
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
