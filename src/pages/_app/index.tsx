@@ -20,21 +20,21 @@ export default function App({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<User>(null);
 
   useEffect(() => {
-    fbProvider.addIdTokenChangedListener((user: User) => {
+    fbProvider.auth.addIdTokenChangedListener((user: User) => {
       setUser(user);
     });
   }, [])
 
   useEffect(() => {
     (async () => {
-      await fbProvider.checkForAuth();
+      await fbProvider.auth.checkForAuth();
       loadingOverlayRef.current.style.display = "none";
     })();
   }, [user]);
 
   function isAuth(): boolean {
     if (router.pathname !== '/url') return true
-    switch (fbProvider.currentUser?.role) {
+    switch (fbProvider.auth.currentUser?.role) {
       case UserRole.Admin: return true
       default: return false
     }
@@ -43,10 +43,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>SST Inc Management Process</title>
-        <meta property="og:title" content="SST Inc Management Process" />
+        <title>SST Inc Management Platform</title>
+        <meta property="og:title" content="SST Inc Management Platform" />
         <meta property="og:image" content="/assets/sstinc-icon.png" />
-        <meta property="og:description" content="SST Inc Management Process" />
+        <meta property="og:description" content="SST Inc Management Platform" />
         <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
@@ -73,7 +73,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <NavBar links={[
             {
               icon: user === null ? <FaSignInAlt /> : <img src={user.photoURL} height={40} style={{borderRadius: 10}}/>,
-              action: user === null ? fbProvider.signIn : '/profile'
+              action: user === null ? fbProvider.auth.signIn : '/profile'
             },
             {
               icon: <FaHome />,
@@ -85,7 +85,7 @@ export default function App({ Component, pageProps }: AppProps) {
             },
             {
               icon: <FaClipboardList /> /* <FaClipboardCheck /> */,
-              action: '/attendance'
+              action: '/atd'
             },
           ]}/>
         </div>

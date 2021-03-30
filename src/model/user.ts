@@ -36,26 +36,30 @@ export enum UserRole {
 }
 
 export class User {
-
   constructor(fbUser: firebase.User) {
-    this._fbUser = fbUser
+    this._fbUser = fbUser;
   }
 
-  private _fbUser: firebase.User
+  private _fbUser: firebase.User;
 
   get role(): string {
     switch (true) {
-      case admins.includes(this._fbUser?.email): return UserRole.Admin
-      default: return UserRole.Member
+      case admins.includes(this._fbUser?.email):
+        return UserRole.Admin;
+      default:
+        return UserRole.Member;
     }
   }
 
+  get displayName(): string {
+    return this._fbUser?.displayName;
+  }
+
   get email(): string {
-    console.log(this._fbUser?.email)
-    return this._fbUser?.email
+    return this._fbUser?.email;
   }
 
   get photoURL(): string {
-    return this._fbUser.photoURL
+    return this._fbUser.photoURL;
   }
 }

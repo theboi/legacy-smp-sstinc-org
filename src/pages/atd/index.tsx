@@ -6,8 +6,9 @@ import hash from "crypto-js/sha256";
 
 import { User, UserRole } from "../../model/user";
 import { FaLock, FaLockOpen } from "react-icons/fa";
+import { fbProvider } from "../../model/fbProvider";
 
-export default function AttendancePage(props: { user: User }) {
+export default function AtdPage(props: { user: User }) {
   const [key, setKey] = useState(getKeyCode());
   const [code, setCode] = useState([...Array(4)].map(() => ""));
   const [isLocked, setIsLocked] = useState(true);
@@ -64,7 +65,9 @@ export default function AttendancePage(props: { user: User }) {
 
   function confirmCode() {
     console.log(code.join(""));
-    if (code.join("") === getKeyCode()) console.log("Yay");
+    if (code.join("") === getKeyCode()) {
+      fbProvider.atd.checkIn(props.user)
+    }
   }
 
   function toggleLock() {
