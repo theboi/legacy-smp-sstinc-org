@@ -12,11 +12,12 @@ export default function AtdPage(props: { user: User }) {
   const [key, setKey] = useState(getKeyCode());
   const [code, setCode] = useState([...Array(4)].map(() => ""));
   const [isLocked, setIsLocked] = useState(true);
+  const [isInvalid, setIsInvalid] = useState(false);
 
   const refs = [...Array(4)].map(() => useRef(null));
 
   useEffect(() => {
-    const interval = setInterval(() => setKey(getKeyCode()), 10_000);
+    const interval = setInterval(() => setKey(getKeyCode()), 1000);
 
     return () => {
       clearInterval(interval);
@@ -32,16 +33,17 @@ export default function AtdPage(props: { user: User }) {
           t[i] = "";
           return t;
         });
-        refs[i - 1]?.current.focus() ?? null;
+        refs[i - 1]?.current.focus();
         break;
       case e.keyCode === 37: // leftArrow
-        refs[i - 1]?.current.focus() ?? refs[i].current.blur();
+        refs[i - 1]?.current.focus();
         break;
       case e.keyCode === 13: // return
         refs[i].current.blur();
+        if (code.join('').length == 4) confirmCode()
         break;
       case e.keyCode === 39: // rightArrow
-        refs[i + 1]?.current.focus() ?? refs[i].current.blur();
+        refs[i + 1]?.current.focus()
         break;
       case (e.keyCode >= 48 && e.keyCode <= 57) ||
         (e.keyCode >= 65 && e.keyCode <= 90): // alphanumeric
@@ -50,7 +52,7 @@ export default function AtdPage(props: { user: User }) {
           t[i] = String.fromCharCode(e.keyCode);
           return t;
         });
-        refs[i + 1]?.current.focus() ?? refs[i].current.blur();
+        refs[i + 1]?.current?.focus()
         break;
     }
   }
@@ -67,6 +69,14 @@ export default function AtdPage(props: { user: User }) {
     console.log(code.join(""));
     if (code.join("") === getKeyCode()) {
       fbProvider.atd.checkIn(props.user)
+    } else {
+      /** Code submission cooldown of 2 sec, informs user that code is incorrect */
+      setIsInvalid(true)
+      setCode([...Array(4)].map(() => ""))
+      refs[0].current.focus()
+      setTimeout(() => {
+        setIsInvalid(false)
+      }, 2000);
     }
   }
 
@@ -92,8 +102,8 @@ export default function AtdPage(props: { user: User }) {
         ))}
       </div>
       <div className={style.buttons}>
-        <button styletype="primary" onClick={confirmCode}>
-          Confirm
+        <button styletype={isInvalid ? "destructive" : "primary"} onClick={confirmCode} disabled={isInvalid || code.join('').length != 4}>
+          {isInvalid ? "Invalid" : "Confirm"}
         </button>
         {props.user?.role === UserRole.Admin ? (
           <div className={style.lock}>
@@ -103,7 +113,7 @@ export default function AtdPage(props: { user: User }) {
           </div>
         ) : null}
       </div>
-      <button styletype="tertiary">Scan a QR Code instead</button>
+      <button styletype="secondary">Scan a QR Code instead</button>
     </div>
   );
 }

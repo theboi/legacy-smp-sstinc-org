@@ -67,6 +67,7 @@ class Auth {
 class Atd {
 
   async checkIn(user: User) {
+    console.log("LOG")
     const ts = firebase.firestore.Timestamp.fromDate(new Date())
     firebase.firestore().collection(firestores.atd).doc(`${ts}-${user.displayName}`).set({
       displayName: user.displayName,
