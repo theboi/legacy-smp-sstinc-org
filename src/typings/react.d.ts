@@ -3,7 +3,7 @@ namespace React {
     // extends React's HTMLAttributes
   }
   interface ButtonHTMLAttributes<T> {
-    styleType?: string;
+    styletype?: string;
   }
 }
 
