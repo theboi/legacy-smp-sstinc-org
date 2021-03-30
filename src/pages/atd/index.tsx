@@ -9,15 +9,20 @@ import { FaLock, FaLockOpen } from "react-icons/fa";
 import { fbProvider } from "../../model/fbProvider";
 
 export default function AtdPage(props: { user: User }) {
+
+  const [time, setTime] = useState(0);
   const [key, setKey] = useState(getKeyCode());
   const [code, setCode] = useState([...Array(4)].map(() => ""));
   const [isLocked, setIsLocked] = useState(true);
-  const [isInvalid, setIsInvalid] = useState(false);
+  const [status, setStatus] = useState('Confirm');
 
   const refs = [...Array(4)].map(() => useRef(null));
 
   useEffect(() => {
-    const interval = setInterval(() => setKey(getKeyCode()), 1000);
+    const interval = setInterval(() => {
+      setTime(10 - new Date().getSeconds() % 10)
+      return setKey(getKeyCode())
+    }, 1000);
 
     return () => {
       clearInterval(interval);
@@ -68,14 +73,23 @@ export default function AtdPage(props: { user: User }) {
   function confirmCode() {
     console.log(code.join(""));
     if (code.join("") === getKeyCode()) {
-      fbProvider.atd.checkIn(props.user)
+      /** Handle after writing to Firestore */
+      fbProvider.atd.checkIn(props.user).then(() => {
+        setStatus(`Success`)
+      }).catch(e => {
+        setStatus(`Error`)
+      }).finally(() => {
+        setTimeout(() => {
+          setStatus(`Confirm`)
+        }, 2000);
+      })
     } else {
       /** Code submission cooldown of 2 sec, informs user that code is incorrect */
-      setIsInvalid(true)
+      setStatus(`Invalid`)
       setCode([...Array(4)].map(() => ""))
       refs[0].current.focus()
       setTimeout(() => {
-        setIsInvalid(false)
+        setStatus(`Confirm`)
       }, 2000);
     }
   }
@@ -100,10 +114,17 @@ export default function AtdPage(props: { user: User }) {
             ref={refs[i]}
           />
         ))}
+        <h1>{!isLocked ? time : null}</h1>
       </div>
       <div className={style.buttons}>
-        <button styletype={isInvalid ? "destructive" : "primary"} onClick={confirmCode} disabled={isInvalid || code.join('').length != 4}>
-          {isInvalid ? "Invalid" : "Confirm"}
+        <button styletype={(() => {
+          switch (status) {
+            case `Error`: case `Invalid`: return "destructive"
+            case `Success`: return "success"
+            default: return "primary"
+          }
+        })()} onClick={confirmCode} disabled={!isLocked || status !== "Confirm" || code.join('').length != 4}>
+          {status}
         </button>
         {props.user?.role === UserRole.Admin ? (
           <div className={style.lock}>
@@ -113,7 +134,7 @@ export default function AtdPage(props: { user: User }) {
           </div>
         ) : null}
       </div>
-      <button styletype="secondary">Scan a QR Code instead</button>
+      <button styletype="secondary" disabled>Scan a QR Code instead</button>
     </div>
   );
 }
