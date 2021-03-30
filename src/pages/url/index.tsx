@@ -107,7 +107,7 @@ export default function UrlPage(props: { user: User }) {
             name: nameField ?? "ERROR",
             link: deepLinkField ?? "ERROR",
             suffix: suffixField || newRandomAlias,
-            date: firebase.firestore.Timestamp.fromDate(new Date()),
+            // date: firebase.firestore.Timestamp.fromDate(new Date()),
           })
           .then(() => {
             createdSuffix = suffixField || newRandomAlias;

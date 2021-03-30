@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 
