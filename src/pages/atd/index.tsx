@@ -92,18 +92,18 @@ export default function AtdPage(props: { user: User }) {
         ))}
       </div>
       <div className={style.buttons}>
-        <button styleType="primary" onClick={confirmCode}>
+        <button styletype="primary" onClick={confirmCode}>
           Confirm
         </button>
         {props.user?.role === UserRole.Admin ? (
           <div className={style.lock}>
-            <button styleType="secondary" onClick={toggleLock}>
+            <button styletype="secondary" onClick={toggleLock}>
               {isLocked ? <FaLock /> : <FaLockOpen />}
             </button>
           </div>
         ) : null}
       </div>
-      <button styleType="tertiary">Scan a QR Code instead</button>
+      <button styletype="tertiary">Scan a QR Code instead</button>
     </div>
   );
 }
