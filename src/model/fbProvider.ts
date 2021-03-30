@@ -4,6 +4,8 @@ import "firebase/firestore";
 import "firebase/analytics";
 import { User } from "./user";
 
+// https://firebase.google.com/docs/rules/basics
+
 const firebaseConfig = {
   apiKey: process.env.GOOGLE_API_KEY,
   authDomain: "smp-sstinc-org.firebaseapp.com",
@@ -67,12 +69,14 @@ class Auth {
 class Atd {
 
   async checkIn(user: User) {
-    console.log("LOG")
     const ts = firebase.firestore.Timestamp.fromDate(new Date())
-    firebase.firestore().collection(firestores.atd).doc(`${ts}-${user.displayName}`).set({
+    const jsDate = ts.toDate()
+    return firebase.firestore().collection(firestores.atd).doc(`${jsDate.getDay()}-${jsDate.getMonth()+1}-${jsDate.getFullYear()}-${user.displayName}`).set({
       displayName: user.displayName,
       email: user.email,
       timestamp: ts,
+    }).catch(e => {
+      console.error("Atd: ", e)
     })
   }
 

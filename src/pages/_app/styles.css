@@ -144,6 +144,11 @@ button[styletype=primary] {
   background: linear-gradient(110deg, #030030 0%, #030030 50%, #00a4ff 50%, #0088ff 100%);
 }
 
+button[styletype=success] {
+  color: #fff;
+  background: linear-gradient(110deg, #003002 0%, #003002 50%, #00c23a 50%, #00a81c 100%);
+}
+
 button[styletype=destructive] {
 	color: #fff;
   background: linear-gradient(110deg, #300000 0%, #300000 50%, #ff3c00 50%, #ff0000 100%);
@@ -154,7 +159,12 @@ button[styletype=tertiary] {
 }
 
 button:disabled {
+  cursor: not-allowed;
   filter: brightness(70%) !important;
+}
+
+button[styletype=tertiary]:disabled, button[styletype=secondary]:disabled {
+  filter: brightness(90%) !important;
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
