@@ -5,7 +5,7 @@ import style from "./style.module.css";
 export default function HomePage() {
   return (
     <div className={style.main}>
-      <h3>SST Inc Management Process (SMP)</h3>
+      <h3>SST Inc Management Platform (SMP)</h3>
       <p>
         Only for use by SST Inc Executive Committee (ExCo) and Board Of
         Directors (BOD). Your attendance data will be recorded in the SST Inc

@@ -13,11 +13,11 @@ export default function NavBar(props: { links: NavLink[] }) {
   const router = useRouter();
 
   return (
-    <nav className={style.main}>
+    <nav className={style.main} preset="shadow">
       {props.links.map((link, i) => {
         return (
           <button
-            styletype="tertiary"
+            preset="tertiary"
             key={i}
             onClick={
               typeof link.action == "string" || link.action instanceof String

@@ -117,7 +117,7 @@ export default function AtdPage(props: { user: User }) {
         <h1>{!isLocked ? time : null}</h1>
       </div>
       <div className={style.buttons}>
-        <button styletype={(() => {
+        <button preset={(() => {
           switch (status) {
             case `Error`: case `Invalid`: return "destructive"
             case `Success`: return "success"
@@ -128,13 +128,13 @@ export default function AtdPage(props: { user: User }) {
         </button>
         {props.user?.role === UserRole.Admin ? (
           <div className={style.lock}>
-            <button styletype="secondary" onClick={toggleLock}>
+            <button preset="secondary" onClick={toggleLock}>
               {isLocked ? <FaLock /> : <FaLockOpen />}
             </button>
           </div>
         ) : null}
       </div>
-      <button styletype="secondary" disabled>Scan a QR Code instead</button>
+      <button preset="secondary" disabled>Scan a QR Code instead</button>
     </div>
   );
 }

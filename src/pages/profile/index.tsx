@@ -11,11 +11,11 @@ export default function ProfilePage(props: { user: User }) {
     <div className={style.main}>
       <p>{props.user?.email}</p>
       {props.user === null ? (
-        <button styletype="primary" onClick={fbProvider.signIn}>
+        <button preset="primary" onClick={fbProvider.auth.signIn}>
           Sign In
         </button>
       ) : (
-        <button styletype="destructive" onClick={fbProvider.signOut}>
+        <button preset="destructive" onClick={fbProvider.auth.signOut}>
           Sign Out
         </button>
       )}

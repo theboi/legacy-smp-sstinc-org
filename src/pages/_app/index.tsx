@@ -60,15 +60,15 @@ export default function App({ Component, pageProps }: AppProps) {
           />
         </a>
         <div className={style.sideSplit}>
-          <div className={style.shadowBox}>
+          <div preset="shadow">
             <div className={style.content}>
             {isAuth() ? (
               <Component {...pageProps} user={user} />
             ) : (
               <ErrorPage status={403}/>
             )}
-            </div>
             <LoadingOverlay ref={loadingOverlayRef} />
+            </div>
           </div>
           <NavBar links={[
             {
