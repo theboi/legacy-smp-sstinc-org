@@ -7,7 +7,9 @@
 
 .sideSplit {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: row;
+  /* for ham */
+  position: relative;
 }
 
 .content {
@@ -63,8 +65,48 @@
   text-decoration: underline;
 }
 
+/* Ham/Nav */
+
+.ham {
+  font-size: 30px;
+  padding: 10px;
+  position: absolute;
+  z-index: 10;
+  top: -30px;
+  right: 10px;
+  width: fit-content;
+}
+
+.nav {
+  max-height: 1000px;
+  transition: all 250ms ease-in-out;
+  position: absolute;
+  right: 0;
+  top: 30px;
+  width: 70px;
+  overflow: hidden;
+}
+
+.isClose ~ .nav {
+  max-height: 0;
+  box-shadow: none;
+}
+
+.navLink {
+  padding: 10px;
+}
+
+.navLink svg {
+  font-size: 20px;
+}
+
+
 @media screen and (min-width: 768px)  {
-  .sideSplit {
-    flex-direction: row;
+  .ham {
+    display: none;
+  }
+  
+  .nav {
+    position: unset;
   }
 }

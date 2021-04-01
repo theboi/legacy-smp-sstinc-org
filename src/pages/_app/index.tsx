@@ -4,12 +4,11 @@ import "./styles.css";
 import style from "./style.module.css";
 import Head from "next/head";
 
-import { FaClipboardCheck, FaClipboardList, FaHome, FaLink, FaSignInAlt } from "react-icons/fa";
+import { FaBars, FaClipboardCheck, FaClipboardList, FaHome, FaLink, FaSignInAlt, FaTimes } from "react-icons/fa";
 import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
 import { useRouter } from "next/router";
 import ErrorPage from "../404";
-import NavBar from "../../components/navbar";
 
 export default function App({ Component, pageProps }: AppProps) {
 
@@ -69,7 +68,7 @@ export default function App({ Component, pageProps }: AppProps) {
             )}
             <LoadingOverlay ref={loadingOverlayRef} />
             </div>
-          </div>
+          </div>            
           <NavBar links={[
             {
               icon: user === null ? <FaSignInAlt /> : <img src={user.photoURL} height={40} style={{borderRadius: 10}}/>,
@@ -88,35 +87,73 @@ export default function App({ Component, pageProps }: AppProps) {
               action: '/atd'
             },
           ]}/>
-        </div>
-        <div className={style.credits}>
-          <p>
-            Made with ♥ by{" "}
-            <a
-              href="https://www.ryanthe.com"
-              target="_blank"
-              className={style.link}
-            >
-              Ryan The
-            </a>{" "}
-            from SST Inc, 2020, v2.0.0.
-          </p>
-          <p>
-            Open sourced on{" "}
-            <a
-              href="https://github.com/theboi/go-sstinc-org"
-              target="_blank"
-              className={style.link}
-            >
-              GitHub
-            </a>
-            .{" "}
-          </p>
-        </div>
+          </div>
+        <Credits />
       </div>
     </>
   );
 }
+
+interface NavLink {
+  icon: React.ReactNode; // Allows for any FontAwesome icon or other React element like images
+  action: (() => void) | string;
+}
+
+const NavBar = (props: { links: NavLink[] }) => {
+
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+    <button className={`${style.ham} ${!isOpen ? style.isClose : null}`} preset="shadow" onClick={() => setIsOpen(c => !c)}>{isOpen ? <FaTimes /> : <FaBars />}</button>
+    <nav className={style.nav} preset="shadow">
+      {props.links.map((link, i) => {
+        return (
+          <button
+            preset="tertiary"
+            key={i}
+            onClick={
+              typeof link.action == "string" || link.action instanceof String
+                ? () => router.push(link.action as string)
+                : link.action
+            }
+            className={style.navLink}
+          >
+            {link.icon}       
+          </button>
+        );
+      })}
+    </nav>
+    </>
+  )
+}
+
+const Credits = () => <div className={style.credits}>
+<p>
+  Made with ♥ by{" "}
+  <a
+    href="https://www.ryanthe.com"
+    target="_blank"
+    className={style.link}
+  >
+    Ryan The
+  </a>{" "}
+  from SST Inc, 2020, v2.0.0.
+</p>
+<p>
+  Open sourced on{" "}
+  <a
+    href="https://github.com/theboi/go-sstinc-org"
+    target="_blank"
+    className={style.link}
+  >
+    GitHub
+  </a>
+  .{" "}
+</p>
+</div>
+
 
 const LoadingOverlay = React.forwardRef(
   (_, ref: React.MutableRefObject<HTMLDivElement>) => (

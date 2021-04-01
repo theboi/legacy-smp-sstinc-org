@@ -39,7 +39,6 @@ export default function AtdPage(props: { user: User }) {
           t[i] = "";
           return t;
         });
-        
         break;
       case e.keyCode === 37: // leftArrow
         refs[i - 1]?.current.focus();
