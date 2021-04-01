@@ -89,11 +89,11 @@
 
 .isClose ~ .nav {
   max-height: 0;
-  box-shadow: none;
 }
 
 .navLink {
   padding: 10px;
+  box-shadow: 0px;
 }
 
 .navLink svg {
@@ -107,6 +107,8 @@
   }
   
   .nav {
+    max-height: unset !important;
+    box-shadow: inset !important;
     position: unset;
   }
 }
