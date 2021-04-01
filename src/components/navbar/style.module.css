@@ -1,13 +1,13 @@
 .main {
   display: flex;
   flex-direction: column;
+  width: 70px;
+}
+
+.navLink {
+  padding: 10px;
 }
 
 .navLink svg {
-  font-size: 25px;
-  opacity: 0.5;
-}
-
-.navLink:hover svg {
-  opacity: 1;
+  font-size: 20px;
 }
