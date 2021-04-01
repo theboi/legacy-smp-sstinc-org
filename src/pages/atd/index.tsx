@@ -33,12 +33,13 @@ export default function AtdPage(props: { user: User }) {
     e.persist();
     switch (true) {
       case e.keyCode === 8: // backspace
-        setCode((c) => {
+        if (code[i] === "") refs[i - 1]?.current.focus();
+        else setCode((c) => {
           const t = [...c];
           t[i] = "";
           return t;
         });
-        refs[i - 1]?.current.focus();
+        
         break;
       case e.keyCode === 37: // leftArrow
         refs[i - 1]?.current.focus();
@@ -109,8 +110,10 @@ export default function AtdPage(props: { user: User }) {
             className={style.number}
             key={i}
             value={n}
-            readOnly
+            // readOnly
             onKeyDown={(e) => manageKeyDown(e, i)}
+            /** Required so React does not throw an error for missing onChange/readOnly */
+            onChange={() => {}}
             ref={refs[i]}
           />
         ))}
