@@ -101,7 +101,8 @@ export default function AtdPage(props: { user: User }) {
   return (
     <div className={style.main}>
       <h3>Attendance</h3>
-      <p>Kindly enter the 4 digit code provided to check-in to SST Inc.</p>
+      <p>Kindly enter the 4 digit code provided to check-in to SST Inc. Your attendance data will be recorded in the SST Inc
+        Attendance Database (SAD).</p>
       <div className={style.code}>
         {(isLocked ? code : key.split("")).map((n, i) => (
           <input

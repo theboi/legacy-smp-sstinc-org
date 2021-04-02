@@ -9,6 +9,12 @@ import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
 import { useRouter } from "next/router";
 import ErrorPage from "../404";
+import ProfilePage from "../profile";
+
+const paths: { [key: string]: UserRole; } = {
+  "/url": UserRole.Admin,
+  "/atd": UserRole.Trainee,
+}
 
 export default function App({ Component, pageProps }: AppProps) {
 
@@ -32,11 +38,8 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [user]);
 
   function isAuth(): boolean {
-    if (router.pathname !== '/url') return true
-    switch (fbProvider.auth.currentUser?.role) {
-      case UserRole.Admin: return true
-      default: return false
-    }
+    if (paths[router.pathname] >= user?.role) return true
+    else return false
   }
 
   return (
@@ -61,11 +64,12 @@ export default function App({ Component, pageProps }: AppProps) {
         <div className={style.sideSplit}>
           <div preset="shadow">
             <div className={style.content}>
-            {isAuth() ? (
-              <Component {...pageProps} user={user} />
-            ) : (
-              <ErrorPage status={403}/>
-            )}
+              {(() => {
+                if (paths[router.pathname] === undefined) return <Component {...pageProps} user={user} />
+                else if (user?.role === undefined) return <ProfilePage user={user}/>
+                else if (isAuth()) return <Component {...pageProps} user={user} />
+                else return <ErrorPage status={403}/>
+              })()}
             <LoadingOverlay ref={loadingOverlayRef} />
             </div>
           </div>            

@@ -1,17 +1,25 @@
 import React from "react";
+import { fbProvider } from "../../model/fbProvider";
+import { User } from "../../model/user";
 
 import style from "./style.module.css";
 
-export default function HomePage() {
+export default function HomePage(props: { user: User }) {
   return (
     <div className={style.main}>
       <h3>SST Inc Management Platform (SMP)</h3>
       <p>
-        Only for use by SST Inc Executive Committee (ExCo) and Board Of
-        Directors (BOD). Your attendance data will be recorded in the SST Inc
-        Attendance Database (SAD).
+        SST Inc Management Platform is a unified platform for SST Inc managerial
+        matters including the attendance taker and URL shortener.
       </p>
-      <p>Please use your SST Google Account to sign in.</p>
+      {props.user === null ? (
+        <>
+          <p>Please use your SST Google Account to sign in.</p>
+          <button preset="primary" onClick={fbProvider.auth.signIn}>
+            Sign In
+          </button>
+        </>
+      ) : null}
     </div>
-  )
+  );
 }
