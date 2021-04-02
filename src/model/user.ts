@@ -31,8 +31,15 @@ const admins = [
 ];
 
 export enum UserRole {
-  Admin = "Admin",
-  Member = "Member",
+  /** Access Roles: 100-199 */
+  Admin = 101,
+  Employee = 196,
+  Trainee = 197,
+  Banned = 198,
+  Alien = 199,
+
+  /** Incentive Roles: 200-299 */
+  Simp = 201,
 }
 
 export class User {
@@ -42,12 +49,12 @@ export class User {
 
   private _fbUser: firebase.User;
 
-  get role(): string {
+  get role(): number {
     switch (true) {
       case admins.includes(this._fbUser?.email):
         return UserRole.Admin;
       default:
-        return UserRole.Member;
+        return UserRole.Alien;
     }
   }
 
