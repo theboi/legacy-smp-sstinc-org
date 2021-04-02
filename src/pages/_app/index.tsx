@@ -131,7 +131,7 @@ const NavBar = (props: { links: NavLink[] }) => {
 
 const Credits = () => <div className={style.credits}>
 <p>
-  Made with ♥ by{" "}
+  Made with ♥&#xFE0E; by{" "}
   <a
     href="https://www.ryanthe.com"
     target="_blank"
@@ -139,12 +139,12 @@ const Credits = () => <div className={style.credits}>
   >
     Ryan The
   </a>{" "}
-  from SST Inc, 2020, v2.0.0.
+  from SST Inc, 2021, v2.0.0.
 </p>
 <p>
   Open sourced on{" "}
   <a
-    href="https://github.com/theboi/go-sstinc-org"
+    href="https://github.com/theboi/smp-sstinc-org"
     target="_blank"
     className={style.link}
   >
