@@ -91,6 +91,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+img {
+  vertical-align: middle;
+}
+
 /* /////////////////////////////////////////////////////////////////////////////
 Defaults
 //////////////////////////////////////////////////////////////////////////////*/
@@ -176,6 +180,13 @@ button:disabled {
 
 button[preset=tertiary]:disabled, button[preset=secondary]:disabled {
   filter: brightness(90%) !important;
+}
+
+/* figure */
+
+figcaption {
+  color: #646464;
+  font-size: 13px;
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
