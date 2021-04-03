@@ -29,7 +29,7 @@ class Auth {
     /** Updates currentUser on login/logout */
     firebase.auth().onIdTokenChanged(async (fbUser) => {
       const user = await new User().initialized(fbUser)
-      this.currentUser = user === null ? null : user
+      this.currentUser = fbUser === null ? null : user
     })
   }
 
@@ -45,12 +45,11 @@ class Auth {
 
   /** Call method when sign in, remember to call checkForAuth when loading page from redirect. */
   async signIn() {
-    let provider = new firebase.auth.GoogleAuthProvider();
     await firebase
       .auth()
       .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(() => {
-        return firebase.auth().signInWithRedirect(provider);
+        return firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider());
       })
       .catch(function (error) {
         console.error(`${error.message} (signInWithRedirect)`);
@@ -85,9 +84,16 @@ class Atd {
       displayName: user.displayName,
       email: user.email,
       timestamp: ts,
+      iid: user.iid
     }).catch(e => {
       console.error("Atd: ", e)
     })
+  }
+
+  async getUsers() {
+    return await firebase.firestore().collection(firestores.atd)
+    .orderBy("timestamp", "desc")
+    .get()
   }
 
 }
