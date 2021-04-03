@@ -86,10 +86,7 @@ class Atd {
 class Url {
 
   async urlForSuffix(suffix: string): Promise<firebase.firestore.DocumentSnapshot> {
-    return firebase.firestore().collection(firestores.url).doc(suffix).get().then((doc) => {
-      console.log(doc.data())
-      return doc
-    }).catch(e => {
+    return firebase.firestore().collection(firestores.url).doc(suffix).get().catch(e => {
       console.error("Url: ", e)
       return e
     })

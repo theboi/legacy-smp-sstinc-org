@@ -6,10 +6,24 @@
 
 .errorCode {
   font-size: 100px;
+  line-height: 100px;
 }
 
 .img {
   width: 100%;
   max-width: 300px;
   border-radius: 10px;
+}
+
+.fig {
+  position: relative;
+}
+
+.cap {
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 10px 0 10px 0;
+  padding: 3px 5px;
 }
