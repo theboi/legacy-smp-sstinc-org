@@ -20,14 +20,16 @@ const firebaseConfig = {
 const firestores = {
   atd: "atd",
   url: "url",
+  users: "users"
 }
 
 class Auth {
   
   constructor() {
     /** Updates currentUser on login/logout */
-    firebase.auth().onIdTokenChanged((user) => {
-      this.currentUser = user === null ? null : new User(user)
+    firebase.auth().onIdTokenChanged(async (fbUser) => {
+      const user = await new User().initialized(fbUser)
+      this.currentUser = user === null ? null : user
     })
   }
 
@@ -35,7 +37,10 @@ class Auth {
 
   /** Helper method to allow external files such as for useState to be updated */
   addIdTokenChangedListener(callback: (user: User) => void) {
-    firebase.auth().onIdTokenChanged((user) => callback(user === null ? null : new User(user)))
+    firebase.auth().onIdTokenChanged(async (fbUser) => {
+      const user = await new User().initialized(fbUser)
+      callback(fbUser === null ? null : user)
+    })
   }
 
   /** Call method when sign in, remember to call checkForAuth when loading page from redirect. */
@@ -63,6 +68,10 @@ class Auth {
   
   async signOut() {
     await firebase.auth().signOut()
+  }
+
+  async getUserData(email: string) {
+    return firebase.firestore().collection(firestores.users).doc(email).get()
   }
 
 }

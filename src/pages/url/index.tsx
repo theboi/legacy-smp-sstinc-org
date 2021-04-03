@@ -26,7 +26,7 @@ export default function UrlPage(props: { user: User }) {
   nameField = suffixField = deepLinkField = "";
 
   useEffect(() => {
-    if (props.user?.role != UserRole.Admin) console.log("oop");
+    if (props.user?.role != UserRole.ExCo) console.log("oop");
   }, [props.user]);
 
   function createUrl() {
@@ -97,7 +97,7 @@ export default function UrlPage(props: { user: User }) {
         return randomAlias;
       };
 
-      if (props.user?.role === UserRole.Admin) {
+      if (props.user?.role === UserRole.ExCo) {
         const newRandomAlias = genRandAlias();
         firebase
           .firestore()

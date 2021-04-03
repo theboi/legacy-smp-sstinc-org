@@ -72,17 +72,18 @@
   padding: 10px;
   position: absolute;
   z-index: 10;
-  top: -30px;
+  top: -40px;
   right: 10px;
   width: fit-content;
+  line-height: 10px;
 }
 
 .nav {
   max-height: 1000px;
   transition: all 250ms ease-in-out;
   position: absolute;
-  right: 0;
-  top: 30px;
+  right: 10px;
+  top: 10px;
   width: 70px;
   overflow: hidden;
 }
@@ -91,13 +92,8 @@
   max-height: 0;
 }
 
-.navLink {
-  padding: 10px;
-  box-shadow: 0px;
-}
-
 .navLink svg {
-  font-size: 20px;
+  font-size: 28px;
 }
 
 
@@ -110,5 +106,9 @@
     max-height: unset !important;
     box-shadow: inset !important;
     position: unset;
+  }
+
+  .navLink svg {
+    font-size: 20px;
   }
 }

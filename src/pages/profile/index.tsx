@@ -3,21 +3,34 @@ import React from "react";
 import style from "./style.module.css";
 
 import { fbProvider } from "../../model/fbProvider";
-import { User } from "../../model/user";
+import { User, UserRole } from "../../model/user";
 
 export default function ProfilePage(props: { user: User }) {
-  console.log(props.user)
+  console.log(Object.keys(User));
   return (
     <div className={style.main}>
-      <p>{props.user?.email}</p>
       {props.user === null ? (
         <button preset="primary" onClick={fbProvider.auth.signIn}>
           Sign In
         </button>
       ) : (
-        <button preset="destructive" onClick={fbProvider.auth.signOut}>
-          Sign Out
-        </button>
+        <>
+          <div>
+            <img
+              src={props.user?.photoURL}
+              alt={props.user?.displayName}
+              className={style.pfp}
+            />
+            <div>
+              <h3>{props.user?.displayName}</h3>
+              <p>{props.user?.email}</p>
+            </div>
+          </div>
+          <p className={style.rbadge}>{UserRole[props.user?.role]}</p>
+          <button preset="destructive" onClick={fbProvider.auth.signOut}>
+            Sign Out
+          </button>
+        </>
       )}
     </div>
   );
