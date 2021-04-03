@@ -12,7 +12,7 @@ import ErrorPage from "../404";
 import ProfilePage from "../profile";
 
 const paths: { [key: string]: UserRole; } = {
-  "/url": UserRole.Admin,
+  "/url": UserRole.ExCo,
   "/atd": UserRole.Trainee,
 }
 

@@ -129,7 +129,7 @@ export default function AtdPage(props: { user: User }) {
         })()} onClick={confirmCode} disabled={!isLocked || status !== "Confirm" || code.join('').length != 4}>
           {status}
         </button>
-        {props.user?.role === UserRole.Admin ? (
+        {props.user?.role === UserRole.ExCo ? (
           <div className={style.lock}>
             <button preset="secondary" onClick={toggleLock}>
               {isLocked ? <FaLock /> : <FaLockOpen />}
