@@ -18,7 +18,8 @@ const firebaseConfig = {
 };
 
 const firestores = {
-  atd: "atd"
+  atd: "atd",
+  url: "url",
 }
 
 class Auth {
@@ -82,6 +83,20 @@ class Atd {
 
 }
 
+class Url {
+
+  async urlForSuffix(suffix: string): Promise<firebase.firestore.DocumentSnapshot> {
+    return firebase.firestore().collection(firestores.url).doc(suffix).get().then((doc) => {
+      console.log(doc.data())
+      return doc
+    }).catch(e => {
+      console.error("Url: ", e)
+      return e
+    })
+  }
+
+}
+
 class FBProvider {
 
   /**
@@ -92,12 +107,14 @@ class FBProvider {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     this.auth = new Auth()
     this.atd = new Atd()
+    this.url = new Url()
   }
   
   // analytics = (): firebase.analytics.Analytics => firebase.analytics();
 
   auth: Auth
   atd: Atd
+  url: Url
 
   static get instance(): FBProvider {
     return fbProvider
