@@ -97,7 +97,7 @@ export default function UrlPage(props: { user: User }) {
         return randomAlias;
       };
 
-      if (props.user?.role === UserRole.ExCo) {
+      if (props.user?.role >= UserRole.ExCo) {
         const newRandomAlias = genRandAlias();
         firebase
           .firestore()
@@ -131,7 +131,7 @@ export default function UrlPage(props: { user: User }) {
           onChange={(event) => {
             nameField = event.target.value;
           }}
-          onKeyUp={(event) => {
+          onKeyDown={(event) => {
             if (event.keyCode === 13) {
               event.preventDefault();
               deepLinkFieldRef.current.focus();
@@ -144,7 +144,7 @@ export default function UrlPage(props: { user: User }) {
           onChange={(event) => {
             deepLinkField = event.target.value;
           }}
-          onKeyUp={(event) => {
+          onKeyDown={(event) => {
             if (event.keyCode === 13) {
               event.preventDefault();
               suffixFieldRef.current.focus();
@@ -157,7 +157,7 @@ export default function UrlPage(props: { user: User }) {
           onChange={(event) => {
             suffixField = event.target.value;
           }}
-          onKeyUp={(event) => {
+          onKeyDown={(event) => {
             if (event.keyCode === 13) {
               event.preventDefault();
               createUrl()

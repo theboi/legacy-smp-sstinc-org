@@ -6,7 +6,7 @@ export default function LabelField(props: {
   label: string;
   placeholder: string;
   onChange: (e) => void;
-  onKeyUp: (e) => void;
+  onKeyDown: (e) => void;
   leftDetail?: React.ReactNode;
   rightDetail?: React.ReactNode;
 }) {
@@ -20,7 +20,7 @@ export default function LabelField(props: {
           type="text"
           placeholder={props.placeholder}
           onChange={props.onChange}
-          onKeyUp={props.onKeyUp}
+          onKeyDown={props.onKeyDown}
         />
         {props.rightDetail}
       </div>

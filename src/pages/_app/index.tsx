@@ -27,6 +27,10 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     fbProvider.auth.addIdTokenChangedListener((user: User) => {
       setUser(user);
+      // console.log(user)
+      // if (user?.iid !== undefined && user?.role === UserRole.Alien) {
+      //   router.replace('/update')
+      // }
     });
   }, [])
 
@@ -38,7 +42,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [user]);
 
   function isAuth(): boolean {
-    if (paths[router.pathname] >= user?.role) return true
+    if (user?.role >= paths[router.pathname]) return true
     else return false
   }
 

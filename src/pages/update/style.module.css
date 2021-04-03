@@ -1,0 +1,12 @@
+.pfp {
+  max-width: 100px;
+  border-radius: 100px;
+}
+
+.rbadge {
+  text-transform: uppercase;
+  padding: 7px;
+  justify-self: normal;
+  background-color: #ffc4c4;
+  color: #ff5757;
+}
