@@ -1,4 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap');
+@font-face {
+  font-family: 'Menlo';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Menlo'), url('../../../public/fonts/Menlo.woff') format('woff');
+  }
 /* /////////////////////////////////////////////////////////////////////////////
 Variables
 //////////////////////////////////////////////////////////////////////////////*/
@@ -130,7 +136,6 @@ input:focus {
 }
 
 /* button */
-
 button {
   transition: all 100ms ease-in-out;
   padding: 10px;
@@ -183,10 +188,18 @@ button[preset=tertiary]:disabled, button[preset=secondary]:disabled {
 }
 
 /* figure */
-
 figcaption {
   color: #646464;
   font-size: 13px;
+}
+
+/* code */
+code {
+  font-family: 'Menlo', monospace;
+}
+
+/* a */
+a {
 }
 
 /* /////////////////////////////////////////////////////////////////////////////

@@ -5,6 +5,14 @@
   text-align: left;
 }
 
+.alert {
+  background-color: #ff4444;
+  color: #fff;
+  align-self: stretch;
+  text-align: center;
+  padding: 10px;
+}
+
 .sideSplit {
   display: flex;
   flex-direction: row;
