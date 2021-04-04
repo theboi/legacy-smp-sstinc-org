@@ -4,26 +4,39 @@ import "./styles.css";
 import style from "./style.module.css";
 import Head from "next/head";
 
-import { FaBars, FaClipboardCheck, FaClipboardList, FaHome, FaLink, FaSignInAlt, FaTimes } from "react-icons/fa";
+import {
+  FaBars,
+  FaClipboardCheck,
+  FaClipboardList,
+  FaHome,
+  FaLink,
+  FaSignInAlt,
+  FaTimes,
+} from "react-icons/fa";
 import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
 import { useRouter } from "next/router";
 import ErrorPage from "../404";
 import ProfilePage from "../profile";
 
-const paths: { [key: string]: UserRole; } = {
+const paths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
   "/atd": UserRole.Trainee,
-}
+};
 
 export default function App({ Component, pageProps }: AppProps) {
-
-  const router = useRouter()
+  const router = useRouter();
 
   let loadingOverlayRef = useRef(null);
 
   const [user, setUser] = useState<User>(null);
+  const [hostname, setHostname] = useState("")
 
+  useEffect(() => {
+    if (window) {
+      setHostname(window.location.hostname)
+    }
+  })
   useEffect(() => {
     fbProvider.auth.addIdTokenChangedListener((user: User) => {
       setUser(user);
@@ -32,7 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
       //   router.replace('/update')
       // }
     });
-  }, [])
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -42,8 +55,8 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [user]);
 
   function isAuth(): boolean {
-    if (user?.role >= paths[router.pathname]) return true
-    else return false
+    if (user?.role >= paths[router.pathname]) return true;
+    else return false;
   }
 
   return (
@@ -57,6 +70,18 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
       <div className={style.main}>
+        {hostname === "go.sstinc.org" || hostname === "qr.sstinc.org" || hostname === "localhost" ? (
+          <div className={style.alert}>
+          <p>
+            <code>go.sstinc.org</code> and <code>qr.sstinc.org</code> will
+            cease operation beginning June 2021. Please use the new unified{" "}
+            <a href="https://smp.sstinc.org">
+              <code>smp.sstinc.org</code>
+            </a>{" "}
+            instead.
+          </p>
+        </div>
+        ) : null}
         <a href="https://sstinc.org" rel="noreferrer noopener" target="_blank">
           <img
             src="/assets/sstinc-icon.png"
@@ -69,33 +94,47 @@ export default function App({ Component, pageProps }: AppProps) {
           <div preset="shadow">
             <div className={style.content}>
               {(() => {
-                if (paths[router.pathname] === undefined) return <Component {...pageProps} user={user} />
-                else if (user?.role === undefined) return <ProfilePage user={user}/>
-                else if (isAuth()) return <Component {...pageProps} user={user} />
-                else return <ErrorPage status={403}/>
+                if (paths[router.pathname] === undefined)
+                  return <Component {...pageProps} user={user} />;
+                else if (user?.role === undefined)
+                  return <ProfilePage user={user} />;
+                else if (isAuth())
+                  return <Component {...pageProps} user={user} />;
+                else return <ErrorPage status={403} />;
               })()}
-            <LoadingOverlay ref={loadingOverlayRef} />
+              <LoadingOverlay ref={loadingOverlayRef} />
             </div>
-          </div>            
-          <NavBar links={[
-            {
-              icon: user === null ? <FaSignInAlt /> : <img src={user.photoURL} height={40} style={{borderRadius: 10}}/>,
-              action: user === null ? fbProvider.auth.signIn : '/profile'
-            },
-            {
-              icon: <FaHome />,
-              action: '/home'
-            },
-            {
-              icon: <FaLink />,
-              action: '/url'
-            },
-            {
-              icon: <FaClipboardList /> /* <FaClipboardCheck /> */,
-              action: '/atd'
-            },
-          ]}/>
           </div>
+          <NavBar
+            links={[
+              {
+                icon:
+                  user === null ? (
+                    <FaSignInAlt />
+                  ) : (
+                    <img
+                      src={user.photoURL}
+                      height={40}
+                      style={{ borderRadius: 10 }}
+                    />
+                  ),
+                action: user === null ? fbProvider.auth.signIn : "/profile",
+              },
+              {
+                icon: <FaHome />,
+                action: "/home",
+              },
+              {
+                icon: <FaLink />,
+                action: "/url",
+              },
+              {
+                icon: <FaClipboardList /> /* <FaClipboardCheck /> */,
+                action: "/atd",
+              },
+            ]}
+          />
+        </div>
         <Credits />
       </div>
     </>
@@ -108,60 +147,62 @@ interface NavLink {
 }
 
 const NavBar = (props: { links: NavLink[] }) => {
-
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-    <button className={`${style.ham} ${!isOpen ? style.isClose : null}`} preset="shadow" onClick={() => setIsOpen(c => !c)}>{isOpen ? <FaTimes /> : <FaBars />}</button>
-    <nav className={style.nav} preset="shadow">
-      {props.links.map((link, i) => {
-        return (
-          <button
-            preset="tertiary"
-            key={i}
-            onClick={
-              typeof link.action == "string" || link.action instanceof String
-                ? () => router.push(link.action as string)
-                : link.action
-            }
-            className={style.navLink}
-          >
-            {link.icon}       
-          </button>
-        );
-      })}
-    </nav>
+      <button
+        className={`${style.ham} ${!isOpen ? style.isClose : null}`}
+        preset="shadow"
+        onClick={() => setIsOpen((c) => !c)}
+      >
+        {isOpen ? <FaTimes /> : <FaBars />}
+      </button>
+      <nav className={style.nav} preset="shadow">
+        {props.links.map((link, i) => {
+          return (
+            <button
+              preset="tertiary"
+              key={i}
+              onClick={
+                typeof link.action == "string" || link.action instanceof String
+                  ? () => router.push(link.action as string)
+                  : link.action
+              }
+              className={style.navLink}
+            >
+              {link.icon}
+            </button>
+          );
+        })}
+      </nav>
     </>
-  )
-}
+  );
+};
 
-const Credits = () => <div className={style.credits}>
-<p>
-  Made with ♥&#xFE0E; by{" "}
-  <a
-    href="https://www.ryanthe.com"
-    target="_blank"
-    className={style.link}
-  >
-    Ryan The
-  </a>{" "}
-  from SST Inc, 2021, v2.0.0.
-</p>
-<p>
-  Open sourced on{" "}
-  <a
-    href="https://github.com/theboi/smp-sstinc-org"
-    target="_blank"
-    className={style.link}
-  >
-    GitHub
-  </a>
-  .{" "}
-</p>
-</div>
-
+const Credits = () => (
+  <div className={style.credits}>
+    <p>
+      Made with ♥&#xFE0E; by{" "}
+      <a href="https://www.ryanthe.com" target="_blank" className={style.link}>
+        Ryan The
+      </a>{" "}
+      from SST Inc, 2021, v2.0.0.
+    </p>
+    <p>
+      Open sourced on{" "}
+      <a
+        href="https://github.com/theboi/smp-sstinc-org"
+        target="_blank"
+        className={style.link}
+      >
+        GitHub
+      </a>
+      .{" "}
+    </p>
+  </div>
+);
 
 const LoadingOverlay = React.forwardRef(
   (_, ref: React.MutableRefObject<HTMLDivElement>) => (
