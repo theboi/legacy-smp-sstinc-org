@@ -15,8 +15,9 @@ export default function AtdPage(props: { user: User }) {
   const [code, setCode] = useState([...Array(4)].map(() => ""));
   const [isLocked, setIsLocked] = useState(true);
   const [status, setStatus] = useState('Confirm');
+  const [debug, setDebug] = useState('')
 
-  const refs = [...Array(4)].map(() => useRef(null));
+  const refs: React.MutableRefObject<HTMLInputElement>[] = [...Array(4)].map(() => useRef(null));
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,16 +30,10 @@ export default function AtdPage(props: { user: User }) {
     };
   }, []);
 
-  function manageKeyDown(e: React.KeyboardEvent<HTMLInputElement>, i: number) {
-    e.persist();
+  function onCodeKeyDown(e: React.KeyboardEvent<HTMLInputElement>, i: number) {
     switch (true) {
       case e.keyCode === 8: // backspace
         if (code[i] === "") refs[i - 1]?.current.focus();
-        else setCode((c) => {
-          const t = [...c];
-          t[i] = "";
-          return t;
-        });
         break;
       case e.keyCode === 37: // leftArrow
         refs[i - 1]?.current.focus();
@@ -50,15 +45,28 @@ export default function AtdPage(props: { user: User }) {
       case e.keyCode === 39: // rightArrow
         refs[i + 1]?.current.focus()
         break;
-      case (e.keyCode >= 48 && e.keyCode <= 57) ||
-        (e.keyCode >= 65 && e.keyCode <= 90): // alphanumeric
-        setCode((c) => {
-          const t = [...c];
-          t[i] = String.fromCharCode(e.keyCode);
-          return t;
-        });
-        refs[i + 1]?.current?.focus()
-        break;
+    }
+  }
+
+  function onCodeChange(e: React.ChangeEvent<HTMLInputElement>, i: number) {
+    const val = e.target.value
+    const newChar = val.charAt(val.length - 1)
+    const charCode = newChar.charCodeAt(0);
+
+    if (newChar === "") { // backspace
+      setCode((c) => {
+        const t = [...c];
+        t[i] = "";
+        return t;
+      });
+      // refs[i - 1]?.current?.focus()
+    } else if ((charCode >= 48 && charCode <= 57) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122)) {
+      setCode((c) => {
+        const t = [...c];
+        t[i] = newChar.toUpperCase();
+        return t;
+      });
+      refs[i + 1]?.current?.focus()
     }
   }
 
@@ -71,7 +79,6 @@ export default function AtdPage(props: { user: User }) {
   }
 
   function confirmCode() {
-    console.log(code.join(""));
     if (code.join("") === getKeyCode()) {
       /** Handle after writing to Firestore */
       fbProvider.atd.checkIn(props.user).then(() => {
@@ -103,18 +110,18 @@ export default function AtdPage(props: { user: User }) {
       <h3>Attendance</h3>
       <p>Kindly enter the 4 digit code provided to check-in to SST Inc. Your attendance data will be recorded in the SST Inc
         Attendance Database (SAD).</p>
+      <p>{debug}</p>
+      <p>{code.join()}</p>
       <div className={style.code}>
         {(isLocked ? code : key.split("")).map((n, i) => (
           <input
-            type="text"
-            className={style.number}
-            key={i}
-            value={n}
-            // readOnly
-            onKeyDown={(e) => manageKeyDown(e, i)}
-            /** Required so React does not throw an error for missing onChange/readOnly */
-            onChange={() => {}}
-            ref={refs[i]}
+          ref={refs[i]}
+          value={code[i]}
+          type="text"
+          className={style.number}
+          key={i}
+          onKeyDown={(e) => onCodeKeyDown(e, i)}
+          onChange={(e) => onCodeChange(e, i)}
           />
         ))}
         <h1>{!isLocked ? time : null}</h1>
