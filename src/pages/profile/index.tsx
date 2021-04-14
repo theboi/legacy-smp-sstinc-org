@@ -26,6 +26,7 @@ export default function ProfilePage(props: { user: User }) {
               <p>{props.user?.email}</p>
             </div>
           </div>
+          <p>{props.user?.buff}</p>
           <p className={style.rbadge}>{UserRole[props.user?.role]}</p>
           <button preset="destructive" onClick={fbProvider.auth.signOut}>
             Sign Out

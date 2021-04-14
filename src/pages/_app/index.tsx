@@ -70,7 +70,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
       <div className={style.main}>
-        {hostname === "go.sstinc.org" || hostname === "qr.sstinc.org" || hostname === "localhost" ? (
+        {hostname === "go.sstinc.org" || hostname === "qr.sstinc.org" ? (
           <div className={style.alert}>
           <p>
             <code>go.sstinc.org</code> and <code>qr.sstinc.org</code> will
@@ -188,7 +188,7 @@ const Credits = () => (
       <a href="https://www.ryanthe.com" target="_blank" className={style.link}>
         Ryan The
       </a>{" "}
-      from SST Inc, 2021, v2.0.0.
+      from SST Inc, 2021, v2.0.1.
     </p>
     <p>
       Open sourced on{" "}
