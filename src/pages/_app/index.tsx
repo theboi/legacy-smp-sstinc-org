@@ -1,9 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { AppProps } from "next/app";
 import "./styles.css";
 import style from "./style.module.css";
 import Head from "next/head";
-import { ChakraProvider } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  ChakraProvider,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
+import theme from "../theme";
 
 import {
   FaBars,
@@ -12,6 +20,7 @@ import {
   FaHome,
   FaLink,
   FaSignInAlt,
+  FaSun,
   FaTimes,
 } from "react-icons/fa";
 import { fbProvider } from "../../model/fbProvider";
@@ -31,13 +40,13 @@ export default function App({ Component, pageProps }: AppProps) {
   let loadingOverlayRef = useRef(null);
 
   const [user, setUser] = useState<User>(null);
-  const [hostname, setHostname] = useState("")
+  const [hostname, setHostname] = useState("");
 
   useEffect(() => {
     if (window) {
-      setHostname(window.location.hostname)
+      setHostname(window.location.hostname);
     }
-  })
+  });
   useEffect(() => {
     fbProvider.auth.addIdTokenChangedListener((user: User) => {
       setUser(user);
@@ -70,75 +79,33 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
-      <ChakraProvider>
-      <div className={style.main}>
+      <ChakraProvider theme={theme}>
         {hostname === "go.sstinc.org" || hostname === "qr.sstinc.org" ? (
           <div className={style.alert}>
-          <p>
-            <code>go.sstinc.org</code> and <code>qr.sstinc.org</code> will
-            cease operation beginning June 2021. Please use the new unified{" "}
-            <a href="https://smp.sstinc.org">
-              <code>smp.sstinc.org</code>
-            </a>{" "}
-            instead.
-          </p>
-        </div>
-        ) : null}
-        <a href="https://sstinc.org" rel="noreferrer noopener" target="_blank">
-          <img
-            src="/assets/sstinc-icon.png"
-            alt="SST Inc Icon"
-            width={100}
-            height={100}
-          />
-        </a>
-        <div className={style.sideSplit}>
-          <div preset="shadow">
-            <div className={style.content}>
-              {(() => {
-                if (paths[router.pathname] === undefined)
-                  return <Component {...pageProps} user={user} />;
-                else if (user?.role === undefined)
-                  return <ProfilePage user={user} />;
-                else if (isAuth())
-                  return <Component {...pageProps} user={user} />;
-                else return <ErrorPage status={403} />;
-              })()}
-              <LoadingOverlay ref={loadingOverlayRef} />
-            </div>
+            <p>
+              <code>go.sstinc.org</code> and <code>qr.sstinc.org</code> will
+              cease operation beginning June 2021. Please use the new unified{" "}
+              <a href="https://smp.sstinc.org">
+                <code>smp.sstinc.org</code>
+              </a>{" "}
+              instead.
+            </p>
           </div>
-          <NavBar
-            links={[
-              {
-                icon:
-                  user === null ? (
-                    <FaSignInAlt />
-                  ) : (
-                    <img
-                      src={user.photoURL}
-                      height={40}
-                      style={{ borderRadius: 10 }}
-                    />
-                  ),
-                action: user === null ? fbProvider.auth.signIn : "/profile",
-              },
-              {
-                icon: <FaHome />,
-                action: "/home",
-              },
-              {
-                icon: <FaLink />,
-                action: "/url",
-              },
-              {
-                icon: <FaClipboardList /> /* <FaClipboardCheck /> */,
-                action: "/atd",
-              },
-            ]}
-          />
-        </div>
-        <Credits />
-      </div>
+        ) : null}
+        <AppScaffold user={user}>
+          <div className={style.content}>
+            {(() => {
+              if (paths[router.pathname] === undefined)
+                return <Component {...pageProps} user={user} />;
+              else if (user?.role === undefined)
+                return <ProfilePage user={user} />;
+              else if (isAuth())
+                return <Component {...pageProps} user={user} />;
+              else return <ErrorPage status={403} />;
+            })()}
+            <LoadingOverlay ref={loadingOverlayRef} />
+          </div>
+        </AppScaffold>
       </ChakraProvider>
     </>
   );
@@ -152,6 +119,7 @@ interface NavLink {
 const NavBar = (props: { links: NavLink[] }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <>
@@ -162,24 +130,27 @@ const NavBar = (props: { links: NavLink[] }) => {
       >
         {isOpen ? <FaTimes /> : <FaBars />}
       </button>
-      <nav className={style.nav} preset="shadow">
-        {props.links.map((link, i) => {
-          return (
-            <button
-              preset="tertiary"
-              key={i}
-              onClick={
-                typeof link.action == "string" || link.action instanceof String
-                  ? () => router.push(link.action as string)
-                  : link.action
-              }
-              className={style.navLink}
-            >
-              {link.icon}
-            </button>
-          );
-        })}
-      </nav>
+      <Box boxShadow={colorMode === "dark" ? "dark-lg" : "lg"} border="1px solid" borderColor={colorMode === "dark" ? "transparent" : "gray.200"} rounded="2xl" p={2} m={2} className={style.nav}>
+        <nav>
+          {props.links.map((link, i) => {
+            return (
+              <Button
+              variant="ghost"
+              // className={style.navLink}
+                key={i}
+                onClick={
+                  typeof link.action == "string" ||
+                  link.action instanceof String
+                    ? () => router.push(link.action as string)
+                    : link.action
+                }
+              >
+                {link.icon}
+              </Button>
+            );
+          })}
+        </nav>
+      </Box>
     </>
   );
 };
@@ -209,7 +180,7 @@ const Credits = () => (
 
 const LoadingOverlay = React.forwardRef(
   (_, ref: React.MutableRefObject<HTMLDivElement>) => (
-    <div className={style.loadingOverlay} ref={ref}>
+    <Box ref={ref} className={style.loadingOverlay}>
       <svg
         width="100"
         height="100"
@@ -237,6 +208,62 @@ const LoadingOverlay = React.forwardRef(
           />
         </circle>
       </svg>
-    </div>
+    </Box>
   )
 );
+
+const AppScaffold = (props: { children: ReactNode, user: User }) => {
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  return (
+    <div className={style.main}>
+      <a href="https://sstinc.org" rel="noreferrer noopener" target="_blank">
+        <img
+          src="/assets/sstinc-icon.png"
+          alt="SST Inc Icon"
+          width={100}
+          height={100}
+        />
+      </a>
+      <div className={style.sideSplit}>
+        <Box boxShadow={colorMode === "dark" ? "dark-lg" : "lg"} border="1px solid" borderColor={colorMode === "dark" ? "transparent" : "gray.200"} rounded="2xl" p={2} m={2}>
+          {props.children}
+        </Box>
+        <NavBar
+          links={[
+            {
+              icon:
+                props.user === null ? (
+                  <FaSignInAlt />
+                ) : (
+                  <img
+                    src={props.user?.photoURL}
+                    height={40}
+                    style={{ borderRadius: 10 }}
+                  />
+                ),
+              action: props.user === null ? fbProvider.auth.signIn : "/profile",
+            },
+            {
+              icon: <FaHome />,
+              action: "/home",
+            },
+            {
+              icon: <FaLink />,
+              action: "/url",
+            },
+            {
+              icon: <FaClipboardList /> /* <FaClipboardCheck /> */,
+              action: "/atd",
+            },
+            {
+              icon: <FaSun />,
+              action: () => toggleColorMode(),
+            },
+          ]}
+        />
+      </div>
+      <Credits />
+    </div>
+  );
+};
