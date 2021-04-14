@@ -15,7 +15,6 @@ export default function AtdPage(props: { user: User }) {
   const [code, setCode] = useState([...Array(4)].map(() => ""));
   const [isLocked, setIsLocked] = useState(true);
   const [status, setStatus] = useState('Confirm');
-  const [debug, setDebug] = useState('')
 
   const refs: React.MutableRefObject<HTMLInputElement>[] = [...Array(4)].map(() => useRef(null));
 
@@ -110,13 +109,11 @@ export default function AtdPage(props: { user: User }) {
       <h3>Attendance</h3>
       <p>Kindly enter the 4 digit code provided to check-in to SST Inc. Your attendance data will be recorded in the SST Inc
         Attendance Database (SAD).</p>
-      <p>{debug}</p>
-      <p>{code.join()}</p>
       <div className={style.code}>
         {(isLocked ? code : key.split("")).map((n, i) => (
           <input
           ref={refs[i]}
-          value={code[i]}
+          value={isLocked ? code[i] : key[i]}
           type="text"
           className={style.number}
           key={i}

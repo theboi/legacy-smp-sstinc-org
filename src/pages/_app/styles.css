@@ -150,6 +150,10 @@ button {
   background-position: 100% 0% !important;
 }
 
+button[preset=tertiary]:hover {
+  background-color: #fff;
+}
+
 button:hover {
   filter: brightness(95%);
 }
@@ -175,7 +179,7 @@ button[preset=destructive] {
 }
 
 button[preset=tertiary] {
-  background-color: #fff;
+  background-color: transparent;
 }
 
 button:disabled {
@@ -196,10 +200,6 @@ figcaption {
 /* code */
 code {
   font-family: 'Menlo', monospace;
-}
-
-/* a */
-a {
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
