@@ -1,36 +1,38 @@
 import React from "react";
 
-import style from "./style.module.css";
-
 import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
+
+import { Button, Badge, Avatar, Heading, Text, Flex } from "@chakra-ui/react";
 
 export default function ProfilePage(props: { user: User }) {
   console.log(Object.keys(User));
   return (
-    <div className={style.main}>
+    <div>
       {props.user === null ? (
-        <button preset="primary" onClick={fbProvider.auth.signIn}>
-          Sign In
-        </button>
+        <Button colorScheme="blue" onClick={fbProvider.auth.signIn}>
+        Sign In
+      </Button>
       ) : (
         <>
           <div>
-            <img
+          <Flex gridGap={5} flexWrap="wrap">
+          <Avatar
+              name={props.user?.displayName}
               src={props.user?.photoURL}
-              alt={props.user?.displayName}
-              className={style.pfp}
+              size="xl"
             />
             <div>
-              <h3>{props.user?.displayName}</h3>
-              <p>{props.user?.email}</p>
+              <Heading size="md">{props.user?.displayName}</Heading>
+              <Text>{props.user?.email}</Text>
+              <Text>{props.user?.buff}</Text>
+              <Badge colorScheme="red">{UserRole[props.user?.role]}</Badge>
             </div>
+          </Flex>
           </div>
-          <p>{props.user?.buff}</p>
-          <p className={style.rbadge}>{UserRole[props.user?.role]}</p>
-          <button preset="destructive" onClick={fbProvider.auth.signOut}>
+          <Button colorScheme="red" onClick={fbProvider.auth.signOut}>
             Sign Out
-          </button>
+          </Button>
         </>
       )}
     </div>
