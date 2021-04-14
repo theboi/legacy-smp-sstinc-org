@@ -3,6 +3,7 @@ import { AppProps } from "next/app";
 import "./styles.css";
 import style from "./style.module.css";
 import Head from "next/head";
+import { ChakraProvider } from "@chakra-ui/react"
 
 import {
   FaBars,
@@ -69,6 +70,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
+      <ChakraProvider>
       <div className={style.main}>
         {hostname === "go.sstinc.org" || hostname === "qr.sstinc.org" ? (
           <div className={style.alert}>
@@ -137,6 +139,7 @@ export default function App({ Component, pageProps }: AppProps) {
         </div>
         <Credits />
       </div>
+      </ChakraProvider>
     </>
   );
 }
