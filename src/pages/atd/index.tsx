@@ -5,21 +5,37 @@ import style from "./style.module.css";
 import hash from "crypto-js/sha256";
 
 import { User, UserRole } from "../../model/user";
-import { FaLock, FaLockOpen } from "react-icons/fa";
+import { FaKey } from "react-icons/fa";
 import { fbProvider } from "../../model/fbProvider";
 
-import { Button, IconButton, ButtonGroup, Heading } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  CircularProgress,
+  CircularProgressLabel,
+} from "@chakra-ui/react";
+
+import {
+  Button,
+  IconButton,
+  ButtonGroup,
+  Heading,
+  PinInputField,
+  PinInput,
+} from "@chakra-ui/react";
 
 export default function AtdPage(props: { user: User }) {
   const [time, setTime] = useState(0);
   const [key, setKey] = useState(getKeyCode());
-  const [code, setCode] = useState([...Array(4)].map(() => ""));
-  const [isLocked, setIsLocked] = useState(true);
+  const [code, setCode] = useState("");
   const [status, setStatus] = useState("Confirm");
-
-  const refs: React.MutableRefObject<HTMLInputElement>[] = [
-    ...Array(4),
-  ].map(() => useRef(null));
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,50 +48,7 @@ export default function AtdPage(props: { user: User }) {
     };
   }, []);
 
-  function onCodeKeyDown(e: React.KeyboardEvent<HTMLInputElement>, i: number) {
-    switch (true) {
-      case e.keyCode === 8: // backspace
-        if (code[i] === "") refs[i - 1]?.current.focus();
-        break;
-      case e.keyCode === 37: // leftArrow
-        refs[i - 1]?.current.focus();
-        break;
-      case e.keyCode === 13: // return
-        refs[i].current.blur();
-        if (code.join("").length == 4) confirmCode();
-        break;
-      case e.keyCode === 39: // rightArrow
-        refs[i + 1]?.current.focus();
-        break;
-    }
-  }
-
-  function onCodeChange(e: React.ChangeEvent<HTMLInputElement>, i: number) {
-    const val = e.target.value;
-    const newChar = val.charAt(val.length - 1);
-    const charCode = newChar.charCodeAt(0);
-
-    if (newChar === "") {
-      // backspace
-      setCode((c) => {
-        const t = [...c];
-        t[i] = "";
-        return t;
-      });
-      // refs[i - 1]?.current?.focus()
-    } else if (
-      (charCode >= 48 && charCode <= 57) ||
-      (charCode >= 65 && charCode <= 90) ||
-      (charCode >= 97 && charCode <= 122)
-    ) {
-      setCode((c) => {
-        const t = [...c];
-        t[i] = newChar.toUpperCase();
-        return t;
-      });
-      refs[i + 1]?.current?.focus();
-    }
-  }
+  function onCodeChange(s: string) { setCode(s.toUpperCase()) }
 
   function getKeyCode() {
     const epochSeconds = new Date().getTime() / 1000;
@@ -86,7 +59,7 @@ export default function AtdPage(props: { user: User }) {
   }
 
   function confirmCode() {
-    if (code.join("") === getKeyCode()) {
+    if (code === getKeyCode()) {
       /** Handle after writing to Firestore */
       fbProvider.atd
         .checkIn(props.user)
@@ -104,56 +77,79 @@ export default function AtdPage(props: { user: User }) {
     } else {
       /** Code submission cooldown of 2 sec, informs user that code is incorrect */
       setStatus(`Invalid`);
-      setCode([...Array(4)].map(() => ""));
-      refs[0].current.focus();
+      setCode("");
       setTimeout(() => {
         setStatus(`Confirm`);
       }, 2000);
     }
   }
 
-  function toggleLock() {
-    setIsLocked((e) => !e);
+  function onCodeKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.keyCode === 13 && code.length == 4) confirmCode();
   }
 
   return (
-    <div className={style.main}>
-      <Heading size="md">Attendance</Heading>
-      <p>
-        Kindly enter the 4 digit code provided to check-in to SST Inc. Your
-        attendance data will be recorded in the SST Inc Attendance Database
-        (SAD).
-      </p>
-      <div className={style.code}>
-        {(isLocked ? code : key.split("")).map((n, i) => (
-          <input
-            ref={refs[i]}
-            value={isLocked ? code[i] : key[i]}
-            type="text"
-            className={style.number}
-            key={i}
-            onKeyDown={(e) => onCodeKeyDown(e, i)}
-            onChange={(e) => onCodeChange(e, i)}
-          />
-        ))}
-        <h1>{!isLocked ? time : null}</h1>
-      </div>
-      <div className={style.buttons}>
-        <ButtonGroup isAttached width="100%">
-          <Button
-          isFullWidth
-          onClick={confirmCode}
-          disabled={!isLocked || status !== "Confirm" || code.join("").length != 4}
-          colorScheme={{"Error": "red", "Invalid": "red", "Success": "green"}[status] ?? "blue"}
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalBody pt={10}>
+          <div className={style.code}>
+            <PinInput type="alphanumeric" value={key} size="xl" isDisabled>
+            {[...Array(4)].map((_, i) => (
+              <PinInputField style={{ fontSize: "2em", opacity: 1, borderColor: "unset" }} key={i}/>
+            ))}
+            </PinInput>
+            <CircularProgress value={time} max={10} size={30} thickness={15} />
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <div className={style.main}>
+        <Heading size="md">Attendance</Heading>
+        <p>
+          Kindly enter the 4 digit code provided to check-in to SST Inc. Your
+          attendance data will be recorded in the SST Inc Attendance Database
+          (SAD).
+        </p>
+        <div className={style.code} onKeyDown={onCodeKeyDown}>
+          <PinInput
+            otp
+            type="alphanumeric"
+            size="xl"
+            onChange={onCodeChange}
+            isInvalid={status === "Invalid"}
           >
-            {status}
-          </Button>
-        {props.user?.role >= UserRole.ExCo ? (
-          <IconButton onClick={toggleLock} aria-label={isLocked ? "Lock" : "Unlock"} icon={isLocked ? <FaLock /> : <FaLockOpen />} />
-        ) : null}
-        </ButtonGroup>
+            {[...Array(4)].map((_, i) => (
+              <PinInputField style={{ fontSize: "2em" }} key={i} />
+            ))}
+          </PinInput>
+        </div>
+        <div className={style.buttons}>
+          <ButtonGroup isAttached width="100%">
+            <Button
+              isFullWidth
+              onClick={confirmCode}
+              disabled={status !== "Confirm" || code.length != 4}
+              colorScheme={
+                { Error: "red", Invalid: "red", Success: "green" }[status] ??
+                "blue"
+              }
+            >
+              {status}
+            </Button>
+            {props.user?.role >= UserRole.ExCo ? (
+              <IconButton
+                onClick={onOpen}
+                aria-label="View Key Code"
+                icon={<FaKey />}
+              />
+            ) : null}
+          </ButtonGroup>
+        </div>
+        <Button disabled>Scan a QR Code instead</Button>
       </div>
-      <Button disabled>Scan a QR Code instead</Button>
-    </div>
+    </>
   );
 }
