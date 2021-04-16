@@ -107,77 +107,7 @@ Defaults
 
 /* input */
 input {
-  font-size: 16px;
-  transition: all 250ms ease-in-out;
-  padding: 10px;
-  margin-top: 5px;
   border-radius: 10px;
-  border: solid #eeeeee 1px;
-  box-shadow: inset 0 0 7px 0px #88888811;
-  background-color: #f9f9f9;
-  width: 100%;
-}
-
-input:focus {
-  background-color: #fff;
-  box-shadow: none;
-	border-color: #ebebeb;
-}
-
-/* button */
-button {
-  transition: all 100ms ease-in-out;
-  padding: 10px;
-  width: 100%;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  background-color: #f9f9f9;
-
-	background-size: 250% 100% !important;
-  background-position: 100% 0% !important;
-}
-
-button[preset=tertiary]:hover {
-  background-color: #fff;
-}
-
-button:hover {
-  filter: brightness(95%);
-}
-
-button:active {
-  filter: brightness(90%);
-	background-position: 0% 0% !important;
-}
-
-button[preset=primary] {
-	color: #fff;
-  background: linear-gradient(110deg, #030030 0%, #030030 50%, #00a4ff 50%, #0088ff 100%);
-}
-
-button[preset=success] {
-  color: #fff;
-  background: linear-gradient(110deg, #003002 0%, #003002 50%, #00c23a 50%, #00a81c 100%);
-}
-
-button[preset=destructive] {
-	color: #fff;
-  background: linear-gradient(110deg, #300000 0%, #300000 50%, #ff3c00 50%, #ff0000 100%);
-}
-
-button[preset=tertiary] {
-  background-color: transparent;
-}
-
-button:disabled {
-  cursor: not-allowed;
-  filter: brightness(70%) !important;
-}
-
-button[preset=tertiary]:disabled, button[preset=secondary]:disabled {
-  filter: brightness(90%) !important;
 }
 
 /* figure */

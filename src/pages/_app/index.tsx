@@ -130,13 +130,21 @@ const NavBar = (props: { links: NavLink[] }) => {
       >
         {isOpen ? <FaTimes /> : <FaBars />}
       </button>
-      <Box boxShadow={colorMode === "dark" ? "dark-lg" : "lg"} border="1px solid" borderColor={colorMode === "dark" ? "transparent" : "gray.200"} rounded="2xl" p={2} m={2} className={style.nav}>
+      <Box
+        boxShadow={colorMode === "dark" ? "dark-lg" : "lg"}
+        border="1px solid"
+        borderColor={colorMode === "dark" ? "transparent" : "gray.200"}
+        rounded="2xl"
+        p={2}
+        m={2}
+        className={style.nav}
+      >
         <nav>
           {props.links.map((link, i) => {
             return (
               <Button
-              variant="ghost"
-              // className={style.navLink}
+                variant="ghost"
+                // className={style.navLink}
                 key={i}
                 onClick={
                   typeof link.action == "string" ||
@@ -156,26 +164,22 @@ const NavBar = (props: { links: NavLink[] }) => {
 };
 
 const Credits = () => (
-  <div className={style.credits}>
-    <p>
-      Made with ♥&#xFE0E; by{" "}
-      <a href="https://www.ryanthe.com" target="_blank" className={style.link}>
-        Ryan The
-      </a>{" "}
-      from SST Inc, 2021, v2.0.1.
-    </p>
-    <p>
-      Open sourced on{" "}
-      <a
-        href="https://github.com/theboi/smp-sstinc-org"
-        target="_blank"
-        className={style.link}
-      >
-        GitHub
-      </a>
-      .{" "}
-    </p>
-  </div>
+  <Text className={style.credits} color="">
+    Made with ♥&#xFE0E; by{" "}
+    <a href="https://www.ryanthe.com" target="_blank" className={style.link}>
+      Ryan The
+    </a>{" "}
+    from SST Inc, 2021, v2.1.0. <br />
+    Open sourced on{" "}
+    <a
+      href="https://github.com/theboi/smp-sstinc-org"
+      target="_blank"
+      className={style.link}
+    >
+      GitHub
+    </a>
+    .{" "}
+  </Text>
 );
 
 const LoadingOverlay = React.forwardRef(
@@ -212,7 +216,7 @@ const LoadingOverlay = React.forwardRef(
   )
 );
 
-const AppScaffold = (props: { children: ReactNode, user: User }) => {
+const AppScaffold = (props: { children: ReactNode; user: User }) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
@@ -226,7 +230,14 @@ const AppScaffold = (props: { children: ReactNode, user: User }) => {
         />
       </a>
       <div className={style.sideSplit}>
-        <Box boxShadow={colorMode === "dark" ? "dark-lg" : "lg"} border="1px solid" borderColor={colorMode === "dark" ? "transparent" : "gray.200"} rounded="2xl" p={2} m={2}>
+        <Box
+          boxShadow={colorMode === "dark" ? "dark-lg" : "lg"}
+          border="1px solid"
+          borderColor={colorMode === "dark" ? "transparent" : "gray.200"}
+          rounded="2xl"
+          p={2}
+          m={2}
+        >
           {props.children}
         </Box>
         <NavBar
