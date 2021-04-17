@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import {
   Table,
@@ -21,15 +21,28 @@ import {
   ModalCloseButton,
   ModalBody,
   useDisclosure,
+  FormControl,
+  Input,
+  FormLabel,
+  ModalHeader,
+  ModalFooter,
+  InputGroup,
+  InputLeftAddon,
+  useToast
 } from "@chakra-ui/react";
 
 import { fbProvider } from "../../model/fbProvider";
-import { User, UserRole } from "../../model/user";
-import { FaBars, FaEllipsisH, FaPlus, FaTrash } from "react-icons/fa";
+import { User } from "../../model/user";
+import { FaEllipsisH, FaPlus, FaTrash } from "react-icons/fa";
 
 export default function UrlsPage(props: { user: User }) {
   const [urls, setUrls] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const urlRef = useRef(null)
+  const suffixRef = useRef(null)
+
+  const toast = useToast()
 
   useEffect(() => {
     const unsubscribe = fbProvider.url.listAll((snapshot) => {
@@ -45,59 +58,108 @@ export default function UrlsPage(props: { user: User }) {
     };
   }, []);
 
+  function saveURLData() {
+    const valid = validateURLData()
+    if (valid !== undefined) {
+      fbProvider.url.updateUrl(valid.suffix, valid.url)
+      onClose()
+      toast({ title: "Shortened URL saved successfully!", status: "success" })
+    }
+    toast({ title: "An error occurred while saving", status: "error" })
+  }
+
+  function validateURLData(): {suffix: string, url: string} {
+    if ((suffixRef.current.value as string).match(/^\w+$/g) === [] && (urlRef.current.value as string).match(/^.+$/g) === []) return {
+      suffix: suffixRef.current.value,
+      url: urlRef.current.value
+    }
+
+    return undefined
+  }
+
   return (
     <>
-    <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal
+        initialFocusRef={urlRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <ModalOverlay />
         <ModalContent>
+          <ModalHeader>Create a new shortened URL</ModalHeader>
           <ModalCloseButton />
-          <ModalBody pt={10}>
+          <ModalBody pb={6}>
+          <FormControl>
+            <FormLabel>URL</FormLabel>
+            <Input ref={urlRef} onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.keyCode === 13) suffixRef.current.focus()
+            }} placeholder="sstinc.org" />
+          </FormControl>
+
+          <FormControl mt={4}>
+            <FormLabel>Suffix</FormLabel>
+            <InputGroup>
+    <InputLeftAddon children="smp.sstinc.org/" />
+    <Input ref={suffixRef} onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.keyCode === 13) saveURLData()
+            }} placeholder="sstinc" />
+  </InputGroup>
+          </FormControl>
           </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={saveURLData}>
+              Save
+            </Button>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
-    <div>
-      <Table size="md">
-        <Thead>
-          <Tr>
-            <Th>Suffix</Th>
-            <Th>URL</Th>
-            <Th isNumeric>
-              <IconButton aria-label="Add New" icon={<FaPlus />} onClick={onOpen} />
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {urls.map((e, i) => (
-            <Tr key={i}>
-              <Td style={{maxWidth: "10px"}}>{e.suffix}</Td>
-              <Td style={{ maxWidth: "30vw" }}>
-                {e.url}
-              </Td>
-              <Td isNumeric>
-                <Menu>
-                  <MenuButton
-                    as={IconButton}
-                    aria-label="More Actions"
-                    icon={<FaEllipsisH />}
-                    variant=""
-                  />
-                  <MenuList>
-                    <MenuItem icon={<FaTrash />}>Delete</MenuItem>
-                  </MenuList>
-                </Menu>
-              </Td>
+      <div>
+        <Table size="md">
+          <Thead>
+            <Tr>
+              <Th>Suffix</Th>
+              <Th>URL</Th>
+              <Th isNumeric>
+                <IconButton
+                  aria-label="Add New"
+                  icon={<FaPlus />}
+                  onClick={onOpen}
+                />
+              </Th>
             </Tr>
-          ))}
-        </Tbody>
-        <Tfoot>
-          <Tr>
-            <Th></Th>
-            <Th></Th>
-            <Th isNumeric></Th>
-          </Tr>
-        </Tfoot>
-      </Table>
-    </div>
+          </Thead>
+          <Tbody>
+            {urls.map((e, i) => (
+              <Tr key={i}>
+                <Td style={{ maxWidth: "10px" }}>{e.suffix}</Td>
+                <Td style={{ maxWidth: "30vw" }}>{e.url}</Td>
+                <Td isNumeric>
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label="More Actions"
+                      icon={<FaEllipsisH />}
+                      variant=""
+                    />
+                    <MenuList>
+                      <MenuItem icon={<FaTrash />}>Delete</MenuItem>
+                    </MenuList>
+                  </Menu>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+          <Tfoot>
+            <Tr>
+              <Th></Th>
+              <Th></Th>
+              <Th isNumeric></Th>
+            </Tr>
+          </Tfoot>
+        </Table>
+      </div>
     </>
   );
 }
