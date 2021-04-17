@@ -111,6 +111,9 @@ class Url {
     return firebase.firestore().collection(firestores.url).onSnapshot(onSnapshot)
   }
 
+  updateUrl(suffix: string, url: string) {
+    return firebase.firestore().collection(firestores.url).doc(suffix).set({url: url})
+  }
 }
 
 class FBProvider {
