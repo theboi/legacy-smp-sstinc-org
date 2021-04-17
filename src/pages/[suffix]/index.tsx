@@ -8,7 +8,7 @@ export default function SuffixPage() {
 
 export async function getServerSideProps(ctx) {
   
-  const url = await fbProvider.url.urlForSuffix(ctx.params?.suffix as string).then((doc): string | undefined => {
+  const url = await fbProvider.url.urlSuffixed(ctx.params?.suffix as string).then((doc): string | undefined => {
     return doc.data()?.url
   })
 
