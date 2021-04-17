@@ -11,7 +11,7 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import theme from "../theme";
+import theme from "../../model/theme";
 
 import {
   FaBars,
