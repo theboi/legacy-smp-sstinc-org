@@ -1,20 +1,26 @@
-# go-sstinc-org
-
-SST Inc's URL Shortener, newly made with a GUI.
+# smp-sstinc-org: SST Inc Management Platform (SMP)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## About
 
-An open sourced, URL Shortener Portal that makes use of firebase to store links mapped to suffixes. Newly made with a GUI for SST Inc EXCO to add links. Made with :heart: by [Ryan The](https://ryanthe.com/) @theboi using Next.js, React and TypeScript. Version 1.0 using Firebase Dynamic Links by Jia Chen.
+The SST Inc Management Platform is an open-sourced, unified platform for SST Inc managerial and educational matters.
 
-## How It Works
+## Features
 
-- For SST Inc EXCO/BOD only.
-- Go to [go.sstinc.org](https://go.sstinc.org) or (Beta June 2020: [go-sstinc-org.now.sh](https://go-sstinc-org.now.sh)).
+### URL Shortener
+
+A custom URL shortener and portal for SST Inc ExCo and users' convenience, without restrictions of a third-party service.
+
+- For SST Inc ExCo/BOD only.
+- Go to [smp.sstinc.org](https://smp.sstinc.org) or (Beta June 2020: [smp-sstinc-org.vercel.com](smp-sstinc-org.vercel.com)).
 - Sign in with Google using your SST Google Account.
 - Create a new shortened link, filling in a Title, Long Link, and New Link.
 - Share the new shortened link.
+
+### Attendance Taker
+
+By simply entering a dynamic 4-digit code (or static QR Code), SST Inc students can independently take their own attendance swiftly without much hassle.
 
 ## Development
 
@@ -27,3 +33,7 @@ An open sourced, URL Shortener Portal that makes use of firebase to store links 
 ## License
 
 This open sourced repository is licensed under the GNU General Public License v3.0.
+
+## Credits
+
+Made with :heart: by [Ryan The](https://ryanthe.com/) @theboi using Next.js, React and TypeScript.
