@@ -69,8 +69,8 @@ export default function UrlsPage(props: { user: User }) {
         <Tbody>
           {urls.map((e, i) => (
             <Tr key={i}>
-              <Td>{e.suffix}</Td>
-              <Td style={{ textOverflow: "ellipsis", maxWidth: 400 }}>
+              <Td style={{maxWidth: "10px"}}>{e.suffix}</Td>
+              <Td style={{ maxWidth: "30vw" }}>
                 {e.url}
               </Td>
               <Td isNumeric>

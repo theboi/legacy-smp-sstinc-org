@@ -200,14 +200,14 @@ const AppScaffold = (props: { children: ReactNode; user: User }) => {
             action: props.user === null ? fbProvider.auth.signIn : "/profile",
           },
           {
-            name: "URL Shortener",
-            icon: <FaLink />,
-            action: "/urls",
-          },
-          {
             name: "Attendance",
             icon: <FaClipboardList />,
             action: "/atd",
+          },
+          {
+            name: "URL Shortener",
+            icon: <FaLink />,
+            action: "/urls",
           },
           {
             name: "Toggle Theme",
