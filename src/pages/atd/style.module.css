@@ -1,11 +1,3 @@
-.code {
-  height: 70px;
-  display: flex;
-  justify-content: left;
-  gap: 10px;
-  margin: 20px 0;
-}
-
 .number {
   width: 60px;
   text-align: center;
