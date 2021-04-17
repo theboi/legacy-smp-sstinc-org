@@ -19,6 +19,7 @@ import {
   useDisclosure,
   CircularProgress,
   CircularProgressLabel,
+  HStack,
 } from "@chakra-ui/react";
 
 import {
@@ -39,7 +40,8 @@ export default function AtdPage(props: { user: User }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(10 - (new Date().getSeconds() % 10));
+      const epochSeconds = Math.floor(new Date().getTime() / 1000);
+      setTime(epochSeconds % 20);
       return setKey(getKeyCode());
     }, 1000);
 
@@ -48,11 +50,13 @@ export default function AtdPage(props: { user: User }) {
     };
   }, []);
 
-  function onCodeChange(s: string) { setCode(s.toUpperCase()) }
+  function onCodeChange(s: string) {
+    setCode(s.toUpperCase());
+  }
 
   function getKeyCode() {
     const epochSeconds = new Date().getTime() / 1000;
-    return hash("sstinc" + (epochSeconds - (epochSeconds % 10)))
+    return hash("sstinc" + (epochSeconds - (epochSeconds % 20)))
       .toString()
       .slice(0, 4)
       .toUpperCase();
@@ -94,15 +98,26 @@ export default function AtdPage(props: { user: User }) {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalBody pt={10}>
-          <div className={style.code}>
-            <PinInput type="alphanumeric" value={key} size="xl" isDisabled>
-            {[...Array(4)].map((_, i) => (
-              <PinInputField style={{ fontSize: "2em", opacity: 1, borderColor: "unset" }} key={i}/>
-            ))}
-            </PinInput>
-            <CircularProgress value={time} max={10} size={30} thickness={15} />
-            </div>
+          <ModalBody pt={10} pb={10}>
+            <HStack>
+              <PinInput type="alphanumeric" value={key} size="" isDisabled>
+                {[...Array(4)].map((_, i) => (
+                  <PinInputField
+                    style={{
+                      fontSize: "2em",
+                      opacity: 1,
+                      borderColor: "unset",
+                    }}
+                    key={i}
+                  />
+                ))}
+              </PinInput>
+              <CircularProgress value={time} max={20}>
+                <CircularProgressLabel fontSize="lg">
+                  {20 - time}
+                </CircularProgressLabel>
+              </CircularProgress>
+            </HStack>
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -113,7 +128,7 @@ export default function AtdPage(props: { user: User }) {
           attendance data will be recorded in the SST Inc Attendance Database
           (SAD).
         </p>
-        <div className={style.code} onKeyDown={onCodeKeyDown}>
+        <HStack onKeyDown={onCodeKeyDown}>
           <PinInput
             otp
             type="alphanumeric"
@@ -125,7 +140,7 @@ export default function AtdPage(props: { user: User }) {
               <PinInputField style={{ fontSize: "2em" }} key={i} />
             ))}
           </PinInput>
-        </div>
+        </HStack>
         <div className={style.buttons}>
           <ButtonGroup isAttached width="100%">
             <Button
