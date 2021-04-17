@@ -20,7 +20,7 @@ export class User {
   async initialized(fbUser: firebase.User): Promise<User> {
     if (this != null) {
       this.#fbUser = fbUser;
-      this.#fbData = (await fbProvider.auth.getUserData(fbUser?.email)).data()
+      this.#fbData = (await fbProvider.auth.userData(fbUser?.email)).data()
     }
 
     return this

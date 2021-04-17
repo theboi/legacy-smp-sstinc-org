@@ -6,7 +6,6 @@ import { User, UserRole } from "../../model/user";
 import { Button, Badge, Avatar, Heading, Text, Flex } from "@chakra-ui/react";
 
 export default function ProfilePage(props: { user: User }) {
-  console.log(Object.keys(User));
   return (
     <div>
       {props.user === null ? (

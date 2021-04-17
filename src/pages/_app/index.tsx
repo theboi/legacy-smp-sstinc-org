@@ -31,6 +31,7 @@ import ProfilePage from "../profile";
 
 const paths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
+  "/urls": UserRole.ExCo,
   "/atd": UserRole.Trainee,
 };
 
@@ -261,7 +262,7 @@ const AppScaffold = (props: { children: ReactNode; user: User }) => {
             },
             {
               icon: <FaLink />,
-              action: "/url",
+              action: "/urls",
             },
             {
               icon: <FaClipboardList /> /* <FaClipboardCheck /> */,

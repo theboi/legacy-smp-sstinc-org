@@ -69,7 +69,7 @@ class Auth {
     await firebase.auth().signOut()
   }
 
-  async getUserData(email: string) {
+  async userData(email: string) {
     return firebase.firestore().collection(firestores.users).doc(email).get()
   }
 
@@ -90,7 +90,7 @@ class Atd {
     })
   }
 
-  async getUsers() {
+  async allUsers() {
     return await firebase.firestore().collection(firestores.atd)
     .orderBy("timestamp", "desc")
     .get()
@@ -100,11 +100,15 @@ class Atd {
 
 class Url {
 
-  async urlForSuffix(suffix: string): Promise<firebase.firestore.DocumentSnapshot> {
+  async urlSuffixed(suffix: string): Promise<firebase.firestore.DocumentSnapshot> {
     return firebase.firestore().collection(firestores.url).doc(suffix).get().catch(e => {
       console.error("Url: ", e)
       return e
     })
+  }
+
+  listAll(onSnapshot: (snapshot: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => void) {
+    return firebase.firestore().collection(firestores.url).onSnapshot(onSnapshot)
   }
 
 }
