@@ -51,8 +51,8 @@ class Auth {
       .then(() => {
         return firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider());
       })
-      .catch(function (error) {
-        console.error(`${error.message} (signInWithRedirect)`);
+      .catch(e => {
+        console.error(`${e.message} (signInWithRedirect)`);
       });
   }
   
@@ -60,8 +60,8 @@ class Auth {
     await firebase
       .auth()
       .getRedirectResult()
-      .catch(function (error) {
-        console.warn(`${error.message} (getRedirectResult)`);
+      .catch(e => {
+        console.warn(`${e.message} (getRedirectResult)`);
       });
   }
   
