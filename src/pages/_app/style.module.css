@@ -13,13 +13,6 @@
   padding: 10px;
 }
 
-.sideSplit {
-  display: flex;
-  flex-direction: row;
-  /* for ham */
-  position: relative;
-}
-
 .content {
   position: relative;
   width: 90vw;
@@ -72,50 +65,13 @@
   text-decoration: underline;
 }
 
-/* Ham/Nav */
-
-.ham {
-  font-size: 30px;
-  padding: 10px;
-  position: absolute;
-  z-index: 10;
-  top: -40px;
-  right: 10px;
-  width: fit-content;
-  line-height: 10px;
+.headnav {
+  display: flex;
+  width: 90vw;
+  max-width: 700px;
+  align-items: center;
 }
 
 .nav {
-  max-height: 1000px;
-  transition: all 250ms ease-in-out;
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 70px;
-  overflow: hidden;
-}
-
-.isClose ~ .nav {
-  max-height: 0;
-}
-
-.navLink svg {
-  font-size: 28px;
-}
-
-
-@media screen and (min-width: 768px)  {
-  .ham {
-    display: none;
-  }
-  
-  .nav {
-    max-height: unset !important;
-    box-shadow: inset !important;
-    position: unset;
-  }
-
-  .navLink svg {
-    font-size: 20px;
-  }
+  margin-left: auto;
 }

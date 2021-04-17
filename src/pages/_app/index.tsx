@@ -3,23 +3,30 @@ import { AppProps } from "next/app";
 import "./styles.css";
 import style from "./style.module.css";
 import Head from "next/head";
+
+import theme from "../../model/theme";
 import {
+  Avatar,
   Box,
   Button,
-  ButtonGroup,
   ChakraProvider,
+  IconButton,
   Text,
   useColorMode,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
-import theme from "../../model/theme";
 
 import {
   FaBars,
-  FaClipboardCheck,
+  FaBug,
   FaClipboardList,
   FaHome,
   FaLink,
   FaSignInAlt,
+  FaSignOutAlt,
   FaSun,
   FaTimes,
 } from "react-icons/fa";
@@ -112,58 +119,6 @@ export default function App({ Component, pageProps }: AppProps) {
   );
 }
 
-interface NavLink {
-  icon: React.ReactNode; // Allows for any FontAwesome icon or other React element like images
-  action: (() => void) | string;
-}
-
-const NavBar = (props: { links: NavLink[] }) => {
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
-  const { colorMode, toggleColorMode } = useColorMode();
-
-  return (
-    <>
-      <button
-        className={`${style.ham} ${!isOpen ? style.isClose : null}`}
-        preset="shadow"
-        onClick={() => setIsOpen((c) => !c)}
-      >
-        {isOpen ? <FaTimes /> : <FaBars />}
-      </button>
-      <Box
-        boxShadow={colorMode === "dark" ? "dark-lg" : "lg"}
-        border="1px solid"
-        borderColor={colorMode === "dark" ? "transparent" : "gray.200"}
-        rounded="2xl"
-        p={2}
-        m={2}
-        className={style.nav}
-      >
-        <nav>
-          {props.links.map((link, i) => {
-            return (
-              <Button
-                variant="ghost"
-                // className={style.navLink}
-                key={i}
-                onClick={
-                  typeof link.action == "string" ||
-                  link.action instanceof String
-                    ? () => router.push(link.action as string)
-                    : link.action
-                }
-              >
-                {link.icon}
-              </Button>
-            );
-          })}
-        </nav>
-      </Box>
-    </>
-  );
-};
-
 const Credits = () => (
   <Text className={style.credits} color="">
     Made with ♥&#xFE0E; by{" "}
@@ -222,6 +177,7 @@ const AppScaffold = (props: { children: ReactNode; user: User }) => {
 
   return (
     <div className={style.main}>
+      <div className={style.headnav}>
       <a href="https://sstinc.org" rel="noreferrer noopener" target="_blank">
         <img
           src="/assets/sstinc-icon.png"
@@ -230,52 +186,91 @@ const AppScaffold = (props: { children: ReactNode; user: User }) => {
           height={100}
         />
       </a>
-      <div className={style.sideSplit}>
-        <Box
-          boxShadow={colorMode === "dark" ? "dark-lg" : "lg"}
-          border="1px solid"
-          borderColor={colorMode === "dark" ? "transparent" : "gray.200"}
-          rounded="2xl"
-          p={2}
-          m={2}
-        >
-          {props.children}
-        </Box>
-        <NavBar
-          links={[
-            {
-              icon:
-                props.user === null ? (
-                  <FaSignInAlt />
-                ) : (
-                  <img
-                    src={props.user?.photoURL}
-                    height={40}
-                    style={{ borderRadius: 10 }}
-                  />
-                ),
-              action: props.user === null ? fbProvider.auth.signIn : "/profile",
-            },
-            {
-              icon: <FaHome />,
-              action: "/home",
-            },
-            {
-              icon: <FaLink />,
-              action: "/urls",
-            },
-            {
-              icon: <FaClipboardList /> /* <FaClipboardCheck /> */,
-              action: "/atd",
-            },
-            {
-              icon: <FaSun />,
-              action: () => toggleColorMode(),
-            },
-          ]}
-        />
+      <nav className={style.nav}><NavBar
+        user={props.user}
+        links={[
+          {
+            name: props.user === null ? "Sign In" : props.user.displayName,
+            icon:
+              props.user === null ? (
+                <FaSignInAlt />
+              ) : (
+                <Avatar src={props.user?.photoURL} size="sm" />
+              ),
+            action: props.user === null ? fbProvider.auth.signIn : "/profile",
+          },
+          {
+            name: "URL Shortener",
+            icon: <FaLink />,
+            action: "/urls",
+          },
+          {
+            name: "Attendance",
+            icon: <FaClipboardList />,
+            action: "/atd",
+          },
+          {
+            name: "Toggle Theme",
+            icon: <FaSun />,
+            action: () => toggleColorMode(),
+          },
+          {
+            name: "Bug Report",
+            icon: <FaBug />,
+            action: "https://github.com/theboi/smp-sstinc-org/issues",
+          },
+        ]}
+      /></nav>
       </div>
+      <Box
+        boxShadow={colorMode === "dark" ? "dark-lg" : "lg"}
+        border="1px solid"
+        borderColor={colorMode === "dark" ? "transparent" : "gray.200"}
+        rounded="2xl"
+        p={2}
+        m={2}
+      >
+        {props.children}
+      </Box>
       <Credits />
     </div>
+  );
+};
+
+interface NavLink {
+  name: string;
+  icon: React.ReactElement<any, string | React.JSXElementConstructor<any>>; // Allows for any FontAwesome icon or other React element like images
+  action: (() => void) | string;
+}
+
+const NavBar = (props: { user: User; links: NavLink[] }) => {
+  const router = useRouter();
+
+  return (
+    <Menu placement="bottom-end">
+      <MenuButton
+        boxSize="60px"
+        style={{ borderRadius: 100 }}
+        as={IconButton}
+        aria-label="Menu"
+        icon={<Avatar src={props.user?.photoURL} size="md" />}
+        variant="outline"
+      />
+      <MenuList>
+        {props.links.map((e, i) => (
+          <MenuItem
+            key={i}
+            onClick={
+              typeof e.action == "string" || e.action instanceof String
+                ? () => router.push(e.action as string)
+                : e.action
+            }
+            icon={e.icon}
+          >
+            {e.name}
+          </MenuItem>
+        ))}
+      </MenuList>
+    </Menu>
   );
 };
