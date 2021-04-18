@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
   Table,
@@ -8,7 +8,6 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   Button,
   MenuButton,
   MenuList,

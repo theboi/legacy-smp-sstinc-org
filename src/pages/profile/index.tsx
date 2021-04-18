@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { fbProvider } from "../../model/fbProvider";
 import { User, UserRole } from "../../model/user";
 

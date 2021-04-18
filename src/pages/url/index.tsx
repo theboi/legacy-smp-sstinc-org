@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaExclamationCircle } from "react-icons/fa";
 import firebase from "firebase/app";
 import "firebase/auth";
