@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "echo This is a temporary test! Change me later!"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.5.1",

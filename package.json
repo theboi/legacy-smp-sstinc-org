@@ -2,8 +2,18 @@
   "name": "@theboi/smp-sstinc-org",
   "version": "2.1.0",
   "private": true,
+  "scripts": {
+    "test": "lerna run test",
+    "test:app": "lerna run test --scope=@theboi/app",
+    "test:tgb": "lerna run test --scope=@theboi/tgb",
+    "version": "lerna version --conventional-commits --yes",
+    "diff": "lerna diff"
+  },
   "workspaces": [
     "app",
     "tgb"
-  ]
+  ],
+  "dependencies": {
+    "lerna": "^4.0.0"
+  }
 }
