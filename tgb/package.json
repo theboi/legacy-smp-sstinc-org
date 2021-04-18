@@ -1,0 +1,11 @@
+{
+  "name": "@theboi/tgb",
+  "version": "2.1.0",
+  "private": true,
+  "dependencies": {
+    "telegraf": "^4.3.0"
+  },
+  "devDependencies": {
+    "typegram": "^3.2.3"
+  }
+}
