@@ -3,17 +3,28 @@
   "version": "2.1.0",
   "private": true,
   "scripts": {
-    "test": "lerna run test",
-    "test:app": "lerna run test --scope=@theboi/app",
-    "test:tgb": "lerna run test --scope=@theboi/tgb",
+    "test": "lerna run test -- --",
+    "test:app": "lerna run test --scope=@theboi/app -- ",
+    "test:tgb": "lerna run test --scope=@theboi/tgb -- ",
     "version": "lerna version --conventional-commits --yes",
-    "diff": "lerna diff"
+    "diff": "lerna diff",
+    "prepare": "husky install"
   },
   "workspaces": [
     "app",
     "tgb"
   ],
-  "dependencies": {
-    "lerna": "^4.0.0"
+  "devDependencies": {
+    "eslint": "^7.24.0",
+    "husky": "^6.0.0",
+    "lerna": "^4.0.0",
+    "lint-staged": "^10.5.4"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "npx eslint",
+      "npx prettier --write",
+      "pnpm test"
+    ]
   }
 }

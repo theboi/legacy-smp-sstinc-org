@@ -1,6 +1,6 @@
 {
   "name": "@theboi/tgb",
-  "version": "2.1.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "test": "echo This is a temporary test! Change me later!"

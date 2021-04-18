@@ -1,5 +1,3 @@
 export default function HackPage() {
-  return (
-    <div></div>
-  )
+  return <div>Hi</div>;
 }
