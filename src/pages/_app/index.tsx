@@ -1,4 +1,5 @@
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import * as React from "react";
 import { AppProps } from "next/app";
 import "./styles.css";
 import style from "./style.module.css";

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { fbProvider } from "../../model/fbProvider";
 
 export default function SuffixPage() {

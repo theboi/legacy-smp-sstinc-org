@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react'
+import { useEffect } from 'react';
 import { FaClipboard } from 'react-icons/fa';
 
 import style from './style.module.css';
