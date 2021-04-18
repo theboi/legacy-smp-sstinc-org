@@ -1,0 +1,7 @@
+{
+  "packages": [
+    "app", "tgb"
+  ],
+  "useWorkspaces": true,
+  "version": "2.1.0"
+}
