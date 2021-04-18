@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   Table,
@@ -31,8 +31,8 @@ import {
   useToast
 } from "@chakra-ui/react";
 
-import { fbProvider } from "../../model/fbProvider";
-import { User } from "../../model/user";
+import { fbProvider } from "../model/fbProvider";
+import { User } from "../model/user";
 import { FaEllipsisH, FaPlus, FaTrash } from "react-icons/fa";
 
 export default function UrlsPage(props: { user: User }) {
