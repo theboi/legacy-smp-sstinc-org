@@ -10,7 +10,7 @@ The SST Inc Management Platform is an open-sourced, unified platform for SST Inc
 
 ### URL Shortener
 
-A custom URL shortener and portal for SST Inc ExCo and users' convenience, without restrictions of a third-party service.
+A custom URL shortener and portal for convenient sharing of long URLs by the SST Inc ExCo, without restrictions of a third-party service.
 
 - For SST Inc ExCo/BOD only.
 - Go to [smp.sstinc.org](https://smp.sstinc.org) or (Beta June 2020: [smp-sstinc-org.vercel.com](smp-sstinc-org.vercel.com)).
