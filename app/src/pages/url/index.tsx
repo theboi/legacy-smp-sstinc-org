@@ -8,7 +8,6 @@ import "firebase/firestore";
 
 import style from "./style.module.css";
 import { User, UserRole } from "../../model/user";
-import LabelField from "../../components/labelField";
 
 let deepLinkField = "";
 let nameField = "";
