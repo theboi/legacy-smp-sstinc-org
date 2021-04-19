@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { FaExclamationCircle } from "react-icons/fa";
@@ -160,7 +161,7 @@ export default function UrlPage(props: { user: User }) {
           onKeyDown={(event) => {
             if (event.keyCode === 13) {
               event.preventDefault();
-              createUrl()
+              createUrl();
             }
           }}
           leftDetail={<p className={style.domain}>go.sstinc.org/</p>}

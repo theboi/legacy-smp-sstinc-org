@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useRef, useState } from "react";
 import * as React from "react";
 
@@ -8,9 +9,8 @@ import { User, UserRole } from "../../model/user";
 import LabelField from "../../components/labelField";
 
 export default function UpdatePage(props: { user: User }) {
-
   function confirmDetails() {}
-//[1-4]0[1-8]
+  // [1-4]0[1-8]
   return (
     <div className={style.main}>
       <h3>Update your account information</h3>

@@ -1,21 +1,21 @@
 import style from "./style.module.css";
 
 interface ErrorCode {
-  msg: string,
-  cap: string
+  msg: string;
+  cap: string;
 }
 
 export default function ErrorPage(props: { status: number }) {
-  const codes: {[key: number]: ErrorCode} = {
+  const codes: { [key: number]: ErrorCode } = {
     403: {
       msg: "For Biden",
-      cap: "Haha funny"
+      cap: "Haha funny",
     },
     404: {
       msg: "Not Found",
-      cap: "IYKYK"
+      cap: "IYKYK",
     },
-  }
+  };
   const status = props.status ?? 404;
 
   return (

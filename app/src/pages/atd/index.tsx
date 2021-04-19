@@ -1,20 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-import * as React from "react";
-
-import style from "./style.module.css";
+import { KeyboardEvent, useEffect, useState } from "react";
 
 import hash from "crypto-js/sha256";
 
-import { User, UserRole } from "../../model/user";
 import { FaKey } from "react-icons/fa";
-import { fbProvider } from "../../model/fbProvider";
-
 import {
+  Button,
+  IconButton,
+  ButtonGroup,
+  Heading,
+  PinInputField,
+  PinInput,
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
   useDisclosure,
@@ -23,14 +21,10 @@ import {
   HStack,
 } from "@chakra-ui/react";
 
-import {
-  Button,
-  IconButton,
-  ButtonGroup,
-  Heading,
-  PinInputField,
-  PinInput,
-} from "@chakra-ui/react";
+import { User, UserRole } from "../../model/user";
+import { fbProvider } from "../../model/fbProvider";
+
+import style from "./style.module.css";
 
 export default function AtdPage(props: { user: User }) {
   const [time, setTime] = useState(0);
@@ -57,7 +51,7 @@ export default function AtdPage(props: { user: User }) {
 
   function getKeyCode() {
     const epochSeconds = new Date().getTime() / 1000;
-    return hash("sstinc" + (epochSeconds - (epochSeconds % 20)))
+    return hash(`sstinc${epochSeconds - (epochSeconds % 20)}`)
       .toString()
       .slice(0, 4)
       .toUpperCase();
@@ -69,28 +63,29 @@ export default function AtdPage(props: { user: User }) {
       fbProvider.atd
         .checkIn(props.user)
         .then(() => {
-          setStatus(`Success`);
+          setStatus("Success");
         })
         .catch((e) => {
-          setStatus(`Error`);
+          console.error(e);
+          setStatus("Error");
         })
         .finally(() => {
           setTimeout(() => {
-            setStatus(`Confirm`);
+            setStatus("Confirm");
           }, 2000);
         });
     } else {
       /** Code submission cooldown of 2 sec, informs user that code is incorrect */
-      setStatus(`Invalid`);
+      setStatus("Invalid");
       setCode("");
       setTimeout(() => {
-        setStatus(`Confirm`);
+        setStatus("Confirm");
       }, 2000);
     }
   }
 
-  function onCodeKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.keyCode === 13 && code.length == 4) confirmCode();
+  function onCodeKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.keyCode === 13 && code.length === 4) confirmCode();
   }
 
   return (
@@ -102,7 +97,7 @@ export default function AtdPage(props: { user: User }) {
           <ModalBody pt={10} pb={10}>
             <HStack>
               <PinInput type="alphanumeric" value={key} size="" isDisabled>
-                {[...Array(4)].map((_, i) => (
+                {[...Array(4)].map((e, i) => (
                   <PinInputField
                     style={{
                       fontSize: "2em",
@@ -147,7 +142,7 @@ export default function AtdPage(props: { user: User }) {
             <Button
               isFullWidth
               onClick={confirmCode}
-              disabled={status !== "Confirm" || code.length != 4}
+              disabled={status !== "Confirm" || code.length !== 4}
               colorScheme={
                 { Error: "red", Invalid: "red", Success: "green" }[status] ??
                 "blue"
