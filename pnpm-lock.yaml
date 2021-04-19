@@ -27,6 +27,7 @@ importers:
       crypto-js: ^4.0.0
       dotenv: ^8.2.0
       eslint-config-airbnb: ^18.2.1
+      eslint-import-resolver-typescript: ^2.4.0
       eslint-plugin-import: ^2.22.1
       eslint-plugin-jsx-a11y: ^6.4.1
       eslint-plugin-react: ^7.21.5
@@ -57,6 +58,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 4.22.0_982c0164c2c03b5f966b085495de6301
       '@typescript-eslint/parser': 4.22.0_typescript@4.2.4
       eslint-config-airbnb: 18.2.1_2dc5011c75ed3ab7a07746a6e5bdadb9
+      eslint-import-resolver-typescript: 2.4.0_eslint-plugin-import@2.22.1
       eslint-plugin-import: 2.22.1
       eslint-plugin-jsx-a11y: 6.4.1
       eslint-plugin-react: 7.23.2
@@ -4847,6 +4849,23 @@ packages:
     dependencies:
       debug: 2.6.9
       resolve: 1.20.0
+    dev: true
+
+  /eslint-import-resolver-typescript/2.4.0_eslint-plugin-import@2.22.1:
+    resolution: {integrity: sha512-useJKURidCcldRLCNKWemr1fFQL1SzB3G4a0li6lFGvlc5xGe1hY343bvG07cbpCzPuM/lK19FIJB3XGFSkplA==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      eslint: '*'
+      eslint-plugin-import: '*'
+    dependencies:
+      debug: 4.3.1
+      eslint-plugin-import: 2.22.1
+      glob: 7.1.6
+      is-glob: 4.0.1
+      resolve: 1.20.0
+      tsconfig-paths: 3.9.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /eslint-module-utils/2.6.0:

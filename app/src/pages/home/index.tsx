@@ -1,9 +1,12 @@
-import { User } from "../../model/user";
+export default function HomePage() {
+  return <></>;
+}
 
-export default function HomePage(props: { user: User }) {
-  return (
-    <div>
-      
-    </div>
-  );
+export async function getServerSideProps() {
+  return {
+    redirect: {
+      destination: "https://sstinc.org",
+      permanent: false,
+    },
+  };
 }
