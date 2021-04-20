@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as React from "react";
 import { AppProps } from "next/app";
 import "./styles.css";
@@ -178,7 +178,7 @@ const LoadingOverlay = React.forwardRef(
   )
 );
 
-const AppScaffold = (props: { children: ReactNode; user: User }) => {
+const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (

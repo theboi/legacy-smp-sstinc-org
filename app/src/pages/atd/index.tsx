@@ -19,6 +19,8 @@ import {
   CircularProgress,
   CircularProgressLabel,
   HStack,
+  Code,
+  VStack,
 } from "@chakra-ui/react";
 
 import { User, UserRole } from "../../model/user";
@@ -95,25 +97,31 @@ export default function AtdPage(props: { user: User }) {
         <ModalContent>
           <ModalCloseButton />
           <ModalBody pt={10} pb={10}>
-            <HStack>
-              <PinInput type="alphanumeric" value={key} size="" isDisabled>
-                {[...Array(4)].map((e, i) => (
-                  <PinInputField
-                    style={{
-                      fontSize: "2em",
-                      opacity: 1,
-                      borderColor: "unset",
-                    }}
-                    key={i}
-                  />
-                ))}
-              </PinInput>
-              <CircularProgress value={time} max={20}>
-                <CircularProgressLabel fontSize="lg">
-                  {20 - time}
-                </CircularProgressLabel>
-              </CircularProgress>
-            </HStack>
+            <VStack>
+              <Heading size="sm">
+                Enter this code at{" "}
+                <Code colorScheme="blue">smp.sstinc.org</Code>
+              </Heading>
+              <HStack>
+                <PinInput type="alphanumeric" value={key} size="" isDisabled>
+                  {[...Array(4)].map((e, i) => (
+                    <PinInputField
+                      style={{
+                        fontSize: "2em",
+                        opacity: 1,
+                        borderColor: "unset",
+                      }}
+                      key={i}
+                    />
+                  ))}
+                </PinInput>
+                <CircularProgress value={time} max={20}>
+                  <CircularProgressLabel fontSize="lg">
+                    {20 - time}
+                  </CircularProgressLabel>
+                </CircularProgress>
+              </HStack>
+            </VStack>
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -159,7 +167,7 @@ export default function AtdPage(props: { user: User }) {
             ) : null}
           </ButtonGroup>
         </div>
-        <Button disabled>Scan a QR Code instead</Button>
+        {/* <Button disabled>Scan a QR Code instead</Button> */}
       </div>
     </>
   );
