@@ -32,7 +32,9 @@
     "no-console": "off",
     "react/jsx-props-no-spreading": "off",
     "react/jsx-one-expression-per-line": "off",
-    "quotes": [2, "double", { "avoidEscape": true }]
+    "quotes": [2, "double", { "avoidEscape": true }],
+    "operator-linebreak": "off",
+    "comma-dangle": "off"
   },
   "settings": {
     "import/resolver": {

@@ -4,11 +4,6 @@
   place-items: center;
 }
 
-.errorCode {
-  font-size: 100px;
-  line-height: 100px;
-}
-
 .img {
   width: 100%;
   max-width: 300px;
