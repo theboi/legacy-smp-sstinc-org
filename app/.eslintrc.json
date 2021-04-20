@@ -30,7 +30,8 @@
     "react/no-array-index-key": "off",
     "react/destructuring-assignment": "off",
     "no-console": "off",
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "quotes": [2, "double", { "avoidEscape": true }]
   },
   "settings": {
     "import/resolver": {
