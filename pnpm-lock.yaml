@@ -67,9 +67,11 @@ importers:
 
   tgb:
     specifiers:
+      dotenv: ^8.2.0
       telegraf: ^4.3.0
       typegram: ^3.2.3
     dependencies:
+      dotenv: 8.2.0
       telegraf: 4.3.0
     devDependencies:
       typegram: 3.2.3
