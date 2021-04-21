@@ -29,6 +29,7 @@ export default function ProfilePage(props: { user: User }) {
           <Button colorScheme="red" onClick={fbProvider.auth.signOut}>
             Sign Out
           </Button>
+          Hi
         </>
       )}
     </div>
