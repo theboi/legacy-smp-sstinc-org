@@ -1,4 +1,4 @@
-import { Box, Heading, Text, useColorMode } from "@chakra-ui/react";
+import { Box, Heading, useColorMode } from "@chakra-ui/react";
 import style from "./style.module.css";
 
 interface ErrorCode {
