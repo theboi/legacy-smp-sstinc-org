@@ -1,28 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import * as React from "react";
-
-import style from "./style.module.css";
+import { KeyboardEvent, useEffect, useState } from "react";
 
 import hash from "crypto-js/sha256";
 
-import { User, UserRole } from "../../model/user";
 import { FaKey } from "react-icons/fa";
-import { fbProvider } from "../../model/fbProvider";
-
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  CircularProgress,
-  CircularProgressLabel,
-  HStack,
-} from "@chakra-ui/react";
-
 import {
   Button,
   IconButton,
@@ -30,7 +10,23 @@ import {
   Heading,
   PinInputField,
   PinInput,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  CircularProgress,
+  CircularProgressLabel,
+  HStack,
+  Code,
+  VStack,
 } from "@chakra-ui/react";
+
+import { User, UserRole } from "../../model/user";
+import { fbProvider } from "../../model/fbProvider";
+
+import style from "./style.module.css";
 
 export default function AtdPage(props: { user: User }) {
   const [time, setTime] = useState(0);
@@ -57,7 +53,7 @@ export default function AtdPage(props: { user: User }) {
 
   function getKeyCode() {
     const epochSeconds = new Date().getTime() / 1000;
-    return hash("sstinc" + (epochSeconds - (epochSeconds % 20)))
+    return hash(`sstinc${epochSeconds - (epochSeconds % 20)}`)
       .toString()
       .slice(0, 4)
       .toUpperCase();
@@ -69,28 +65,29 @@ export default function AtdPage(props: { user: User }) {
       fbProvider.atd
         .checkIn(props.user)
         .then(() => {
-          setStatus(`Success`);
+          setStatus("Success");
         })
         .catch((e) => {
-          setStatus(`Error`);
+          console.error(e);
+          setStatus("Error");
         })
         .finally(() => {
           setTimeout(() => {
-            setStatus(`Confirm`);
+            setStatus("Confirm");
           }, 2000);
         });
     } else {
       /** Code submission cooldown of 2 sec, informs user that code is incorrect */
-      setStatus(`Invalid`);
+      setStatus("Invalid");
       setCode("");
       setTimeout(() => {
-        setStatus(`Confirm`);
+        setStatus("Confirm");
       }, 2000);
     }
   }
 
-  function onCodeKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.keyCode === 13 && code.length == 4) confirmCode();
+  function onCodeKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.keyCode === 13 && code.length === 4) confirmCode();
   }
 
   return (
@@ -100,25 +97,31 @@ export default function AtdPage(props: { user: User }) {
         <ModalContent>
           <ModalCloseButton />
           <ModalBody pt={10} pb={10}>
-            <HStack>
-              <PinInput type="alphanumeric" value={key} size="" isDisabled>
-                {[...Array(4)].map((_, i) => (
-                  <PinInputField
-                    style={{
-                      fontSize: "2em",
-                      opacity: 1,
-                      borderColor: "unset",
-                    }}
-                    key={i}
-                  />
-                ))}
-              </PinInput>
-              <CircularProgress value={time} max={20}>
-                <CircularProgressLabel fontSize="lg">
-                  {20 - time}
-                </CircularProgressLabel>
-              </CircularProgress>
-            </HStack>
+            <VStack>
+              <Heading size="sm">
+                Enter this code at{" "}
+                <Code colorScheme="blue">smp.sstinc.org</Code>
+              </Heading>
+              <HStack>
+                <PinInput type="alphanumeric" value={key} size="" isDisabled>
+                  {[...Array(4)].map((e, i) => (
+                    <PinInputField
+                      style={{
+                        fontSize: "2em",
+                        opacity: 1,
+                        borderColor: "unset",
+                      }}
+                      key={i}
+                    />
+                  ))}
+                </PinInput>
+                <CircularProgress value={time} max={20}>
+                  <CircularProgressLabel fontSize="lg">
+                    {20 - time}
+                  </CircularProgressLabel>
+                </CircularProgress>
+              </HStack>
+            </VStack>
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -147,7 +150,7 @@ export default function AtdPage(props: { user: User }) {
             <Button
               isFullWidth
               onClick={confirmCode}
-              disabled={status !== "Confirm" || code.length != 4}
+              disabled={status !== "Confirm" || code.length !== 4}
               colorScheme={
                 { Error: "red", Invalid: "red", Success: "green" }[status] ??
                 "blue"
@@ -164,7 +167,7 @@ export default function AtdPage(props: { user: User }) {
             ) : null}
           </ButtonGroup>
         </div>
-        <Button disabled>Scan a QR Code instead</Button>
+        {/* <Button disabled>Scan a QR Code instead</Button> */}
       </div>
     </>
   );

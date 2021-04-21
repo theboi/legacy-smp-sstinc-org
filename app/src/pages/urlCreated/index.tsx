@@ -1,21 +1,20 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { FaClipboard } from 'react-icons/fa';
+/* eslint-disable */
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { FaClipboard } from "react-icons/fa";
 
-import style from './style.module.css';
+import style from "./style.module.css";
 
 export default function SuccessPage(props: {}) {
   let copiedPopupRef: HTMLDivElement;
 
   const router = useRouter();
 
-  const { suffix } = router.query
+  const { suffix } = router.query;
 
   useEffect(() => {
     // if (screen === `success`) {
-    navigator.clipboard.writeText(
-      `${router.basePath}${suffix ?? "ERROR"}`
-    );
+    navigator.clipboard.writeText(`${router.basePath}${suffix ?? "ERROR"}`);
     copiedPopupRef.className = `${style.copiedPopup} ${style.show}`;
     setTimeout(() => {
       if (copiedPopupRef !== null) {
@@ -65,10 +64,7 @@ export default function SuccessPage(props: {}) {
           className={style.activeButton}
           style={{ marginBottom: 10, marginTop: 30 }}
           onClick={() => {
-            window.open(
-              `${router.basePath}${suffix ?? "ERROR"}`,
-              "_blank"
-            );
+            window.open(`${router.basePath}${suffix ?? "ERROR"}`, "_blank");
           }}
         >
           Test it out

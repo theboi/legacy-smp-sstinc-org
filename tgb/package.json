@@ -1,7 +1,10 @@
 {
   "name": "@theboi/tgb",
-  "version": "2.1.0",
+  "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "test": "echo This is a temporary test! Change me later!"
+  },
   "dependencies": {
     "telegraf": "^4.3.0"
   },

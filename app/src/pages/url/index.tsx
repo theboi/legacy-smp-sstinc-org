@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { FaExclamationCircle } from "react-icons/fa";
@@ -7,7 +8,6 @@ import "firebase/firestore";
 
 import style from "./style.module.css";
 import { User, UserRole } from "../../model/user";
-import LabelField from "../../components/labelField";
 
 let deepLinkField = "";
 let nameField = "";
@@ -160,7 +160,7 @@ export default function UrlPage(props: { user: User }) {
           onKeyDown={(event) => {
             if (event.keyCode === 13) {
               event.preventDefault();
-              createUrl()
+              createUrl();
             }
           }}
           leftDetail={<p className={style.domain}>go.sstinc.org/</p>}
