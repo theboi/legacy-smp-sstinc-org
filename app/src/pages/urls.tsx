@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 import {
   Table,
@@ -27,21 +27,20 @@ import {
   ModalFooter,
   InputGroup,
   InputLeftAddon,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 
-import { fbProvider } from "../model/fbProvider";
-import { User } from "../model/user";
 import { FaEllipsisH, FaPlus, FaTrash } from "react-icons/fa";
+import { fbProvider } from "../model/fbProvider";
 
-export default function UrlsPage(props: { user: User }) {
+export default function UrlsPage() {
   const [urls, setUrls] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const urlRef = useRef(null)
-  const suffixRef = useRef(null)
+  const urlRef = useRef(null);
+  const suffixRef = useRef(null);
 
-  const toast = useToast()
+  const toast = useToast();
 
   useEffect(() => {
     const unsubscribe = fbProvider.url.listAll((snapshot) => {
@@ -58,52 +57,62 @@ export default function UrlsPage(props: { user: User }) {
   }, []);
 
   function saveURLData() {
-    const valid = validateURLData()
+    const valid = validateURLData();
     if (valid !== undefined) {
-      fbProvider.url.updateUrl(valid.suffix, valid.url)
-      onClose()
-      toast({ title: "Shortened URL saved successfully!", status: "success" })
+      fbProvider.url.updateUrl(valid.suffix, valid.url);
+      onClose();
+      toast({ title: "Shortened URL saved successfully!", status: "success" });
     }
-    toast({ title: "An error occurred while saving", status: "error" })
+    toast({ title: "An error occurred while saving", status: "error" });
   }
 
-  function validateURLData(): {suffix: string, url: string} {
-    if ((suffixRef.current.value as string).match(/^\w+$/g) === [] && (urlRef.current.value as string).match(/^.+$/g) === []) return {
-      suffix: suffixRef.current.value,
-      url: urlRef.current.value
+  function validateURLData(): { suffix: string; url: string } {
+    if (
+      (suffixRef.current.value as string).match(/^\w+$/g) === [] &&
+      (urlRef.current.value as string).match(/^.+$/g) === []
+    ) {
+      return {
+        suffix: suffixRef.current.value,
+        url: urlRef.current.value,
+      };
     }
 
-    return undefined
+    return undefined;
   }
 
   return (
     <>
-      <Modal
-        initialFocusRef={urlRef}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
+      <Modal initialFocusRef={urlRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create a new shortened URL</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-          <FormControl>
-            <FormLabel>URL</FormLabel>
-            <Input ref={urlRef} onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.keyCode === 13) suffixRef.current.focus()
-            }} placeholder="sstinc.org" />
-          </FormControl>
+            <FormControl>
+              <FormLabel>URL</FormLabel>
+              <Input
+                ref={urlRef}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.keyCode === 13)
+                    suffixRef.current.focus();
+                }}
+                placeholder="sstinc.org"
+              />
+            </FormControl>
 
-          <FormControl mt={4}>
-            <FormLabel>Suffix</FormLabel>
-            <InputGroup>
-    <InputLeftAddon children="smp.sstinc.org/" />
-    <Input ref={suffixRef} onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.keyCode === 13) saveURLData()
-            }} placeholder="sstinc" />
-  </InputGroup>
-          </FormControl>
+            <FormControl mt={4}>
+              <FormLabel>Suffix</FormLabel>
+              <InputGroup>
+                <InputLeftAddon>smp.sstinc.org/</InputLeftAddon>
+                <Input
+                  ref={suffixRef}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.keyCode === 13) saveURLData();
+                  }}
+                  placeholder="sstinc"
+                />
+              </InputGroup>
+            </FormControl>
           </ModalBody>
 
           <ModalFooter>
@@ -152,9 +161,9 @@ export default function UrlsPage(props: { user: User }) {
           </Tbody>
           <Tfoot>
             <Tr>
-              <Th></Th>
-              <Th></Th>
-              <Th isNumeric></Th>
+              <Th />
+              <Th />
+              <Th isNumeric />
             </Tr>
           </Tfoot>
         </Table>
