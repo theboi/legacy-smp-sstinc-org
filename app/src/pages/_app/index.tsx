@@ -16,6 +16,7 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import {
+  FaBook,
   FaBug,
   FaClipboardList,
   FaLink,
@@ -184,15 +185,20 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
   return (
     <div className={style.main}>
       <div className={style.headnav}>
-        <a href="https://sstinc.org" rel="noreferrer noopener" target="_blank">
-          <img
-            src="/assets/sstinc-icon.png"
-            alt="SST Inc Icon"
-            width={100}
-            height={100}
-          />
-        </a>
         <nav className={style.nav}>
+          <a
+            className={style.icon}
+            href="https://sstinc.org"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            <img
+              src="/assets/sstinc-icon.png"
+              alt="SST Inc Icon"
+              width={100}
+              height={100}
+            />
+          </a>
           <NavBar
             user={props.user}
             links={[
@@ -213,6 +219,11 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
                 action: "/atd",
               },
               {
+                name: "PSLE",
+                icon: <FaBook />,
+                action: "/psle",
+              },
+              {
                 name: "URL Shortener",
                 icon: <FaLink />,
                 action: "/urls",
@@ -231,16 +242,7 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
           />
         </nav>
       </div>
-      <Box
-        boxShadow={colorMode === "dark" ? "dark-lg" : "lg"}
-        border="1px solid"
-        borderColor={colorMode === "dark" ? "transparent" : "gray.200"}
-        rounded="2xl"
-        p={2}
-        m={2}
-      >
-        {props.children}
-      </Box>
+      {props.children}
       <Credits />
     </div>
   );

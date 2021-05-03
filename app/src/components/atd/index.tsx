@@ -26,9 +26,7 @@ import {
 import { User, UserRole } from "../../model/user";
 import { fbProvider } from "../../model/fbProvider";
 
-import style from "./style.module.css";
-
-export default function AtdPage(props: { user: User }) {
+export default function AtdField(props: { user: User }) {
   const [time, setTime] = useState(0);
   const [key, setKey] = useState(getKeyCode());
   const [code, setCode] = useState("");
@@ -125,13 +123,9 @@ export default function AtdPage(props: { user: User }) {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <div className={style.main}>
+      <div>
         <Heading size="md">Attendance</Heading>
-        <p>
-          Kindly enter the 4 digit code provided to check-in to SST Inc. Your
-          attendance data will be recorded in the SST Inc Attendance Database
-          (SAD).
-        </p>
+        <p>Kindly enter the 4 digit code provided to check-in to SST Inc.</p>
         <HStack onKeyDown={onCodeKeyDown}>
           <PinInput
             otp
@@ -145,7 +139,7 @@ export default function AtdPage(props: { user: User }) {
             ))}
           </PinInput>
         </HStack>
-        <div className={style.buttons}>
+        <div>
           <ButtonGroup isAttached width="100%">
             <Button
               isFullWidth
