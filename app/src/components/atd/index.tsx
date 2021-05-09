@@ -21,12 +21,10 @@ import {
   HStack,
   Code,
   VStack,
-  AlertIcon,
   AlertTitle,
   AlertDescription,
   Alert,
   Box,
-  CloseButton,
 } from "@chakra-ui/react";
 
 import { User, UserRole } from "../../model/user";
@@ -125,7 +123,6 @@ export default function AtdField(props: { user: User }) {
         </ModalContent>
       </Modal>
       <Alert status="info">
-        <AlertIcon />
         <Box style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <AlertTitle>Attendance</AlertTitle>
           <AlertDescription display="block">

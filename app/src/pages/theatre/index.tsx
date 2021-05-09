@@ -1,8 +1,3 @@
-/* eslint-disable */
-
-import { fbProvider } from "../../model/fbProvider";
-import { User, UserRole } from "../../model/user";
-
 import {
   Accordion,
   AccordionItem,
@@ -16,22 +11,20 @@ import {
   MenuItem,
   Image,
   Button,
-  Wrap,
-  WrapItem,
   Center,
   Heading,
-  Text,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Dispatch, SetStateAction, useState } from "react";
+import { User } from "../../model/user";
 import AtdField from "../../components/atd";
 import { useColor } from "../../extensions/chakra";
 
-enum TheatreAssignmentType {
-  None,
-  Video,
-  Quiz,
-}
+// enum TheatreAssignmentType {
+//   None,
+//   Video,
+//   Quiz,
+// }
 
 interface _TheatreAssignment {
   // type: TheatreAssignmentType;
@@ -58,16 +51,16 @@ interface TheatreLesson {
   assignments: TheatreAssignment[];
 }
 
-interface TheatreCourse {
-  subject: TheatreCourseSubject;
-  lessons: TheatreLesson[];
-}
-
 enum TheatreCourseSubject {
   Ios = "iOS",
   Rct = "React",
   And = "Android",
   Des = "Design",
+}
+
+interface TheatreCourse {
+  subject: TheatreCourseSubject;
+  lessons: TheatreLesson[];
 }
 
 const courses: TheatreCourse[] = [
@@ -173,15 +166,11 @@ export default function TheatrePage(props: { user: User }) {
         <div style={{ flexBasis: 300, flexGrow: 1 }}>
           <AtdField user={props.user} />
           {courseDropdown}
-          <Accordion allowToggle>
-            <div>
-              <TheatreLessonSelectBar
-                lessons={courses[courseInd].lessons}
-                currentAid={currentAid}
-                setCurrentAid={setCurrentAid}
-              />
-            </div>
-          </Accordion>
+          <TheatreLessonSelectBar
+            lessons={courses[courseInd].lessons}
+            currentAid={currentAid}
+            setCurrentAid={setCurrentAid}
+          />
         </div>
         <TheatreLessonContent />
       </div>
@@ -195,7 +184,7 @@ function TheatreLessonSelectBar(props: {
   setCurrentAid: Dispatch<SetStateAction<string>>;
 }) {
   return (
-    <div>
+    <Accordion allowToggle>
       {props.lessons.map((l) => (
         <AccordionItem key={l.lid}>
           <h2>
@@ -222,9 +211,9 @@ function TheatreLessonSelectBar(props: {
               style={
                 props.currentAid === a.aid
                   ? {
-                      color: "var(--chakra-colors-teal-200)",
-                      background: "rgba(48, 140, 122, 0.3)",
-                    }
+                    color: "var(--chakra-colors-teal-200)",
+                    background: "rgba(48, 140, 122, 0.3)",
+                  }
                   : {}
               }
             >
@@ -233,11 +222,11 @@ function TheatreLessonSelectBar(props: {
           ))}
         </AccordionItem>
       ))}
-    </div>
+    </Accordion>
   );
 }
 
-function TheatreLessonContent(props: {}) {
+function TheatreLessonContent() {
   return (
     <Box
       style={{

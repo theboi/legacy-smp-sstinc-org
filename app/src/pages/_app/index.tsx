@@ -18,7 +18,6 @@ import {
 import {
   FaBook,
   FaBug,
-  FaClipboardList,
   FaLink,
   FaSignInAlt,
   FaSun,
@@ -214,9 +213,9 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
                   props.user === null ? fbProvider.auth.signIn : "/profile",
               },
               {
-                name: "Learn",
+                name: "Learning Theatre",
                 icon: <FaBook />,
-                action: "/learn",
+                action: "/theatre",
               },
               {
                 name: "URL Shortener",
