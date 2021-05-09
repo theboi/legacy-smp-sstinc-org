@@ -68,20 +68,15 @@ export default function AtdField(props: { user: User }) {
         .catch((e) => {
           console.error(e);
           setStatus("Error");
-        })
-        .finally(() => {
-          setTimeout(() => {
-            setStatus("Confirm");
-          }, 2000);
         });
     } else {
-      /** Code submission cooldown of 2 sec, informs user that code is incorrect */
       setStatus("Invalid");
-      setCode("");
-      setTimeout(() => {
-        setStatus("Confirm");
-      }, 2000);
     }
+    /** Code submission cooldown of 2 sec */
+    setTimeout(() => {
+      setCode("");
+      setStatus("Confirm");
+    }, 2000);
   }
 
   function onCodeKeyDown(e: KeyboardEvent<HTMLInputElement>) {
@@ -131,6 +126,7 @@ export default function AtdField(props: { user: User }) {
             otp
             type="alphanumeric"
             size="xl"
+            value={code}
             onChange={onCodeChange}
             isInvalid={status === "Invalid"}
           >

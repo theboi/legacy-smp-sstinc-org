@@ -4,7 +4,7 @@ import { User, UserRole } from "../../model/user";
 
 export default function ProfilePage(props: { user: User }) {
   return (
-    <div>
+    <div style={{ maxWidth: 500 }}>
       {props.user === null ? (
         <Button colorScheme="blue" onClick={fbProvider.auth.signIn}>
           Sign In

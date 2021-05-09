@@ -180,7 +180,7 @@ const LoadingOverlay = React.forwardRef(
 );
 
 const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { toggleColorMode } = useColorMode();
 
   return (
     <div className={style.main}>
@@ -214,14 +214,9 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
                   props.user === null ? fbProvider.auth.signIn : "/profile",
               },
               {
-                name: "Attendance",
-                icon: <FaClipboardList />,
-                action: "/atd",
-              },
-              {
-                name: "PSLE",
+                name: "Learn",
                 icon: <FaBook />,
-                action: "/psle",
+                action: "/learn",
               },
               {
                 name: "URL Shortener",

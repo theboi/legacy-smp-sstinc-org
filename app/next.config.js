@@ -1,4 +1,5 @@
-require('dotenv').config()
+import("dotenv").then((o) => o.config());
+
 module.exports = {
   env: {
     GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
@@ -9,15 +10,15 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/atd',
+        source: "/",
+        destination: "/theatre",
         permanent: false,
       },
       {
-        source: '/home',
-        destination: '/atd',
+        source: "/home",
+        destination: "/theatre",
         permanent: false,
       },
-    ]
+    ];
   },
-}
+};
