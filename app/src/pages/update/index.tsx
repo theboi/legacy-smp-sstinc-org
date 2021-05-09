@@ -3,8 +3,7 @@
 import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import style from "./style.module.css";
 
-import { fbProvider } from "../../model/fbProvider";
-import { User, UserRole } from "../../model/user";
+import { User } from "../../model/user";
 
 export default function UpdatePage(props: { user: User }) {
   function confirmDetails() {}
