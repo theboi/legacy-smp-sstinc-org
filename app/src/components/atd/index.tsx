@@ -21,6 +21,12 @@ import {
   HStack,
   Code,
   VStack,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Alert,
+  Box,
+  CloseButton,
 } from "@chakra-ui/react";
 
 import { User, UserRole } from "../../model/user";
@@ -118,24 +124,27 @@ export default function AtdField(props: { user: User }) {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <div>
-        <Heading size="md">Attendance</Heading>
-        <p>Kindly enter the 4 digit code provided to check-in to SST Inc.</p>
-        <HStack onKeyDown={onCodeKeyDown}>
-          <PinInput
-            otp
-            type="alphanumeric"
-            size="xl"
-            value={code}
-            onChange={onCodeChange}
-            isInvalid={status === "Invalid"}
-          >
-            {[...Array(4)].map((_, i) => (
-              <PinInputField style={{ fontSize: "2em" }} key={i} />
-            ))}
-          </PinInput>
-        </HStack>
-        <div>
+      <Alert status="info">
+        <AlertIcon />
+        <Box style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <AlertTitle>Attendance</AlertTitle>
+          <AlertDescription display="block">
+            Kindly enter the 4 digit code provided to check-in to SST Inc.
+          </AlertDescription>
+          <HStack onKeyDown={onCodeKeyDown}>
+            <PinInput
+              otp
+              type="alphanumeric"
+              size="xl"
+              value={code}
+              onChange={onCodeChange}
+              isInvalid={status === "Invalid"}
+            >
+              {[...Array(4)].map((_, i) => (
+                <PinInputField style={{ fontSize: "2em" }} key={i} />
+              ))}
+            </PinInput>
+          </HStack>
           <ButtonGroup isAttached width="100%">
             <Button
               isFullWidth
@@ -156,9 +165,9 @@ export default function AtdField(props: { user: User }) {
               />
             ) : null}
           </ButtonGroup>
-        </div>
-        {/* <Button disabled>Scan a QR Code instead</Button> */}
-      </div>
+          {/* <Button disabled>Scan a QR Code instead</Button> */}
+        </Box>
+      </Alert>
     </>
   );
 }
