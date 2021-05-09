@@ -31,7 +31,7 @@ import {
 } from "@chakra-ui/react";
 
 import { FaEllipsisH, FaPlus, FaTrash } from "react-icons/fa";
-import { fbProvider } from "../model/fbProvider";
+import { fbProvider } from "../../model/fbProvider";
 
 export default function UrlsPage() {
   const [urls, setUrls] = useState([]);
@@ -67,16 +67,24 @@ export default function UrlsPage() {
   }
 
   function validateURLData(): { suffix: string; url: string } {
-    if (
-      (suffixRef.current.value as string).match(/^\w+$/g) === [] &&
-      (urlRef.current.value as string).match(/^.+$/g) === []
-    ) {
-      return {
-        suffix: suffixRef.current.value,
-        url: urlRef.current.value,
-      };
+    let url: string = urlRef.current.value;
+    let suffix: string = suffixRef.current.value;
+    if (!(url.startsWith("http://") || url.startsWith("https://"))) {
+      url = `https://${url}`;
     }
-
+    if (suffix === "") {
+      suffix = "a"; // random
+    }
+    console.log(
+      url,
+      /^https?:\/\/[a-zA-Z0-9-._~!*'();:@&=+$,\/?#[]%]+$/g.test(url)
+    );
+    if (
+      /^https?:\/\/[a-zA-Z0-9-._~!*'();:@&=+$,\/?#\[\]%]+$/g.test(url) &&
+      /^\w+$/g.test(suffix)
+    ) {
+      return { url, suffix };
+    }
     return undefined;
   }
 
@@ -93,8 +101,9 @@ export default function UrlsPage() {
               <Input
                 ref={urlRef}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.keyCode === 13)
+                  if (e.key === "Enter" || e.keyCode === 13) {
                     suffixRef.current.focus();
+                  }
                 }}
                 placeholder="sstinc.org"
               />
