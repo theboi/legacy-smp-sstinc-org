@@ -25,53 +25,54 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Dispatch, SetStateAction, useState } from "react";
 import AtdField from "../../components/atd";
+import { useColor } from "../../extensions/chakra";
 
-enum LearnAssignmentType {
+enum TheatreAssignmentType {
   None,
   Video,
   Quiz,
 }
 
-interface _LearnAssignment {
-  // type: LearnAssignmentType;
+interface _TheatreAssignment {
+  // type: TheatreAssignmentType;
   aid: string;
   title: string;
 }
 
-type LearnAssignment =
-  | _LearnAssignment
-  | LearnVideoAssignment
-  | LearnQuizAssignment;
+type TheatreAssignment =
+  | _TheatreAssignment
+  | TheatreVideoAssignment
+  | TheatreQuizAssignment;
 
-interface LearnVideoAssignment extends _LearnAssignment {
+interface TheatreVideoAssignment extends _TheatreAssignment {
   media: string[];
 }
 
-interface LearnQuizAssignment extends _LearnAssignment {
+interface TheatreQuizAssignment extends _TheatreAssignment {
   quiz: string;
 }
 
-interface LearnLesson {
+interface TheatreLesson {
   lid: string;
   title: string;
-  assignments: LearnAssignment[];
+  assignments: TheatreAssignment[];
 }
 
-interface LearnCourse {
-  subject: LearnCourseSubject;
-  lessons: LearnLesson[];
+interface TheatreCourse {
+  subject: TheatreCourseSubject;
+  lessons: TheatreLesson[];
 }
 
-enum LearnCourseSubject {
+enum TheatreCourseSubject {
   Ios = "iOS",
   Rct = "React",
   And = "Android",
   Des = "Design",
 }
 
-const courses: LearnCourse[] = [
+const courses: TheatreCourse[] = [
   {
-    subject: LearnCourseSubject.Ios,
+    subject: TheatreCourseSubject.Ios,
     lessons: [
       {
         lid: "ios_001",
@@ -107,7 +108,7 @@ const courses: LearnCourse[] = [
     ],
   },
   {
-    subject: LearnCourseSubject.Rct,
+    subject: TheatreCourseSubject.Rct,
     lessons: [
       {
         lid: "rct_001",
@@ -138,8 +139,8 @@ const courses: LearnCourse[] = [
   },
 ];
 
-export default function LearnPage(props: { user: User }) {
-  // const courses: LearnLesson[] = [{ name: "iOS " }];
+export default function TheatrePage(props: { user: User }) {
+  // const courses: TheatreLesson[] = [{ name: "iOS " }];
 
   const [courseInd, setCourseInd] = useState(0);
   const [currentAid, setCurrentAid] = useState("");
@@ -174,7 +175,7 @@ export default function LearnPage(props: { user: User }) {
           {courseDropdown}
           <Accordion allowToggle>
             <div>
-              <LearnLessonSelectBar
+              <TheatreLessonSelectBar
                 lessons={courses[courseInd].lessons}
                 currentAid={currentAid}
                 setCurrentAid={setCurrentAid}
@@ -182,14 +183,14 @@ export default function LearnPage(props: { user: User }) {
             </div>
           </Accordion>
         </div>
-        <LearnLessonContent />
+        <TheatreLessonContent />
       </div>
     </div>
   );
 }
 
-function LearnLessonSelectBar(props: {
-  lessons: LearnLesson[];
+function TheatreLessonSelectBar(props: {
+  lessons: TheatreLesson[];
   currentAid: string;
   setCurrentAid: Dispatch<SetStateAction<string>>;
 }) {
@@ -236,11 +237,15 @@ function LearnLessonSelectBar(props: {
   );
 }
 
-function LearnLessonContent(props: {}) {
+function TheatreLessonContent(props: {}) {
   return (
     <Box
-      style={{ flexBasis: "50vw", flexGrow: 9999, aspectRatio: "1920/1080" }}
-      bg="gray.900"
+      style={{
+        flexBasis: "50vw",
+        flexGrow: 9999,
+        aspectRatio: "1920/1080",
+        backgroundColor: useColor("bg2"),
+      }}
     >
       <Center style={{ height: "100%", flexDirection: "column" }}>
         <Heading>🤫</Heading>
