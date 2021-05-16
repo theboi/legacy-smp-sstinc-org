@@ -1,8 +1,8 @@
 import { NextApiResponse, NextApiRequest } from "next";
-import { fbProvider } from "../../../model/fbProvider";
+import { provider } from "../../../model/provider";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const output = (await fbProvider.atd.allUsers()).docs.map((value) => ({
+  const output = (await provider.atd.allUsers()).docs.map((value) => ({
     /**
      * Forces data.date to SGT time format. If excluded, time will
      * be shown in UTC during production.

@@ -15,19 +15,13 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
-import {
-  FaBook,
-  FaBug,
-  FaLink,
-  FaSignInAlt,
-  FaSun,
-} from "react-icons/fa";
+import { FaBook, FaBug, FaLink, FaSignInAlt, FaSun } from "react-icons/fa";
 import { useRouter } from "next/router";
 import style from "./style.module.css";
 
 import theme from "../../model/theme";
 
-import { fbProvider } from "../../model/fbProvider";
+import { provider } from "../../model/provider";
 import { User, UserRole } from "../../model/user";
 import ErrorPage from "../404";
 import ProfilePage from "../profile";
@@ -52,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   });
   useEffect(() => {
-    fbProvider.auth.addIdTokenChangedListener((user: User) => {
+    provider.auth.addIdTokenChangedListener((user: User) => {
       setCurUser(user);
       // console.log(user)
       // if (user?.iid !== undefined && user?.role === UserRole.Alien) {
@@ -63,7 +57,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     (async () => {
-      await fbProvider.auth.checkForAuth();
+      await provider.auth.checkForAuth();
       loadingOverlayRef.current.style.display = "none";
     })();
   }, [curUser]);
@@ -209,8 +203,7 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
                   ) : (
                     <Avatar src={props.user?.photoURL} size="sm" />
                   ),
-                action:
-                  props.user === null ? fbProvider.auth.signIn : "/profile",
+                action: props.user === null ? provider.auth.signIn : "/profile",
               },
               {
                 name: "Learning Theatre",
