@@ -1,12 +1,12 @@
 import { Button, Badge, Avatar, Heading, Text, Flex } from "@chakra-ui/react";
-import { fbProvider } from "../../model/fbProvider";
+import { provider } from "../../model/provider";
 import { User, UserRole } from "../../model/user";
 
 export default function ProfilePage(props: { user: User }) {
   return (
     <div style={{ maxWidth: 500 }}>
       {props.user === null ? (
-        <Button colorScheme="blue" onClick={fbProvider.auth.signIn}>
+        <Button colorScheme="blue" onClick={provider.auth.signIn}>
           Sign In
         </Button>
       ) : (
@@ -26,7 +26,7 @@ export default function ProfilePage(props: { user: User }) {
               </div>
             </Flex>
           </div>
-          <Button colorScheme="red" onClick={fbProvider.auth.signOut}>
+          <Button colorScheme="red" onClick={provider.auth.signOut}>
             Sign Out
           </Button>
         </>

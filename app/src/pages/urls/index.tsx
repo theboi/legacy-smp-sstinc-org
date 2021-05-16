@@ -31,9 +31,9 @@ import {
 } from "@chakra-ui/react";
 
 import { FaEllipsisH, FaPlus, FaTrash } from "react-icons/fa";
-import { fbProvider } from "../../model/fbProvider";
+import { provider } from "../../model/provider";
 
-export default function UrlsPage() {
+export default function URLsPage() {
   const [urls, setUrls] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -43,7 +43,7 @@ export default function UrlsPage() {
   const toast = useToast();
 
   useEffect(() => {
-    const unsubscribe = fbProvider.url.listAll((snapshot) => {
+    const unsubscribe = provider.url.getURLsSnapshot((snapshot) => {
       setUrls(
         snapshot.docs.map((e) => ({
           url: e.data().url,
@@ -56,17 +56,17 @@ export default function UrlsPage() {
     };
   }, []);
 
-  function saveURLData() {
-    const valid = validateURLData();
+  function saveURL() {
+    const valid = validateURL();
     if (valid !== undefined) {
-      fbProvider.url.updateUrl(valid.suffix, valid.url);
+      provider.url.updateURL(valid.suffix, valid.url);
       onClose();
       toast({ title: "Shortened URL saved successfully!", status: "success" });
     }
     toast({ title: "An error occurred while saving", status: "error" });
   }
 
-  function validateURLData(): { suffix: string; url: string } {
+  function validateURL(): { suffix: string; url: string } {
     let url: string = urlRef.current.value;
     let suffix: string = suffixRef.current.value;
     if (!(url.startsWith("http://") || url.startsWith("https://"))) {
@@ -75,10 +75,6 @@ export default function UrlsPage() {
     if (suffix === "") {
       suffix = "a"; // random
     }
-    console.log(
-      url,
-      /^https?:\/\/[a-zA-Z0-9-._~!*'();:@&=+$,\/?#[]%]+$/g.test(url)
-    );
     if (
       /^https?:\/\/[a-zA-Z0-9-._~!*'();:@&=+$,\/?#\[\]%]+$/g.test(url) &&
       /^\w+$/g.test(suffix)
@@ -86,6 +82,10 @@ export default function UrlsPage() {
       return { url, suffix };
     }
     return undefined;
+  }
+
+  function deleteURL(suffix: string) {
+    provider.url.deleteURL(suffix);
   }
 
   return (
@@ -116,7 +116,7 @@ export default function UrlsPage() {
                 <Input
                   ref={suffixRef}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.keyCode === 13) saveURLData();
+                    if (e.key === "Enter" || e.keyCode === 13) saveURL();
                   }}
                   placeholder="sstinc"
                 />
@@ -125,7 +125,7 @@ export default function UrlsPage() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={saveURLData}>
+            <Button colorScheme="blue" mr={3} onClick={saveURL}>
               Save
             </Button>
             <Button onClick={onClose}>Cancel</Button>
@@ -161,7 +161,12 @@ export default function UrlsPage() {
                       variant=""
                     />
                     <MenuList>
-                      <MenuItem icon={<FaTrash />}>Delete</MenuItem>
+                      <MenuItem
+                        icon={<FaTrash />}
+                        onClick={() => deleteURL(e.suffix)}
+                      >
+                        Delete
+                      </MenuItem>
                     </MenuList>
                   </Menu>
                 </Td>

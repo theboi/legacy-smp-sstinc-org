@@ -28,7 +28,7 @@ import {
 } from "@chakra-ui/react";
 
 import { User, UserRole } from "../../model/user";
-import { fbProvider } from "../../model/fbProvider";
+import { provider } from "../../model/provider";
 
 export default function AtdField(props: { user: User }) {
   const [time, setTime] = useState(0);
@@ -64,7 +64,7 @@ export default function AtdField(props: { user: User }) {
   function confirmCode() {
     if (code === getKeyCode()) {
       /** Handle after writing to Firestore */
-      fbProvider.atd
+      provider.atd
         .checkIn(props.user)
         .then(() => {
           setStatus("Success");
