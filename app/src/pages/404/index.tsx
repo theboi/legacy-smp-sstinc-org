@@ -12,14 +12,15 @@ export default function ErrorPage(props: { status: number }) {
   const codes: { [key: number]: ErrorCode } = {
     403: {
       msg: "For Biden",
-      cap: "Not Trump",
+      cap: "Not You",
     },
     404: {
       msg: "Not Found",
-      cap: "IYKYK",
+      cap: "Oops",
     },
   };
   const status = props.status ?? 404;
+  const imageSrc = `/assets/errors/${status}-${1 + Math.floor(Math.random() * 4)}.png`;
 
   return (
     <div className={style.main}>
@@ -32,7 +33,7 @@ export default function ErrorPage(props: { status: number }) {
       >
         <figure className={style.fig}>
           <img
-            src={`/assets/errors/${status}.png`}
+            src={imageSrc}
             alt={`${status}: ${codes[status].msg}`}
             className={style.img}
           />

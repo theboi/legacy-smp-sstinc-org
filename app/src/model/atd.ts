@@ -35,7 +35,7 @@ export class Atd {
 
   async allUsers(): Promise<
     firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>
-  > {
+    > {
     return firebase
       .firestore()
       .collection(this.firestore)

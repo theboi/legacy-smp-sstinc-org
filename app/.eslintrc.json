@@ -40,7 +40,8 @@
     "@typescript-eslint/no-shadow": ["error"],
     "nonblock-statement-body-position": "off",
     "no-useless-escape": "off",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "object-curly-newline": "off"
   },
   "settings": {
     "import/resolver": {
