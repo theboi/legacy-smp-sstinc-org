@@ -2,6 +2,11 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+| Folder | Description
+|:-|:-|
+| app | Main web application
+| tgb | Telegram bot
+
 ## About
 
 The SST Inc Management Platform is an open-sourced, unified platform for SST Inc managerial and educational matters.
