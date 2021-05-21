@@ -14,6 +14,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
 import { FaBook, FaBug, FaLink, FaSignInAlt, FaSun } from "react-icons/fa";
 import { useRouter } from "next/router";
@@ -28,8 +29,7 @@ import ProfilePage from "../profile";
 
 const paths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
-  "/urls": UserRole.ExCo,
-  "/atd": UserRole.Trainee,
+  "/train": UserRole.Trainee,
 };
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -62,10 +62,28 @@ export default function App({ Component, pageProps }: AppProps) {
     })();
   }, [curUser]);
 
-  function isAuth(): boolean {
-    if (curUser?.role >= paths[router.pathname]) return true;
-    return false;
-  }
+  // function genRandAlias() {
+  //   const characters =
+  //     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
+  //   let randomAlias = "";
+  //   for (var i = 0; i < 4; i++) {
+  //     randomAlias += characters.charAt(
+  //       Math.floor(Math.random() * characters.length)
+  //     );
+  //   }
+  //   firebase
+  //     .firestore()
+  //     .collection("links")
+  //     .get()
+  //     .then((col) => {
+  //       col.docs.map((doc) => {
+  //         if (randomAlias === doc.data().suffix) {
+  //           return genRandAlias();
+  //         }
+  //       });
+  //     });
+  //   return randomAlias;
+  // }
 
   return (
     <>
@@ -99,7 +117,7 @@ export default function App({ Component, pageProps }: AppProps) {
                   return <Component {...pageProps} user={curUser} />;
                 case curUser?.role === undefined:
                   return <ProfilePage user={curUser} />;
-                case isAuth():
+                case curUser?.role >= paths[router.pathname]: // isAuth
                   return <Component {...pageProps} user={curUser} />;
                 default:
                   return <ErrorPage status={403} />;
@@ -206,19 +224,22 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
                 action: props.user === null ? provider.auth.signIn : "/profile",
               },
               {
-                name: "Learning Theatre",
+                name: "Train",
                 icon: <FaBook />,
-                action: "/theatre",
+                action: "/train",
               },
               {
                 name: "URL Shortener",
                 icon: <FaLink />,
-                action: "/urls",
+                action: "/url",
               },
               {
                 name: "Toggle Theme",
                 icon: <FaSun />,
                 action: () => toggleColorMode(),
+              },
+              {
+                isDivider: true
               },
               {
                 name: "Bug Report",
@@ -236,10 +257,12 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
 };
 
 interface NavLink {
-  name: string;
+  minRole?: UserRole;
+  isDivider?: boolean;
+  name?: string;
   // Allows for any FontAwesome icon or other React element like images
-  icon: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
-  action: (() => void) | string;
+  icon?: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+  action?: (() => void) | string;
 }
 
 const NavBar = (props: { user: User; links: NavLink[] }) => {
@@ -256,19 +279,23 @@ const NavBar = (props: { user: User; links: NavLink[] }) => {
         variant="outline"
       />
       <MenuList>
-        {props.links.map((e, i) => (
-          <MenuItem
-            key={i}
-            onClick={
-              typeof e.action === "string" || e.action instanceof String
-                ? () => router.push(e.action as string)
-                : e.action
-            }
-            icon={e.icon}
-          >
-            {e.name}
-          </MenuItem>
-        ))}
+        {props.links.map((e, i) => {
+          if (e.isDivider) return <MenuDivider />;
+          // else if (props.user.role >= e.minRole) return null;
+          return (
+            <MenuItem
+              key={i}
+              onClick={
+                typeof e.action === "string" || e.action instanceof String
+                  ? () => router.push(e.action as string)
+                  : e.action
+              }
+              icon={e.icon}
+            >
+              {e.name}
+            </MenuItem>
+          );
+        })}
       </MenuList>
     </Menu>
   );

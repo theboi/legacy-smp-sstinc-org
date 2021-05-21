@@ -34,3 +34,11 @@ export default function ProfilePage(props: { user: User }) {
     </div>
   );
 }
+
+// export async function getStaticProps() {
+//   const train = new Train();
+
+//   return {
+//     props: { response },
+//   };
+// }

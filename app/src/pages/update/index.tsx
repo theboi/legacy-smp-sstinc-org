@@ -1,15 +1,14 @@
-/* eslint-disable */
-
 import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
-import style from "./style.module.css";
 
 import { User } from "../../model/user";
 
 export default function UpdatePage(props: { user: User }) {
-  function confirmDetails() {}
+  function confirmDetails() {
+    console.log(props.user);
+  }
   // [1-4]0[1-8]
   return (
-    <div className={style.main}>
+    <div>
       <h3>Update your account information</h3>
       <p>
         Welcome! In order to use SMP, we need to confirm some details about you.

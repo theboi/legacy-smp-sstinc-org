@@ -30,11 +30,7 @@ export class Auth {
     return firebase
       .auth()
       .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(() =>
-        firebase
-          .auth()
-          .signInWithRedirect(new firebase.auth.GoogleAuthProvider())
-      )
+      .then(() => firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider()))
       .catch((e) => {
         console.error(`${e.message} (signInWithRedirect)`);
       });
