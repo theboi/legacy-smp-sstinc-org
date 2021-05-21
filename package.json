@@ -22,7 +22,6 @@
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "npx eslint --fix",
       "npx prettier --write",
       "pnpm test"
     ]
