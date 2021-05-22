@@ -9,7 +9,19 @@
 Variables
 //////////////////////////////////////////////////////////////////////////////*/
 :root {
-  
+	/* light */
+  --l-bg1: var(--chakra-colors-white);
+	--l-bg2: var(--chakra-colors-gray-50);
+
+	--l-tx1: var(--chakra-colors-gray-800);
+	--l-bd1: var(--chakra-gray-200);
+
+	/* dark */
+	--d-bg1: var(--chakra-colors-gray-800);
+	--d-bg2: var(--chakra-colors-gray-900);
+
+	--d-tx1: var(--chakra-colors-whiteAlpha-900);
+	--d-bd1: var(--chakra-colors-whiteAlpha-300);
 }
 
 /* /////////////////////////////////////////////////////////////////////////////

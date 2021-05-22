@@ -14,28 +14,23 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
-import {
-  FaBug,
-  FaClipboardList,
-  FaLink,
-  FaSignInAlt,
-  FaSun,
-} from "react-icons/fa";
+import { FaBook, FaBug, FaLink, FaSignInAlt, FaSun } from "react-icons/fa";
 import { useRouter } from "next/router";
 import style from "./style.module.css";
 
 import theme from "../../model/theme";
 
-import { fbProvider } from "../../model/fbProvider";
+import { provider } from "../../model/provider";
 import { User, UserRole } from "../../model/user";
 import ErrorPage from "../404";
-import ProfilePage from "../profile";
+import ProfilePage from "../account/profile";
+import { authProvider } from "../../model/auth";
 
 const paths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
-  "/urls": UserRole.ExCo,
-  "/atd": UserRole.Trainee,
+  "/train": UserRole.Trainee,
 };
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -52,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   });
   useEffect(() => {
-    fbProvider.auth.addIdTokenChangedListener((user: User) => {
+    authProvider.addIdTokenChangedListener((user: User) => {
       setCurUser(user);
       // console.log(user)
       // if (user?.iid !== undefined && user?.role === UserRole.Alien) {
@@ -63,15 +58,33 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     (async () => {
-      await fbProvider.auth.checkForAuth();
+      await authProvider.checkForAuth();
       loadingOverlayRef.current.style.display = "none";
     })();
   }, [curUser]);
 
-  function isAuth(): boolean {
-    if (curUser?.role >= paths[router.pathname]) return true;
-    return false;
-  }
+  // function genRandAlias() {
+  //   const characters =
+  //     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
+  //   let randomAlias = "";
+  //   for (var i = 0; i < 4; i++) {
+  //     randomAlias += characters.charAt(
+  //       Math.floor(Math.random() * characters.length)
+  //     );
+  //   }
+  //   firebase
+  //     .firestore()
+  //     .collection("links")
+  //     .get()
+  //     .then((col) => {
+  //       col.docs.map((doc) => {
+  //         if (randomAlias === doc.data().suffix) {
+  //           return genRandAlias();
+  //         }
+  //       });
+  //     });
+  //   return randomAlias;
+  // }
 
   return (
     <>
@@ -105,7 +118,7 @@ export default function App({ Component, pageProps }: AppProps) {
                   return <Component {...pageProps} user={curUser} />;
                 case curUser?.role === undefined:
                   return <ProfilePage user={curUser} />;
-                case isAuth():
+                case curUser?.role >= paths[router.pathname]: // isAuth
                   return <Component {...pageProps} user={curUser} />;
                 default:
                   return <ErrorPage status={403} />;
@@ -179,20 +192,25 @@ const LoadingOverlay = React.forwardRef(
 );
 
 const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { toggleColorMode } = useColorMode();
 
   return (
     <div className={style.main}>
       <div className={style.headnav}>
-        <a href="https://sstinc.org" rel="noreferrer noopener" target="_blank">
-          <img
-            src="/assets/sstinc-icon.png"
-            alt="SST Inc Icon"
-            width={100}
-            height={100}
-          />
-        </a>
         <nav className={style.nav}>
+          <a
+            className={style.icon}
+            href="https://sstinc.org"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            <img
+              src="/assets/sstinc-icon.png"
+              alt="SST Inc Icon"
+              width={100}
+              height={100}
+            />
+          </a>
           <NavBar
             user={props.user}
             links={[
@@ -204,18 +222,18 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
                   ) : (
                     <Avatar src={props.user?.photoURL} size="sm" />
                   ),
-                action:
-                  props.user === null ? fbProvider.auth.signIn : "/profile",
+                action: props.user === null ? authProvider.signIn : "/profile",
               },
               {
-                name: "Attendance",
-                icon: <FaClipboardList />,
-                action: "/atd",
+                name: "Train",
+                icon: <FaBook />,
+                action: "/train",
               },
               {
                 name: "URL Shortener",
                 icon: <FaLink />,
-                action: "/urls",
+                action: "/url",
+                minRole: paths["/url"],
               },
               {
                 name: "Toggle Theme",
@@ -231,26 +249,19 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
           />
         </nav>
       </div>
-      <Box
-        boxShadow={colorMode === "dark" ? "dark-lg" : "lg"}
-        border="1px solid"
-        borderColor={colorMode === "dark" ? "transparent" : "gray.200"}
-        rounded="2xl"
-        p={2}
-        m={2}
-      >
-        {props.children}
-      </Box>
+      {props.children}
       <Credits />
     </div>
   );
 };
 
 interface NavLink {
-  name: string;
+  minRole?: UserRole;
+  isDivider?: boolean;
+  name?: string;
   // Allows for any FontAwesome icon or other React element like images
-  icon: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
-  action: (() => void) | string;
+  icon?: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+  action?: (() => void) | string;
 }
 
 const NavBar = (props: { user: User; links: NavLink[] }) => {
@@ -267,19 +278,23 @@ const NavBar = (props: { user: User; links: NavLink[] }) => {
         variant="outline"
       />
       <MenuList>
-        {props.links.map((e, i) => (
-          <MenuItem
-            key={i}
-            onClick={
-              typeof e.action === "string" || e.action instanceof String
-                ? () => router.push(e.action as string)
-                : e.action
-            }
-            icon={e.icon}
-          >
-            {e.name}
-          </MenuItem>
-        ))}
+        {props.links.map((e, i) => {
+          if (props.user?.role < e.minRole) return null;
+          else if (e.isDivider) return <MenuDivider key={i} />;
+          return (
+            <MenuItem
+              key={i}
+              onClick={
+                typeof e.action === "string" || e.action instanceof String
+                  ? () => router.push(e.action as string)
+                  : e.action
+              }
+              icon={e.icon}
+            >
+              {e.name}
+            </MenuItem>
+          );
+        })}
       </MenuList>
     </Menu>
   );
