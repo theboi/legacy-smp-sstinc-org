@@ -15,137 +15,31 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../model/user";
 import AtdField from "../../components/atd";
 import { useColor } from "../../extensions/chakra";
+import { Training, trainProvider, Vocation } from "../../model/train";
 
-// enum TheatreAssignmentType {
-//   None,
-//   Video,
-//   Quiz,
-// }
+export default function TrainPage(props: { user: User }) {
+  const [vocInd, setVocInd] = useState(0);
+  const [currentDid, setCurrentDid] = useState("");
+  const [voc, setVoc] = useState<Vocation[]>();
 
-interface _TheatreAssignment {
-  // type: TheatreAssignmentType;
-  aid: string;
-  title: string;
-}
-
-type TheatreAssignment =
-  | _TheatreAssignment
-  | TheatreVideoAssignment
-  | TheatreQuizAssignment;
-
-interface TheatreVideoAssignment extends _TheatreAssignment {
-  media: string[];
-}
-
-interface TheatreQuizAssignment extends _TheatreAssignment {
-  quiz: string;
-}
-
-interface TheatreLesson {
-  lid: string;
-  title: string;
-  assignments: TheatreAssignment[];
-}
-
-enum TheatreCourseSubject {
-  Ios = "iOS",
-  Rct = "React",
-  And = "Android",
-  Des = "Design",
-}
-
-interface TheatreCourse {
-  subject: TheatreCourseSubject;
-  lessons: TheatreLesson[];
-}
-
-const courses: TheatreCourse[] = [
-  {
-    subject: TheatreCourseSubject.Ios,
-    lessons: [
-      {
-        lid: "ios_001",
-        title: "Introduction to Programming",
-        assignments: [
-          {
-            aid: "ios_001_001",
-            title: "Coding",
-          },
-          {
-            aid: "ios_001_002",
-            title: "Coding2",
-          },
-          {
-            aid: "ios_001_003",
-            title: "Coding3",
-          },
-        ],
-      },
-      {
-        lid: "ios_002",
-        title: "iOS In a Nutshell",
-        assignments: [
-          {
-            aid: "ios_002_001",
-            title: "Net",
-            media: [
-              "https://docs.google.com/presentation/d/1KSwnS2GOVxLefTSHNXyOC3hRmtoUzSqCbmJYtQBFhjc",
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    subject: TheatreCourseSubject.Rct,
-    lessons: [
-      {
-        lid: "rct_001",
-        title: "Introduction to Programming",
-        assignments: [
-          {
-            aid: "ios_001_001",
-            title: "Coding",
-            quiz: "Hello",
-          },
-          {
-            aid: "ios_001_002",
-            title: "Coding2",
-            media: [
-              "https://docs.google.com/presentation/d/1KSwnS2GOVxLefTSHNXyOC3hRmtoUzSqCbmJYtQBFhjc",
-            ],
-          },
-          {
-            aid: "ios_001_003",
-            title: "Coding3",
-            media: [
-              "https://docs.google.com/presentation/d/1KSwnS2GOVxLefTSHNXyOC3hRmtoUzSqCbmJYtQBFhjc",
-            ],
-          },
-        ],
-      },
-    ],
-  },
-];
-
-export default function TheatrePage(props: { user: User }) {
-  // const courses: TheatreLesson[] = [{ name: "iOS " }];
-
-  const [courseInd, setCourseInd] = useState(0);
-  const [currentAid, setCurrentAid] = useState("");
+  useEffect(() => {
+    (async () => {
+      setVoc(await trainProvider.vocations);
+    })();
+  });
 
   const courseDropdown = (
     <Menu>
       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-        Course: {courses[courseInd].subject}
+        Course: {voc[vocInd].subject}
       </MenuButton>
       <MenuList>
-        {courses.map((e, i) => (
-          <MenuItem minH="48px" onClick={() => setCourseInd(i)}>
+        {voc.map((e, i) => (
+          <MenuItem minH="48px" onClick={() => setVocInd(i)}>
             <Image
               boxSize="2rem"
               borderRadius="full"
@@ -166,10 +60,10 @@ export default function TheatrePage(props: { user: User }) {
         <div style={{ flexBasis: 300, flexGrow: 1 }}>
           <AtdField user={props.user} />
           {courseDropdown}
-          <TheatreLessonSelectBar
-            lessons={courses[courseInd].lessons}
-            currentAid={currentAid}
-            setCurrentAid={setCurrentAid}
+          <TrainingSelectBar
+            trainings={voc[vocInd].trainings}
+            currentAid={currentDid}
+            setCurrentAid={setCurrentDid}
           />
         </div>
         <TheatreLessonContent />
@@ -178,15 +72,15 @@ export default function TheatrePage(props: { user: User }) {
   );
 }
 
-function TheatreLessonSelectBar(props: {
-  lessons: TheatreLesson[];
+function TrainingSelectBar(props: {
+  trainings: Training[];
   currentAid: string;
   setCurrentAid: Dispatch<SetStateAction<string>>;
 }) {
   return (
     <Accordion allowToggle>
-      {props.lessons.map((l) => (
-        <AccordionItem key={l.lid}>
+      {props.trainings.map((l) => (
+        <AccordionItem key={l.tid}>
           <h2>
             <AccordionButton
               onClick={() => props.setCurrentAid(`${l.lid}_001`)}
@@ -211,9 +105,9 @@ function TheatreLessonSelectBar(props: {
               style={
                 props.currentAid === a.aid
                   ? {
-                    color: "var(--chakra-colors-teal-200)",
-                    background: "rgba(48, 140, 122, 0.3)",
-                  }
+                      color: "var(--chakra-colors-teal-200)",
+                      background: "rgba(48, 140, 122, 0.3)",
+                    }
                   : {}
               }
             >

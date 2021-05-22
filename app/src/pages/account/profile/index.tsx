@@ -1,12 +1,13 @@
 import { Button, Badge, Avatar, Heading, Text, Flex } from "@chakra-ui/react";
-import { provider } from "../../model/provider";
-import { User, UserRole } from "../../model/user";
+import { authProvider } from "../../../model/auth";
+import { provider } from "../../../model/provider";
+import { User, UserRole } from "../../../model/user";
 
 export default function ProfilePage(props: { user: User }) {
   return (
     <div style={{ maxWidth: 500 }}>
       {props.user === null ? (
-        <Button colorScheme="blue" onClick={provider.auth.signIn}>
+        <Button colorScheme="blue" onClick={authProvider.signIn}>
           Sign In
         </Button>
       ) : (
@@ -26,7 +27,7 @@ export default function ProfilePage(props: { user: User }) {
               </div>
             </Flex>
           </div>
-          <Button colorScheme="red" onClick={provider.auth.signOut}>
+          <Button colorScheme="red" onClick={authProvider.signOut}>
             Sign Out
           </Button>
         </>

@@ -25,7 +25,8 @@ import theme from "../../model/theme";
 import { provider } from "../../model/provider";
 import { User, UserRole } from "../../model/user";
 import ErrorPage from "../404";
-import ProfilePage from "../profile";
+import ProfilePage from "../account/profile";
+import { authProvider } from "../../model/auth";
 
 const paths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
@@ -46,7 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   });
   useEffect(() => {
-    provider.auth.addIdTokenChangedListener((user: User) => {
+    authProvider.addIdTokenChangedListener((user: User) => {
       setCurUser(user);
       // console.log(user)
       // if (user?.iid !== undefined && user?.role === UserRole.Alien) {
@@ -57,7 +58,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     (async () => {
-      await provider.auth.checkForAuth();
+      await authProvider.checkForAuth();
       loadingOverlayRef.current.style.display = "none";
     })();
   }, [curUser]);
@@ -221,7 +222,7 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
                   ) : (
                     <Avatar src={props.user?.photoURL} size="sm" />
                   ),
-                action: props.user === null ? provider.auth.signIn : "/profile",
+                action: props.user === null ? authProvider.signIn : "/profile",
               },
               {
                 name: "Train",
@@ -232,14 +233,12 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
                 name: "URL Shortener",
                 icon: <FaLink />,
                 action: "/url",
+                minRole: paths["/url"],
               },
               {
                 name: "Toggle Theme",
                 icon: <FaSun />,
                 action: () => toggleColorMode(),
-              },
-              {
-                isDivider: true
               },
               {
                 name: "Bug Report",
@@ -280,8 +279,8 @@ const NavBar = (props: { user: User; links: NavLink[] }) => {
       />
       <MenuList>
         {props.links.map((e, i) => {
-          if (e.isDivider) return <MenuDivider />;
-          // else if (props.user.role >= e.minRole) return null;
+          if (props.user?.role < e.minRole) return null;
+          else if (e.isDivider) return <MenuDivider key={i} />;
           return (
             <MenuItem
               key={i}

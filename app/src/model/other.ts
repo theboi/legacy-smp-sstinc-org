@@ -14,9 +14,9 @@ export class Train {
       filter: {
         property: "Vocation ID",
         select: {
-          equals: vid
-        }
-      }
+          equals: vid,
+        },
+      },
     });
   }
 
@@ -28,13 +28,14 @@ export class Train {
   }
 
   async checkIn(code: string) {
-    if (code === "") return this.notion.pages.create({
-      parent: {
-        database_id: "79df706a109546f798e74c0105752329",
-      },
-      properties: {
-        "Inc ID": ""
-      }
-    });
+    if (code === "")
+      return this.notion.pages.create({
+        parent: {
+          database_id: "79df706a109546f798e74c0105752329",
+        },
+        properties: {
+          "Inc ID": "",
+        },
+      });
   }
 }
