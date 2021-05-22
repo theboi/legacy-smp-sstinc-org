@@ -1,4 +1,5 @@
 import firebase from "firebase/app";
+import { authProvider } from "./auth";
 import { provider } from "./provider";
 
 export enum UserRole {
@@ -20,7 +21,7 @@ export class User {
   async initialized(fbUser: firebase.User): Promise<User> {
     if (this != null) {
       this.#fbUser = fbUser;
-      this.#fbData = (await provider.auth.getUser(fbUser?.email)).data();
+      this.#fbData = (await authProvider.getUser(fbUser?.email)).data();
     }
 
     return this;

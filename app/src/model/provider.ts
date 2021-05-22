@@ -1,12 +1,11 @@
 import firebase from "firebase/app";
 
-import { Auth } from "./auth";
 import { Atd } from "./atd";
 import { Url } from "./url";
 
 // https://firebase.google.com/docs/rules/basics
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.GOOGLE_API_KEY,
   authDomain: "smp-sstinc-org.firebaseapp.com",
   databaseURL: "",
@@ -24,14 +23,11 @@ class Provider {
    */
   constructor() {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    this.auth = new Auth();
     this.atd = new Atd();
     this.url = new Url();
   }
 
   // analytics = (): firebase.analytics.Analytics => firebase.analytics();
-
-  auth: Auth;
 
   atd: Atd;
 

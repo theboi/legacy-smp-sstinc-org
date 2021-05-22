@@ -1,13 +1,16 @@
 import firebase from "firebase/app";
+import { firebaseConfig } from "./provider";
 import { User } from "./user";
 
 require("firebase/auth");
 require("firebase/firestore");
 
-export class Auth {
+class AuthProvider {
   readonly firestore = "users";
 
   constructor() {
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
     /** Updates currentUser on login/logout */
     firebase.auth().onIdTokenChanged(async (fbUser) => {
       const user = await new User().initialized(fbUser);
@@ -30,7 +33,11 @@ export class Auth {
     return firebase
       .auth()
       .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(() => firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider()))
+      .then(() =>
+        firebase
+          .auth()
+          .signInWithRedirect(new firebase.auth.GoogleAuthProvider())
+      )
       .catch((e) => {
         console.error(`${e.message} (signInWithRedirect)`);
       });
@@ -60,4 +67,12 @@ export class Auth {
   > {
     return firebase.firestore().collection(this.firestore).doc(email).get();
   }
+
+  async getPrivacyPolicy(): Promise<string> {
+    return "hello";
+  }
 }
+
+const authProvider = new AuthProvider();
+
+export { AuthProvider, authProvider };
