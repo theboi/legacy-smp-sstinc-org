@@ -19,6 +19,9 @@ export default extendTheme({
       // a: {
       //   color: props.colorMode === "dark" ? "teal.300" : "teal.500",
       // },
+      div: {
+        borderRadius: 8,
+      },
     }),
   },
 });

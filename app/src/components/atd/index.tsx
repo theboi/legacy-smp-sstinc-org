@@ -21,14 +21,16 @@ import {
   HStack,
   Code,
   VStack,
+  AlertTitle,
+  AlertDescription,
+  Alert,
+  Box,
 } from "@chakra-ui/react";
 
 import { User, UserRole } from "../../model/user";
-import { fbProvider } from "../../model/fbProvider";
+import { provider } from "../../model/provider";
 
-import style from "./style.module.css";
-
-export default function AtdPage(props: { user: User }) {
+export default function AtdField(props: { user: User }) {
   const [time, setTime] = useState(0);
   const [key, setKey] = useState(getKeyCode());
   const [code, setCode] = useState("");
@@ -62,7 +64,7 @@ export default function AtdPage(props: { user: User }) {
   function confirmCode() {
     if (code === getKeyCode()) {
       /** Handle after writing to Firestore */
-      fbProvider.atd
+      provider.atd
         .checkIn(props.user)
         .then(() => {
           setStatus("Success");
@@ -70,20 +72,15 @@ export default function AtdPage(props: { user: User }) {
         .catch((e) => {
           console.error(e);
           setStatus("Error");
-        })
-        .finally(() => {
-          setTimeout(() => {
-            setStatus("Confirm");
-          }, 2000);
         });
     } else {
-      /** Code submission cooldown of 2 sec, informs user that code is incorrect */
       setStatus("Invalid");
-      setCode("");
-      setTimeout(() => {
-        setStatus("Confirm");
-      }, 2000);
     }
+    /** Code submission cooldown of 2 sec */
+    setTimeout(() => {
+      setCode("");
+      setStatus("Confirm");
+    }, 2000);
   }
 
   function onCodeKeyDown(e: KeyboardEvent<HTMLInputElement>) {
@@ -125,27 +122,26 @@ export default function AtdPage(props: { user: User }) {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <div className={style.main}>
-        <Heading size="md">Attendance</Heading>
-        <p>
-          Kindly enter the 4 digit code provided to check-in to SST Inc. Your
-          attendance data will be recorded in the SST Inc Attendance Database
-          (SAD).
-        </p>
-        <HStack onKeyDown={onCodeKeyDown}>
-          <PinInput
-            otp
-            type="alphanumeric"
-            size="xl"
-            onChange={onCodeChange}
-            isInvalid={status === "Invalid"}
-          >
-            {[...Array(4)].map((_, i) => (
-              <PinInputField style={{ fontSize: "2em" }} key={i} />
-            ))}
-          </PinInput>
-        </HStack>
-        <div className={style.buttons}>
+      <Alert status="info">
+        <Box style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <AlertTitle>Attendance</AlertTitle>
+          <AlertDescription display="block">
+            Kindly enter the 4 digit code provided to check-in to SST Inc.
+          </AlertDescription>
+          <HStack onKeyDown={onCodeKeyDown}>
+            <PinInput
+              otp
+              type="alphanumeric"
+              size="xl"
+              value={code}
+              onChange={onCodeChange}
+              isInvalid={status === "Invalid"}
+            >
+              {[...Array(4)].map((_, i) => (
+                <PinInputField style={{ fontSize: "2em" }} key={i} />
+              ))}
+            </PinInput>
+          </HStack>
           <ButtonGroup isAttached width="100%">
             <Button
               isFullWidth
@@ -166,9 +162,9 @@ export default function AtdPage(props: { user: User }) {
               />
             ) : null}
           </ButtonGroup>
-        </div>
-        {/* <Button disabled>Scan a QR Code instead</Button> */}
-      </div>
+          {/* <Button disabled>Scan a QR Code instead</Button> */}
+        </Box>
+      </Alert>
     </>
   );
 }

@@ -1,12 +1,12 @@
-import { fbProvider } from "../../model/fbProvider";
+import { provider } from "../../model/provider";
 
 export default function SuffixPage() {
   return <></>;
 }
 
 export async function getServerSideProps(ctx) {
-  const url = await fbProvider.url
-    .urlSuffixed(ctx.params?.suffix as string)
+  const url = await provider.url
+    .getURL(ctx.params?.suffix as string)
     .then((doc): string | undefined => doc.data()?.url);
 
   if (url) {

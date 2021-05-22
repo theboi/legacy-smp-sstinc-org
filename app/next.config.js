@@ -1,7 +1,9 @@
-require('dotenv').config()
+import("dotenv").then((o) => o.config());
+
 module.exports = {
   env: {
     GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+    NOTION_API_KEY: process.env.NOTION_API_KEY
   },
   future: {
     webpack5: true,
@@ -9,15 +11,15 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/atd',
+        source: "/",
+        destination: "/train",
         permanent: false,
       },
       {
-        source: '/home',
-        destination: '/atd',
+        source: "/home",
+        destination: "/train",
         permanent: false,
       },
-    ]
+    ];
   },
-}
+};
