@@ -17,28 +17,22 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../model/user";
+import { Lesson, useLearn } from "../../services/learn";
 import AtdField from "../../components/atd";
 import { useColor } from "../../extensions/chakra";
-import { Training, trainProvider, Vocation } from "../../model/train";
 
 export default function TrainPage(props: { user: User }) {
   const [vocInd, setVocInd] = useState(0);
   const [currentDid, setCurrentDid] = useState("");
-  const [voc, setVoc] = useState<Vocation[]>();
-
-  useEffect(() => {
-    (async () => {
-      setVoc(await trainProvider.vocations);
-    })();
-  });
+  const courses = useLearn();
 
   const courseDropdown = (
     <Menu>
       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-        Course: {voc[vocInd].subject}
+        Course: {courses[vocInd]?.subject}
       </MenuButton>
       <MenuList>
-        {voc.map((e, i) => (
+        {courses.map((e, i) => (
           <MenuItem minH="48px" onClick={() => setVocInd(i)}>
             <Image
               boxSize="2rem"
@@ -61,7 +55,7 @@ export default function TrainPage(props: { user: User }) {
           <AtdField user={props.user} />
           {courseDropdown}
           <TrainingSelectBar
-            trainings={voc[vocInd].trainings}
+            lessons={Object.values(courses[vocInd]?.lessons ?? {})}
             currentAid={currentDid}
             setCurrentAid={setCurrentDid}
           />
@@ -73,14 +67,14 @@ export default function TrainPage(props: { user: User }) {
 }
 
 function TrainingSelectBar(props: {
-  trainings: Training[];
+  lessons: Lesson[];
   currentAid: string;
   setCurrentAid: Dispatch<SetStateAction<string>>;
 }) {
   return (
     <Accordion allowToggle>
-      {props.trainings.map((l) => (
-        <AccordionItem key={l.tid}>
+      {props.lessons.map((l) => (
+        <AccordionItem key={l.lid}>
           <h2>
             <AccordionButton
               onClick={() => props.setCurrentAid(`${l.lid}_001`)}
@@ -96,7 +90,7 @@ function TrainingSelectBar(props: {
               <AccordionIcon />
             </AccordionButton>
           </h2>
-          {l.assignments.map((a) => (
+          {Object.values(l.assignments ?? {}).map((a) => (
             <AccordionPanel
               onClick={() => props.setCurrentAid(a.aid)}
               key={a.aid}
