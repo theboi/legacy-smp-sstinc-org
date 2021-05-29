@@ -44,6 +44,7 @@ enum SignUpType {
 export default function SignUpPage(props: { user: User }) {
   const [step, setStep] = useState(0);
   const [signUpType, setSignUpType] = useState(SignUpType.Non);
+  const [verified, setVerified] = useState(false);
   const [privacy, setPrivacy] = useState("");
 
   useEffect(() => {
@@ -90,17 +91,20 @@ export default function SignUpPage(props: { user: User }) {
     </Box>,
     <Box>
       <Heading>Verify that you are from SST Inc.</Heading>
-      <Stack spacing={3}>
-        <FormControl id="first-name" isRequired>
+      <Stack spacing={5}>
+        <FormControl isRequired>
           <FormLabel>SST Class</FormLabel>
           <InputGroup>
             <InputLeftAddon>S</InputLeftAddon>
             <Input placeholder="301" />
           </InputGroup>
         </FormControl>
-        <Button leftIcon={<FaGoogle />} colorScheme="red">
-          Verify with Google
-        </Button>
+        <FormControl isRequired>
+          <FormLabel>Verify</FormLabel>
+          <Button leftIcon={<FaGoogle />} colorScheme="red" disabled={verified}>
+            {verified ? "Verified" : "Verify"} with Google
+          </Button>
+        </FormControl>
       </Stack>
     </Box>,
     <Box>
