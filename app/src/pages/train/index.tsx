@@ -15,12 +15,12 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { User } from "../../model/user";
-import { Assignment, Course, Lesson, useTrain } from "../../services/train";
+import { Dispatch, SetStateAction, useState } from "react";
+import { User } from "../../services/userold";
+import { Assignment, Course, Lesson } from "../../services/train";
 import AtdField from "../../components/atd";
-import { useColor } from "../../hooks/color";
 import AssignmentContent from "../../components/train/assignmentContent";
+import { useTrain } from "../../hooks/train";
 
 export default function TrainPage(props: { user: User }) {
   const [index, setIndex] = useState(0);

@@ -1,7 +1,6 @@
 import { Octokit } from "@octokit/core";
 import { Endpoints } from "@octokit/types";
-import { Dispatch, SetStateAction, useState } from "react";
-import { Assignment, Course, Lesson } from "../services/train";
+import { Assignment, Course, Lesson, SetCourseType } from "../services/train";
 
 // https://docs.github.com/en/rest/reference/repos#get-repository-content
 const getRepoContentPath = "GET /repos/{owner}/{repo}/contents/{path}";
@@ -9,7 +8,13 @@ const getCommits = "GET /repos/{owner}/{repo}/commits";
 
 const octokit = new Octokit();
 
-type SetCourseType = Dispatch<SetStateAction<{ [cid: string]: Course }>>;
+// const res = await octokit.request(getCommits, {
+//   owner: "theboi",
+//   repo: "smp-sstinc-org",
+//   path: ``,
+//   per_page: 1
+// });
+
 type OctokitRepoContentDataType =
   Endpoints[typeof getRepoContentPath]["response"]["data"] & {
     length: number /* Octokit typing missing length property */;

@@ -24,10 +24,10 @@ import style from "./style.module.css";
 import theme from "../../model/theme";
 
 import { provider } from "../../model/provider";
-import { User, UserRole } from "../../model/user";
+import { User, UserRole } from "../../services/userold";
 import ErrorPage from "../404";
 import ProfilePage from "../account/profile";
-import { authProvider } from "../../model/auth";
+import { authProvider } from "../../providers/auth";
 
 const paths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,

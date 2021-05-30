@@ -1,7 +1,7 @@
 import { Button, Badge, Avatar, Heading, Text, Flex } from "@chakra-ui/react";
-import { authProvider } from "../../../model/auth";
+import { authProvider } from "../../../providers/auth";
 import { provider } from "../../../model/provider";
-import { User, UserRole } from "../../../model/user";
+import { User, UserRole } from "../../../services/userold";
 
 export default function ProfilePage(props: { user: User }) {
   return (

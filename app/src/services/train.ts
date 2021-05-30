@@ -1,37 +1,7 @@
-import { Octokit } from "@octokit/core";
-import { Endpoints } from "@octokit/types";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { TrainProvider } from "../providers/train";
 
-// https://docs.github.com/en/rest/reference/repos#get-repository-content
-const getRepoContentPath = "GET /repos/{owner}/{repo}/contents/{path}";
-const getCommits = "GET /repos/{owner}/{repo}/commits";
-
-const octokit = new Octokit();
-
-// const res = await octokit.request(getCommits, {
-//   owner: "theboi",
-//   repo: "smp-sstinc-org",
-//   path: ``,
-//   per_page: 1
-// });
-
-type SetCourseType = Dispatch<SetStateAction<{ [cid: string]: Course }>>;
-type OctokitRepoContentDataType =
-  Endpoints[typeof getRepoContentPath]["response"]["data"] & {
-    length: number /* Octokit typing missing length property */;
-  };
-
-function useTrain() {
-  const [courses, setCourse] = useState<{ [cid: string]: Course }>();
-
-  const getCourses = (): Course[] => {
-    if (courses === undefined) TrainProvider.getCourses(setCourse);
-    return Object.values(courses ?? {});
-  };
-
-  return getCourses();
-}
+export type SetCourseType = Dispatch<SetStateAction<{ [cid: string]: Course }>>;
 
 enum CourseSubject {
   ios = "iOS",
@@ -145,4 +115,4 @@ class Assignment {
   }
 }
 
-export { useTrain, Course, CourseSubject, Lesson, Assignment, AssignmentType };
+export { Course, CourseSubject, Lesson, Assignment, AssignmentType };

@@ -27,7 +27,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 
-import { User, UserRole } from "../../model/user";
+import { User, UserRole } from "../../services/userold";
 import { provider } from "../../model/provider";
 
 export default function AtdField(props: { user: User }) {
