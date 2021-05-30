@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;800;900&display=swap');
+@font-face {
+  font-family: 'Menlo';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Menlo'), url('../../../public/fonts/Menlo.woff') format('woff');
+  }
+/* /////////////////////////////////////////////////////////////////////////////
+Variables
+//////////////////////////////////////////////////////////////////////////////*/
+:root {
+	/* light */
+  --l-bg1: var(--chakra-colors-white);
+	--l-bg2: var(--chakra-colors-gray-50);
+
+	--l-tx1: var(--chakra-colors-gray-800);
+	--l-bd1: var(--chakra-gray-200);
+
+	--l-blue: var(--chakra-colors-blue-500);
+
+	/* dark */
+	--d-bg1: var(--chakra-colors-gray-800);
+	--d-bg2: var(--chakra-colors-gray-900);
+
+	--d-tx1: var(--chakra-colors-whiteAlpha-900);
+	--d-bd1: var(--chakra-colors-whiteAlpha-300);
+
+	--d-blue: var(--chakra-colors-blue-200)
+}
+
+/* /////////////////////////////////////////////////////////////////////////////
+Reset
+//////////////////////////////////////////////////////////////////////////////*/
+// *:not(input):focus-visible {
+//   outline: solid 3px rgba(0, 0, 0, 0.2) !important;
+//   z-index: 100;
+// }
+
+// html, body, div, span, applet, object, iframe,
+// h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+// a, abbr, acronym, address, big, cite, code,
+// del, dfn, em, font, img, ins, kbd, q, s, samp,
+// small, strike, strong, sub, sup, tt, var,
+// b, u, i, center,
+// dl, dt, dd, ol, ul, li,
+// fieldset, figure, figcaption, form, label, legend,
+// table, caption, tbody, tfoot, thead, tr, th, td {
+// 	margin: 0;
+// 	padding: 0;
+// 	vertical-align: baseline;
+// 	background: transparent;
+// }
+
+// h1, h2, h3, h4, h5, h6 {
+// 	clear: both;
+// }
+
+// blockquote {
+// 	quotes: none;
+// }
+// blockquote::before, blockquote::after {
+// 	content: none;
+// }
+// del {
+// 	text-decoration: line-through;
+// }
+// table {
+// 	border-collapse: collapse;
+// 	border-spacing: 0;
+// }
+// a img { border: none; }
+
+// html {
+//   box-sizing: border-box;
+// }
+
+// *, *:before, *:after {
+// 	box-sizing: inherit;
+// }
+
+// a {
+// 	font-style: none;
+// }
+
+// *:focus {
+// 	outline: none;
+// }
+
+// a:link, a:visited, a:hover, a:active {
+// 	text-decoration: none;
+// }
+
+// textarea,
+// input.text,
+// input[type="text"],
+// input[type="button"],
+// input[type="submit"],
+// .input-checkbox {
+// -webkit-appearance: none;
+// }
+
+// body {
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+// }
+
+// img {
+//   vertical-align: middle;
+// }
+
+// /* /////////////////////////////////////////////////////////////////////////////
+// Defaults
+// //////////////////////////////////////////////////////////////////////////////*/
+
+// /* input */
+input {
+  border-radius: 10px;
+}
+
+// /* figure */
+// figcaption {
+//   color: #646464;
+//   font-size: 13px;
+// }
+
+// /* code */
+// code {
+//   font-family: 'Menlo', monospace;
+// }
+
+// /* /////////////////////////////////////////////////////////////////////////////
+// MOBILE
+// //////////////////////////////////////////////////////////////////////////////*/
+
+
+// /* /////////////////////////////////////////////////////////////////////////////
+// DESKTOP
+// //////////////////////////////////////////////////////////////////////////////*/
+
+// @media screen and (min-width: 768px)  {
+
+// }
