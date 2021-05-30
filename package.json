@@ -8,7 +8,8 @@
     "test:tgb": "lerna run test --scope=@theboi/tgb -- ",
     "version": "lerna version --conventional-commits --yes",
     "diff": "lerna diff",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "npx patch-package"
   },
   "workspaces": [
     "app",

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import * as React from "react";
 import { AppProps } from "next/app";
-import "./styles.css";
+import "./styles.scss";
+import "./cssreset.scss";
 import Head from "next/head";
 import {
   Avatar,
@@ -96,7 +97,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider theme={theme} resetCSS={false}>
         {hostname === "go.sstinc.org" || hostname === "qr.sstinc.org" ? (
           <div className={style.alert}>
             <p>
