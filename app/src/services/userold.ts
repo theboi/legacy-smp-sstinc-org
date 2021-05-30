@@ -1,14 +1,16 @@
 import firebase from "firebase/app";
-import { authProvider } from "./auth";
-import { provider } from "./provider";
+import { authProvider } from "../providers/auth";
 
 export enum UserRole {
-  "Alien" = 0,
-  "Banned" = 1,
+  "Banned" = 0,
+  "Member" = 1,
   "Trainee" = 2,
   "Employee" = 3,
-  "ExCo" = 7,
-  "Head" = 8,
+  "Associate" = 4,
+  "Alumni" = 5,
+  "ExCo" = 6,
+  "Consultant" = 7,
+  "BOD" = 8,
   "Root" = 9,
 }
 
@@ -47,7 +49,7 @@ export class User {
   }
 
   get role(): UserRole {
-    return this.#fbData?.role ?? UserRole.Alien;
+    return this.#fbData?.role ?? UserRole.Member;
   }
 
   get displayName(): string {

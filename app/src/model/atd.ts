@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import { User } from "./user";
+import { User } from "../services/userold";
 
 export class Atd {
   readonly firestore = "atd";
@@ -35,7 +35,7 @@ export class Atd {
 
   async allUsers(): Promise<
     firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>
-    > {
+  > {
     return firebase
       .firestore()
       .collection(this.firestore)
