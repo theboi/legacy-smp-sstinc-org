@@ -19,7 +19,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../model/user";
 import { Assignment, Course, Lesson, useTrain } from "../../services/train";
 import AtdField from "../../components/atd";
-import { useColor } from "../../extensions/chakra";
+import { useColor } from "../../hooks/color";
 import AssignmentContent from "../../components/train/assignmentContent";
 
 export default function TrainPage(props: { user: User }) {
