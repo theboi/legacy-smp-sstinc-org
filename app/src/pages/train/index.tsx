@@ -17,50 +17,29 @@ import {
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../model/user";
-import { Lesson, useLearn } from "../../services/learn";
+import { Assignment, Course, Lesson, useTrain } from "../../services/train";
 import AtdField from "../../components/atd";
 import { useColor } from "../../extensions/chakra";
+import AssignmentContent from "../../components/train/assignmentContent";
 
 export default function TrainPage(props: { user: User }) {
-  const [vocInd, setVocInd] = useState(0);
-  const [currentDid, setCurrentDid] = useState("");
-  const courses = useLearn();
-
-  const courseDropdown = (
-    <Menu>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-        Course: {courses[vocInd]?.subject}
-      </MenuButton>
-      <MenuList>
-        {courses.map((e, i) => (
-          <MenuItem minH="48px" onClick={() => setVocInd(i)}>
-            <Image
-              boxSize="2rem"
-              borderRadius="full"
-              src="https://placekitten.com/100/100"
-              alt="Fluffybuns the destroyer"
-              mr="12px"
-            />
-            <span>{e.subject}</span>
-          </MenuItem>
-        ))}
-      </MenuList>
-    </Menu>
-  );
+  const [index, setIndex] = useState(0);
+  const [assignment, setAssignment] = useState<Assignment>();
+  const courses = useTrain();
 
   return (
     <div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
         <div style={{ flexBasis: 300, flexGrow: 1 }}>
           <AtdField user={props.user} />
-          {courseDropdown}
+          <CourseDropdown index={index} setIndex={setIndex} courses={courses} />
           <TrainingSelectBar
-            lessons={Object.values(courses[vocInd]?.lessons ?? {})}
-            currentAid={currentDid}
-            setCurrentAid={setCurrentDid}
+            lessons={Object.values(courses[index]?.lessons ?? {})}
+            assignment={assignment}
+            setAssignment={setAssignment}
           />
         </div>
-        <TheatreLessonContent />
+        <AssignmentContent assignment={assignment} />
       </div>
     </div>
   );
@@ -68,8 +47,8 @@ export default function TrainPage(props: { user: User }) {
 
 function TrainingSelectBar(props: {
   lessons: Lesson[];
-  currentAid: string;
-  setCurrentAid: Dispatch<SetStateAction<string>>;
+  assignment: Assignment;
+  setAssignment: Dispatch<SetStateAction<Assignment>>;
 }) {
   return (
     <Accordion allowToggle>
@@ -77,7 +56,7 @@ function TrainingSelectBar(props: {
         <AccordionItem key={l.lid}>
           <h2>
             <AccordionButton
-              onClick={() => props.setCurrentAid(`${l.lid}_001`)}
+              onClick={() => props.setAssignment(null)}
               style={{ borderRadius: "var(--chakra-radii-md)" }}
               _expanded={{
                 color: "var(--chakra-colors-teal-200)",
@@ -92,12 +71,12 @@ function TrainingSelectBar(props: {
           </h2>
           {Object.values(l.assignments ?? {}).map((a) => (
             <AccordionPanel
-              onClick={() => props.setCurrentAid(a.aid)}
+              onClick={() => props.setAssignment(a)}
               key={a.aid}
               pb={4}
               pl={10}
               style={
-                props.currentAid === a.aid
+                props.assignment?.aid === a.aid
                   ? {
                       color: "var(--chakra-colors-teal-200)",
                       background: "rgba(48, 140, 122, 0.3)",
@@ -114,20 +93,30 @@ function TrainingSelectBar(props: {
   );
 }
 
-function TheatreLessonContent() {
+function CourseDropdown(props: {
+  index: number;
+  setIndex: Dispatch<SetStateAction<number>>;
+  courses: Course[];
+}) {
   return (
-    <Box
-      style={{
-        flexBasis: "50vw",
-        flexGrow: 9999,
-        aspectRatio: "1920/1080",
-        backgroundColor: useColor("bg2"),
-      }}
-    >
-      <Center style={{ height: "100%", flexDirection: "column" }}>
-        <Heading>🤫</Heading>
-        <Heading size="sm">Coming Soon...</Heading>
-      </Center>
-    </Box>
+    <Menu>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+        Course: {props.courses[props.index]?.subject}
+      </MenuButton>
+      <MenuList>
+        {props.courses.map((e, i) => (
+          <MenuItem key={i} minH="48px" onClick={() => props.setIndex(i)}>
+            <Image
+              boxSize="2rem"
+              borderRadius="full"
+              src="https://placekitten.com/100/100"
+              alt="Fluffybuns the destroyer"
+              mr="12px"
+            />
+            <span>{e.subject}</span>
+          </MenuItem>
+        ))}
+      </MenuList>
+    </Menu>
   );
 }

@@ -21,7 +21,7 @@ type OctokitRepoContentDataType =
     length: number /* Octokit typing missing length property */;
   };
 
-function useLearn() {
+function useTrain() {
   const [courses, setCourse] = useState<{ [cid: string]: Course }>();
 
   const getCourses = (): Course[] => {
@@ -154,16 +154,16 @@ class Lesson {
 }
 
 enum AssignmentType {
-  sld,
-  qui,
-  art,
+  sld = "slides",
+  qui = "quiz",
+  art = "article",
 }
 
 class Assignment {
   setCourse: SetCourseType;
   readonly cid: string;
   readonly lid: string;
-  readonly aid: string;
+  readonly aid: string; // also the file name including extension
   readonly url: string;
   #content: string;
 
@@ -194,6 +194,11 @@ class Assignment {
     return this.aid.split("_")[1];
   }
 
+  get type(): AssignmentType {
+    console.log("hi", this.aid.split(".")[1]);
+    return AssignmentType[this.aid.split(".")[1]];
+  }
+
   constructor(
     setCourse: SetCourseType,
     cid: string,
@@ -205,7 +210,8 @@ class Assignment {
     this.cid = cid;
     this.lid = lid;
     this.aid = aid;
+    this.url = url;
   }
 }
 
-export { useLearn, Course, CourseSubject, Lesson, Assignment, AssignmentType };
+export { useTrain, Course, CourseSubject, Lesson, Assignment, AssignmentType };

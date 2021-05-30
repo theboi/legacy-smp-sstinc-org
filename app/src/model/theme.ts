@@ -6,8 +6,8 @@ export default extendTheme({
     useSystemColorMode: true,
   },
   fonts: {
-    heading: "Rubik",
-    body: "Rubik",
+    heading: "Inter",
+    body: "Inter",
   },
   styles: {
     global: (props) => ({
@@ -25,7 +25,7 @@ export default extendTheme({
     }),
   },
   colors: {
-    black: "#0D1821",
-    white: "#D8D4F2",
+    // black: "#0D1821",
+    // white: "#D8D4F2",
   },
 });
