@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/core";
 import { Endpoints } from "@octokit/types";
 import { Dispatch, SetStateAction, useState } from "react";
+import { TrainProvider } from "../providers/train";
 
 // https://docs.github.com/en/rest/reference/repos#get-repository-content
 const getRepoContentPath = "GET /repos/{owner}/{repo}/contents/{path}";
@@ -25,23 +26,7 @@ function useTrain() {
   const [courses, setCourse] = useState<{ [cid: string]: Course }>();
 
   const getCourses = (): Course[] => {
-    if (courses === undefined) {
-      (async () => {
-        const res = await octokit.request(getRepoContentPath, {
-          owner: "theboi",
-          repo: "smp-sstinc-org",
-          path: `/data/train`,
-        });
-        const data = Object.fromEntries(
-          Array.from(
-            res.data as OctokitRepoContentDataType,
-            (e) => new Course(setCourse, e.name)
-          ).map((d) => [d.cid, d])
-        );
-
-        setCourse(data);
-      })();
-    }
+    if (courses === undefined) TrainProvider.getCourses(setCourse);
     return Object.values(courses ?? {});
   };
 
@@ -64,28 +49,8 @@ class Course {
   }
 
   get lessons(): { [lid: string]: Lesson } {
-    if (this.#lessons === undefined) {
-      (async () => {
-        const res = await octokit.request(getRepoContentPath, {
-          owner: "theboi",
-          repo: "smp-sstinc-org",
-          path: `/data/train/${this.cid}`,
-        });
-        const data = Object.fromEntries(
-          Array.from(
-            res.data as OctokitRepoContentDataType,
-            (e) => new Lesson(this.setCourse, this.cid, e.name)
-          ).map((d) => [d.lid, d])
-        );
-
-        this.setCourse((c) => {
-          const n = Object.assign(Object.create(Object.getPrototypeOf(c)), c);
-          n[this.cid].#lessons = data;
-          return n;
-        });
-      })();
-    }
-
+    if (this.#lessons === undefined)
+      TrainProvider.getLessons(this.setCourse, this.cid);
     return this.#lessons ?? {};
   }
 
@@ -110,35 +75,8 @@ class Lesson {
   }
 
   get assignments(): { [aid: string]: Assignment } {
-    if (this.#assignments === undefined) {
-      (async () => {
-        const res = await octokit.request(getRepoContentPath, {
-          owner: "theboi",
-          repo: "smp-sstinc-org",
-          path: `/data/train/${this.cid}/${this.lid}`,
-        });
-        const data = Object.fromEntries(
-          Array.from(
-            res.data as OctokitRepoContentDataType,
-            (e) =>
-              new Assignment(
-                this.setCourse,
-                this.cid,
-                this.lid,
-                e.name,
-                e.download_url
-              )
-          ).map((d) => [d.aid, d])
-        );
-
-        this.setCourse((c) => {
-          const n = Object.assign(Object.create(Object.getPrototypeOf(c)), c);
-          n[this.cid].lessons[this.lid].#assignments = data;
-          return n;
-        });
-      })();
-    }
-
+    if (this.#assignments === undefined)
+      TrainProvider.getAssignments(this.setCourse, this.cid, this.lid);
     return this.#assignments ?? {};
   }
 
@@ -172,21 +110,14 @@ class Assignment {
   }
 
   get content(): string {
-    if (this.#content === undefined) {
-      (async () => {
-        const res = await octokit.request("GET {url}", {
-          url: this.url,
-        });
-
-        this.setCourse((c) => {
-          const n = Object.assign(Object.create(Object.getPrototypeOf(c)), c);
-          n[this.cid].lessons[this.lid].assignments[this.aid].#content =
-            res.data;
-          return n;
-        });
-      })();
-    }
-
+    if (this.#content === undefined)
+      TrainProvider.getContent(
+        this.setCourse,
+        this.cid,
+        this.lid,
+        this.aid,
+        this.url
+      );
     return this.#content ?? "";
   }
 

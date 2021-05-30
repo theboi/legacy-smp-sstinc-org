@@ -1,5 +1,5 @@
 import { Box, Center, CSSReset, Heading } from "@chakra-ui/react";
-import { useColor } from "../../extensions/chakra";
+import { useColor } from "../../hooks/color";
 import { Assignment } from "../../services/train";
 import MarkdownIt from "markdown-it";
 
