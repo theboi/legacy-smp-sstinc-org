@@ -21,9 +21,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaGithub, FaGoogle } from "react-icons/fa";
-import { authProvider } from "../../../model/auth";
+import { authProvider } from "../../../providers/auth";
 import { provider } from "../../../model/provider";
-import { User, UserRole } from "../../../model/user";
+import { User, UserRole } from "../../../services/userold";
 
 interface SignUpOption {
   description: string;

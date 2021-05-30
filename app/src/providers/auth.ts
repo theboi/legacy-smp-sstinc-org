@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
-import { firebaseConfig } from "./provider";
-import { User } from "./user";
+import { firebaseConfig } from "../model/provider";
+import { User } from "../services/userold";
 
 require("firebase/auth");
 require("firebase/firestore");
