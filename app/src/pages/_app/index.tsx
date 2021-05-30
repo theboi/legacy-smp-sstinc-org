@@ -28,6 +28,8 @@ import { User, UserRole } from "../../services/userold";
 import ErrorPage from "../404";
 import ProfilePage from "../account/profile";
 import { authProvider } from "../../providers/auth";
+import { NavBar } from "../../components/app/navBar";
+import { Credits } from "../../components/app/credits";
 
 const paths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
@@ -133,31 +135,6 @@ export default function App({ Component, pageProps }: AppProps) {
   );
 }
 
-const Credits = () => (
-  <Text className={style.credits} color="">
-    Made with ♥&#xFE0E; by{" "}
-    <a
-      href="https://www.ryanthe.com"
-      target="_blank"
-      className={style.link}
-      rel="noreferrer"
-    >
-      Ryan The
-    </a>{" "}
-    from SST Inc, 2021, v2.1.0. <br />
-    Open sourced on{" "}
-    <a
-      href="https://github.com/theboi/smp-sstinc-org"
-      target="_blank"
-      className={style.link}
-      rel="noreferrer"
-    >
-      GitHub
-    </a>
-    .{" "}
-  </Text>
-);
-
 const LoadingOverlay = React.forwardRef(
   (_, ref: React.MutableRefObject<HTMLDivElement>) => (
     <Box ref={ref} className={style.loadingOverlay}>
@@ -253,50 +230,5 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
       {props.children}
       <Credits />
     </div>
-  );
-};
-
-interface NavLink {
-  minRole?: UserRole;
-  isDivider?: boolean;
-  name?: string;
-  // Allows for any FontAwesome icon or other React element like images
-  icon?: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
-  action?: (() => void) | string;
-}
-
-const NavBar = (props: { user: User; links: NavLink[] }) => {
-  const router = useRouter();
-
-  return (
-    <Menu placement="bottom-end">
-      <MenuButton
-        boxSize="60px"
-        style={{ borderRadius: 100 }}
-        as={IconButton}
-        aria-label="Menu"
-        icon={<Avatar src={props.user?.photoURL} size="md" />}
-        variant="outline"
-      />
-      <MenuList>
-        {props.links.map((e, i) => {
-          if (props.user?.role < e.minRole) return null;
-          else if (e.isDivider) return <MenuDivider key={i} />;
-          return (
-            <MenuItem
-              key={i}
-              onClick={
-                typeof e.action === "string" || e.action instanceof String
-                  ? () => router.push(e.action as string)
-                  : e.action
-              }
-              icon={e.icon}
-            >
-              {e.name}
-            </MenuItem>
-          );
-        })}
-      </MenuList>
-    </Menu>
   );
 };
