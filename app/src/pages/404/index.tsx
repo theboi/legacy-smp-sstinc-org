@@ -20,7 +20,9 @@ export default function ErrorPage(props: { status: number }) {
     },
   };
   const status = props.status ?? 404;
-  const imageSrc = `/assets/errors/${status}-${1 + Math.floor(Math.random() * 4)}.png`;
+  const imageSrc = `/assets/errors/${status}-${
+    1 + Math.floor(Math.random() * 4)
+  }.png`;
 
   return (
     <div className={style.main}>
@@ -30,6 +32,7 @@ export default function ErrorPage(props: { status: number }) {
         border="1px solid"
         borderColor={colorMode === "dark" ? "transparent" : "gray.200"}
         rounded="2xl"
+        mb={2}
       >
         <figure className={style.fig}>
           <img
@@ -43,7 +46,7 @@ export default function ErrorPage(props: { status: number }) {
       <Heading className={style.errorCode} size="4xl" style={{ lineHeight: 1 }}>
         {status}
       </Heading>
-      <Heading size="sm">{codes[status].msg}</Heading>
+      <Heading size="md">{codes[status].msg}</Heading>
     </div>
   );
 }
