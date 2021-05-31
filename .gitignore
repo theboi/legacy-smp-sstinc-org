@@ -20,7 +20,9 @@ build
 
 # misc
 .DS_Store
-.idea
+
+# Idea
+.idea/
 
 # debug
 *.log
