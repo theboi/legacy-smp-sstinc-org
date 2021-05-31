@@ -3,8 +3,8 @@ import { Endpoints } from "@octokit/types";
 import { Assignment, Course, Lesson, SetCourseType } from "../services/train";
 
 // https://docs.github.com/en/rest/reference/repos#get-repository-content
-const getRepoContentPath = "GET /repos/{owner}/{repo}/contents/{path}";
-const getCommits = "GET /repos/{owner}/{repo}/commits";
+export const getRepoContentPath = "GET /repos/{owner}/{repo}/contents/{path}";
+export const getCommits = "GET /repos/{owner}/{repo}/commits";
 
 const octokit = new Octokit();
 
@@ -15,7 +15,7 @@ const octokit = new Octokit();
 //   per_page: 1
 // });
 
-type OctokitRepoContentDataType =
+export type OctokitRepoContentDataType =
   Endpoints[typeof getRepoContentPath]["response"]["data"] & {
     length: number /* Octokit typing missing length property */;
   };

@@ -6,8 +6,6 @@ require("firebase/auth");
 require("firebase/firestore");
 
 class AuthProvider {
-  readonly firestore = "users";
-
   constructor() {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
@@ -21,7 +19,7 @@ class AuthProvider {
   currentUser: User;
 
   /** Helper method to allow external files such as for useState to be updated */
-  addIdTokenChangedListener(callback: (user: User) => void): void {
+  static addIdTokenChangedListener(callback: (user: User) => void): void {
     firebase.auth().onIdTokenChanged(async (fbUser) => {
       const user = await new User().initialized(fbUser);
       callback(fbUser === null ? null : user);
@@ -29,7 +27,7 @@ class AuthProvider {
   }
 
   /** Call method when sign in, remember to call checkForAuth when loading page from redirect. */
-  async signIn(): Promise<void> {
+  static async signIn(): Promise<void> {
     return firebase
       .auth()
       .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -43,7 +41,7 @@ class AuthProvider {
       });
   }
 
-  async checkForAuth(): Promise<void> {
+  static async checkForAuth(): Promise<void> {
     await firebase
       .auth()
       .getRedirectResult()
@@ -52,7 +50,7 @@ class AuthProvider {
       });
   }
 
-  async signOut(): Promise<boolean> {
+  static async signOut(): Promise<boolean> {
     return firebase
       .auth()
       .signOut()
@@ -60,15 +58,15 @@ class AuthProvider {
       .catch(() => false);
   }
 
-  async getUser(
+  static async getUser(
     email: string
   ): Promise<
     firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
   > {
-    return firebase.firestore().collection(this.firestore).doc(email).get();
+    return firebase.firestore().collection("users").doc(email).get();
   }
 
-  async getPrivacyPolicy(): Promise<string> {
+  static async getPrivacyPolicy(): Promise<string> {
     return "hello";
   }
 }
