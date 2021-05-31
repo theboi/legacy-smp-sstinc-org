@@ -30,15 +30,21 @@ export default function TrainPage(props: { user: User }) {
   return (
     <div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
-        <div style={{ flexBasis: 300, flexGrow: 1 }}>
+        <Box style={{ flexBasis: 300, flexGrow: 1 }} mr={3}>
           <AtdField user={props.user} />
-          <CourseDropdown index={index} setIndex={setIndex} courses={courses} />
-          <TrainingSelectBar
-            lessons={Object.values(courses[index]?.lessons ?? {})}
-            assignment={assignment}
-            setAssignment={setAssignment}
-          />
-        </div>
+          <Box mt={5}>
+            <CourseDropdown
+              index={index}
+              setIndex={setIndex}
+              courses={courses}
+            />
+            <TrainingSelectBar
+              lessons={Object.values(courses[index]?.lessons ?? {})}
+              assignment={assignment}
+              setAssignment={setAssignment}
+            />
+          </Box>
+        </Box>
         <AssignmentContent assignment={assignment} />
       </div>
     </div>
