@@ -29,6 +29,7 @@ import {
 
 import { User, UserRole } from "../../services/userold";
 import { provider } from "../../model/provider";
+import { useColor, useCustomColor } from "../../hooks/color";
 
 export default function AtdField(props: { user: User }) {
   const [time, setTime] = useState(0);
@@ -93,7 +94,7 @@ export default function AtdField(props: { user: User }) {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalBody pt={10} pb={10}>
+          <ModalBody py={10}>
             <VStack>
               <Heading size="sm">
                 Enter this code at{" "}
@@ -106,7 +107,6 @@ export default function AtdField(props: { user: User }) {
                       style={{
                         fontSize: "2em",
                         opacity: 1,
-                        borderColor: "unset",
                       }}
                       key={i}
                     />
@@ -128,7 +128,7 @@ export default function AtdField(props: { user: User }) {
           <AlertDescription display="block">
             Kindly enter the 4 digit code provided to check-in to SST Inc.
           </AlertDescription>
-          <Box my={3}>
+          <Box>
             <HStack onKeyDown={onCodeKeyDown}>
               <PinInput
                 otp
@@ -139,7 +139,17 @@ export default function AtdField(props: { user: User }) {
                 isInvalid={status === "Invalid"}
               >
                 {[...Array(4)].map((_, i) => (
-                  <PinInputField style={{ fontSize: "2em" }} key={i} />
+                  <PinInputField
+                    style={{ fontSize: "2em" }}
+                    borderColor={useCustomColor("blackAlpha.400", null)}
+                    _hover={{
+                      borderColor: useCustomColor(
+                        "blackAlpha.500",
+                        "whiteAlpha.500"
+                      ),
+                    }}
+                    key={i}
+                  />
                 ))}
               </PinInput>
             </HStack>

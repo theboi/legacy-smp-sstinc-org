@@ -11,8 +11,6 @@ import {
   MenuItem,
   Image,
   Button,
-  Center,
-  Heading,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -30,9 +28,9 @@ export default function TrainPage(props: { user: User }) {
   return (
     <div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
-        <Box style={{ flexBasis: 300, flexGrow: 1 }} mr={3}>
+        <Box style={{ flexBasis: 300, flexGrow: 1 }}>
           <AtdField user={props.user} />
-          <Box mt={5}>
+          {/* <Box>
             <CourseDropdown
               index={index}
               setIndex={setIndex}
@@ -43,7 +41,7 @@ export default function TrainPage(props: { user: User }) {
               assignment={assignment}
               setAssignment={setAssignment}
             />
-          </Box>
+          </Box> */}
         </Box>
         <AssignmentContent assignment={assignment} />
       </div>
