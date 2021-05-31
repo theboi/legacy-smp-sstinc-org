@@ -128,20 +128,22 @@ export default function AtdField(props: { user: User }) {
           <AlertDescription display="block">
             Kindly enter the 4 digit code provided to check-in to SST Inc.
           </AlertDescription>
-          <HStack onKeyDown={onCodeKeyDown}>
-            <PinInput
-              otp
-              type="alphanumeric"
-              size="xl"
-              value={code}
-              onChange={onCodeChange}
-              isInvalid={status === "Invalid"}
-            >
-              {[...Array(4)].map((_, i) => (
-                <PinInputField style={{ fontSize: "2em" }} key={i} />
-              ))}
-            </PinInput>
-          </HStack>
+          <Box my={3}>
+            <HStack onKeyDown={onCodeKeyDown}>
+              <PinInput
+                otp
+                type="alphanumeric"
+                size="xl"
+                value={code}
+                onChange={onCodeChange}
+                isInvalid={status === "Invalid"}
+              >
+                {[...Array(4)].map((_, i) => (
+                  <PinInputField style={{ fontSize: "2em" }} key={i} />
+                ))}
+              </PinInput>
+            </HStack>
+          </Box>
           <ButtonGroup isAttached width="100%">
             <Button
               isFullWidth
