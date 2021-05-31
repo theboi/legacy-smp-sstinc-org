@@ -9,12 +9,14 @@ import {
   Button,
   Link,
 } from "@chakra-ui/react";
+import style from "./style.module.css";
 
 const HomePage = () => {
   return (
     <Box>
       <Header />
       <Body />
+      <SignUp />
     </Box>
   );
 };
@@ -51,7 +53,7 @@ const Header = () => {
 const Body = () => {
   const content = [
     {
-      key: 1,
+      id: 1,
       img: "https://placekitten.com/300/300",
       imgAlt: "Kitten",
       title: "Placeholder",
@@ -61,7 +63,7 @@ const Body = () => {
   return (
     <Box>
       {content.map((bodyContent) => (
-        <BodyItem bodyContent={bodyContent} />
+        <BodyItem bodyContent={bodyContent} key={bodyContent.id} />
       ))}
     </Box>
   );
@@ -69,7 +71,7 @@ const Body = () => {
 
 const BodyItem = ({ bodyContent }) => {
   return (
-    <Box borderWidth={"1px"} borderRadius={"lg"} overflow={"hidden"} mb={"4"}>
+    <Box overflow={"hidden"} mb={"4"}>
       <HStack spacing={"50px"}>
         <Box>
           <Image
@@ -85,6 +87,25 @@ const BodyItem = ({ bodyContent }) => {
           <Text fontSize={"md"}>{bodyContent.desc}</Text>
         </Box>
       </HStack>
+    </Box>
+  );
+};
+
+const SignUp = () => {
+  return (
+    <Box
+      boxShadow={"base"}
+      p={"6"}
+      rounded={"md"}
+      borderWidth={"1px"}
+      borderRadius={"lg"}
+      overflow={"hidden"}
+      mb={5}
+    >
+      <Text fontSize={"3xl"}>
+        <b>Sign Up</b>
+      </Text>
+      <Center></Center>
     </Box>
   );
 };
