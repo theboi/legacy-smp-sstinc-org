@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import { authProvider } from "../providers/auth";
+import { AuthProvider } from "../providers/auth";
 
 export enum UserRole {
   "Banned" = 0,
@@ -23,7 +23,7 @@ export class User {
   async initialized(fbUser: firebase.User): Promise<User> {
     if (this != null) {
       this.#fbUser = fbUser;
-      this.#fbData = (await authProvider.getUser(fbUser?.email)).data();
+      this.#fbData = (await AuthProvider.getUser(fbUser?.email)).data();
     }
 
     return this;

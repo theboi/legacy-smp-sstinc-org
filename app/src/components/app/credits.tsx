@@ -9,7 +9,7 @@ export const Credits = () => (
   >
     Made with ♥&#xFE0E; by{" "}
     <Link
-      color={useColor("blue")}
+      color={useColor("link")}
       href="https://www.ryanthe.com"
       target="_blank"
       rel="noreferrer"
@@ -19,7 +19,7 @@ export const Credits = () => (
     from SST Inc, 2021, v2.1.0. <br />
     Open sourced on{" "}
     <Link
-      color={useColor("blue")}
+      color={useColor("link")}
       href="https://github.com/theboi/smp-sstinc-org"
       target="_blank"
       rel="noreferrer"

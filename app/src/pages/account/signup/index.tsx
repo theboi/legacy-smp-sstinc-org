@@ -1,34 +1,34 @@
 import {
   Button,
-  Badge,
-  Avatar,
   Heading,
   Text,
-  Flex,
   SimpleGrid,
   Box,
-  Image,
   Stack,
-  Input,
-  InputGroup,
-  InputLeftAddon,
   FormControl,
   FormLabel,
   FormHelperText,
   IconButton,
   Checkbox,
   Skeleton,
+  Link,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { FaArrowLeft, FaGithub, FaGoogle } from "react-icons/fa";
-import { authProvider } from "../../../providers/auth";
-import { provider } from "../../../model/provider";
-import { User, UserRole } from "../../../services/userold";
+import {
+  FaArrowLeft,
+  FaGithub,
+  FaGoogle,
+  FaQuestionCircle,
+} from "react-icons/fa";
+import { AuthProvider } from "../../../providers/auth";
+import { User } from "../../../services/userold";
+import { useColor } from "../../../hooks/color";
 
 interface SignUpOption {
   description: string;
   emoji: string;
-  type: SignUpType;
+  isInc: boolean;
 }
 
 interface SignUpField {
@@ -36,31 +36,26 @@ interface SignUpField {
   regex: RegExp;
 }
 
-enum SignUpType {
-  Inc,
-  Non,
-}
-
 export default function SignUpPage(props: { user: User }) {
   const [step, setStep] = useState(0);
-  const [signUpType, setSignUpType] = useState(SignUpType.Non);
+  const [isInc, setIsInc] = useState(false);
   const [verified, setVerified] = useState(false);
   const [privacy, setPrivacy] = useState("");
 
   useEffect(() => {
-    authProvider.getPrivacyPolicy().then((pp) => setPrivacy(pp));
+    AuthProvider.getPrivacyPolicy().then((pp) => setPrivacy(pp));
   });
 
   const signUpOptions: SignUpOption[] = [
     {
-      description: "I am a member of SST Inc.",
+      description: "I am a member of SST Inc",
       emoji: "😄",
-      type: SignUpType.Inc,
+      isInc: true,
     },
     {
-      description: "I am just interested!",
+      description: "I am just interested",
       emoji: "😬",
-      type: SignUpType.Non,
+      isInc: false,
     },
   ];
 
@@ -68,8 +63,14 @@ export default function SignUpPage(props: { user: User }) {
     <Box>
       <Heading>Let's get you ready to use SMP!</Heading>
       <Text>
-        If you are a member of SST Inc., you may also link your SST Inc ID to
-        SMP.
+        If you are a member of SST Inc, please do indicate.{" "}
+        <Link
+          color={useColor("link")}
+          target="_blank"
+          href="https://sstinc.org"
+        >
+          What is SST Inc?
+        </Link>
       </Text>
       <SimpleGrid columns={2} minChildWidth={300} gap={10}>
         {signUpOptions.map((e) => (
@@ -79,8 +80,8 @@ export default function SignUpPage(props: { user: User }) {
             key={e.description}
             flexDir="column"
             onClick={() => {
-              setSignUpType(e.type);
-              setStep((s) => s + (e.type === SignUpType.Inc ? 1 : 2));
+              setIsInc(e.isInc);
+              goForward();
             }}
           >
             <Text fontSize="5xl">{e.emoji}</Text>
@@ -90,20 +91,44 @@ export default function SignUpPage(props: { user: User }) {
       </SimpleGrid>
     </Box>,
     <Box>
-      <Heading>Verify that you are from SST Inc.</Heading>
-      <Stack spacing={5}>
+      <Heading>Connect your internet accounts</Heading>
+      <Stack maxWidth={500}>
         <FormControl isRequired>
-          <FormLabel>SST Class</FormLabel>
-          <InputGroup>
-            <InputLeftAddon>S</InputLeftAddon>
-            <Input placeholder="301" />
-          </InputGroup>
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel>Verify</FormLabel>
-          <Button leftIcon={<FaGoogle />} colorScheme="red" disabled={verified}>
-            {verified ? "Verified" : "Verify"} with Google
-          </Button>
+          {isInc ? (
+            <>
+              <FormLabel>Verify your membership in SST Inc</FormLabel>
+              <Button
+                leftIcon={<FaGoogle />}
+                colorScheme="red"
+                disabled={verified}
+              >
+                {verified ? "Verified" : "Verify"} with Google
+              </Button>
+            </>
+          ) : null}
+          <FormLabel>Verify your humanity</FormLabel>
+          <Box display="flex" flexDir="row">
+            <Button leftIcon={<FaGithub />} colorScheme="gray">
+              Verify with GitHub
+            </Button>
+            <Tooltip
+              shouldWrapChildren
+              label="GitHub is used to ensure that your email is verified and content such as your profile picture does not contain inappropriate content"
+              fontSize="sm"
+            >
+              <FaQuestionCircle />
+            </Tooltip>
+          </Box>
+          <FormHelperText>
+            Don't have a GitHub account?{" "}
+            <Link
+              color={useColor("link")}
+              href="https://github.com/"
+              target="_blank"
+            >
+              Create one now!
+            </Link>
+          </FormHelperText>
         </FormControl>
       </Stack>
     </Box>,
@@ -112,38 +137,36 @@ export default function SignUpPage(props: { user: User }) {
       <Skeleton isLoaded={privacy != ""} height={100}>
         <Text>{privacy}</Text>
       </Skeleton>
-      <Stack spacing={3}>
+      <Stack>
         <Checkbox>I have read and acknowledged.</Checkbox>
-        <Button colorScheme="green">Next</Button>
       </Stack>
     </Box>,
     <Box>
       <Heading>Great! One last step!</Heading>
-      <Stack spacing={3}>
-        <FormLabel>
-          Sign in with GitHub to customise your profile page (and prevent bot
-          accounts 😬!)
-        </FormLabel>
-        <Button leftIcon={<FaGithub />} colorScheme="gray">
-          Verify with GitHub
-        </Button>
-      </Stack>
+      <Stack></Stack>
     </Box>,
   ];
 
+  const goBack = () => {
+    setStep((s) => s - 1);
+  };
+
+  const goForward = () => {
+    setStep((s) => s + 1);
+  };
+
   return (
-    <Box display="flex" gap={10}>
+    <Box style={{ display: "flex", gap: 10, maxWidth: 800, margin: "0 auto" }}>
       {step > 0 ? (
         <IconButton
-          onClick={() =>
-            setStep((s) => s - (signUpType === SignUpType.Inc ? 1 : 2))
-          }
+          onClick={goBack}
           icon={<FaArrowLeft />}
           aria-label="Back"
           alignSelf="start"
         />
       ) : null}
       {steps[step]}
+      {step > 0 ? <Button colorScheme="green">Next</Button> : null}
     </Box>
   );
 }

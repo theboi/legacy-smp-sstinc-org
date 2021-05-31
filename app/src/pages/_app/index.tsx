@@ -4,34 +4,21 @@ import { AppProps } from "next/app";
 import "./styles.scss";
 import "./cssreset.scss";
 import Head from "next/head";
-import {
-  Avatar,
-  Box,
-  ChakraProvider,
-  IconButton,
-  Text,
-  useColorMode,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-} from "@chakra-ui/react";
-import { FaBook, FaBug, FaLink, FaSignInAlt, FaSun } from "react-icons/fa";
+import { Box, ChakraProvider } from "@chakra-ui/react";
+
 import { useRouter } from "next/router";
 import style from "./style.module.css";
 
 import theme from "../../model/theme";
 
-import { provider } from "../../model/provider";
 import { User, UserRole } from "../../services/userold";
 import ErrorPage from "../404";
 import ProfilePage from "../account/profile";
-import { authProvider } from "../../providers/auth";
+import { AuthProvider } from "../../providers/auth";
 import { NavBar } from "../../components/app/navBar";
 import { Credits } from "../../components/app/credits";
 
-const paths: { [key: string]: UserRole } = {
+export const authPaths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
   "/train": UserRole.Trainee,
 };
@@ -50,7 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   });
   useEffect(() => {
-    authProvider.addIdTokenChangedListener((user: User) => {
+    AuthProvider.addIdTokenChangedListener((user: User) => {
       setCurUser(user);
       // console.log(user)
       // if (user?.iid !== undefined && user?.role === UserRole.Alien) {
@@ -61,7 +48,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     (async () => {
-      await authProvider.checkForAuth();
+      await AuthProvider.checkForAuth();
       loadingOverlayRef.current.style.display = "none";
     })();
   }, [curUser]);
@@ -117,11 +104,11 @@ export default function App({ Component, pageProps }: AppProps) {
           <div className={style.content}>
             {(() => {
               switch (true) {
-                case paths[router.pathname] === undefined:
+                case authPaths[router.pathname] === undefined:
                   return <Component {...pageProps} user={curUser} />;
                 case curUser?.role === undefined:
                   return <ProfilePage user={curUser} />;
-                case curUser?.role >= paths[router.pathname]: // isAuth
+                case curUser?.role >= authPaths[router.pathname]: // isAuth
                   return <Component {...pageProps} user={curUser} />;
                 default:
                   return <ErrorPage status={403} />;
@@ -170,8 +157,6 @@ const LoadingOverlay = React.forwardRef(
 );
 
 const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
-  const { toggleColorMode } = useColorMode();
-
   return (
     <div className={style.main}>
       <div className={style.headnav}>
@@ -189,42 +174,7 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
               height={100}
             />
           </a>
-          <NavBar
-            user={props.user}
-            links={[
-              {
-                name: props.user === null ? "Sign In" : props.user.displayName,
-                icon:
-                  props.user === null ? (
-                    <FaSignInAlt />
-                  ) : (
-                    <Avatar src={props.user?.photoURL} size="sm" />
-                  ),
-                action: props.user === null ? authProvider.signIn : "/profile",
-              },
-              {
-                name: "Train",
-                icon: <FaBook />,
-                action: "/train",
-              },
-              {
-                name: "URL Shortener",
-                icon: <FaLink />,
-                action: "/url",
-                minRole: paths["/url"],
-              },
-              {
-                name: "Toggle Theme",
-                icon: <FaSun />,
-                action: () => toggleColorMode(),
-              },
-              {
-                name: "Bug Report",
-                icon: <FaBug />,
-                action: "https://github.com/theboi/smp-sstinc-org/issues",
-              },
-            ]}
-          />
+          <NavBar user={props.user} />
         </nav>
       </div>
       {props.children}
