@@ -1,4 +1,14 @@
-import { Heading, Box, Center, Image, HStack, Text } from "@chakra-ui/react";
+import {
+  Heading,
+  Box,
+  Center,
+  Image,
+  HStack,
+  Stack,
+  Text,
+  Button,
+  Link,
+} from "@chakra-ui/react";
 
 const HomePage = () => {
   return (
@@ -11,9 +21,28 @@ const HomePage = () => {
 
 const Header = () => {
   return (
-    <Box my={2}>
+    <Box mt={2} mb={20}>
       <Center>
-        <Text fontSize={"5xl"}>Header Goes Here</Text>
+        <Box>
+          <Box mb={5}>
+            <Text fontSize={"4xl"}>
+              <b>SST Inc. Management Platform</b>
+            </Text>
+            <Text fontSize={"2xl"}>Manage, Learn, Develop</Text>
+          </Box>
+          <Stack direction={"row"} spacing={4}>
+            <Link to={"/home"}>
+              <Button colorScheme={"teal"} size={"md"}>
+                Management
+              </Button>
+            </Link>
+            <Link to={"/home"}>
+              <Button colorScheme={"teal"} size={"md"}>
+                Learn
+              </Button>
+            </Link>
+          </Stack>
+        </Box>
       </Center>
     </Box>
   );
@@ -22,6 +51,7 @@ const Header = () => {
 const Body = () => {
   const content = [
     {
+      key: 1,
       img: "https://placekitten.com/300/300",
       imgAlt: "Kitten",
       title: "Placeholder",
@@ -39,7 +69,7 @@ const Body = () => {
 
 const BodyItem = ({ bodyContent }) => {
   return (
-    <Box borderWidth={"1px"} borderRadius="lg" overflow="hidden">
+    <Box borderWidth={"1px"} borderRadius={"lg"} overflow={"hidden"} mb={"4"}>
       <HStack spacing={"50px"}>
         <Box>
           <Image
