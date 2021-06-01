@@ -16,7 +16,6 @@ const HomePage = () => {
     <Box>
       <Header />
       <Body />
-      <SignUp />
     </Box>
   );
 };
@@ -32,15 +31,15 @@ const Header = () => {
             </Text>
             <Text fontSize={"2xl"}>Manage, Learn, Develop</Text>
           </Box>
-          <Stack direction={"row"} spacing={4}>
+          <Stack direction={"row"} spacing={7}>
             <Link to={"/home"}>
               <Button colorScheme={"teal"} size={"md"}>
-                Management
+                Attendance & Learn
               </Button>
             </Link>
             <Link to={"/home"}>
-              <Button colorScheme={"teal"} size={"md"}>
-                Learn
+              <Button colorScheme={"green"} size={"md"}>
+                Sign Up
               </Button>
             </Link>
           </Stack>
@@ -87,25 +86,6 @@ const BodyItem = ({ bodyContent }) => {
           <Text fontSize={"md"}>{bodyContent.desc}</Text>
         </Box>
       </HStack>
-    </Box>
-  );
-};
-
-const SignUp = () => {
-  return (
-    <Box
-      boxShadow={"base"}
-      p={"6"}
-      rounded={"md"}
-      borderWidth={"1px"}
-      borderRadius={"lg"}
-      overflow={"hidden"}
-      mb={5}
-    >
-      <Text fontSize={"3xl"}>
-        <b>Sign Up</b>
-      </Text>
-      <Center></Center>
     </Box>
   );
 };
