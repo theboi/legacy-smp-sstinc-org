@@ -27,5 +27,7 @@ export default extendTheme({
   colors: {
     // black: "#0D1821",
     // white: "#D8D4F2",
+    teal: "#38B2AC",
+    signUpRed: "#FC8181",
   },
 });

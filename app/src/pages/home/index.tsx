@@ -7,15 +7,14 @@ import {
   Stack,
   Text,
   Button,
-  Link,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
-import style from "./style.module.css";
+import NextLink from "next/link";
 
 const HomePage = () => {
   return (
     <Box>
       <Header />
-      <Body />
     </Box>
   );
 };
@@ -32,16 +31,26 @@ const Header = () => {
             <Text fontSize={"2xl"}>Manage, Learn, Develop</Text>
           </Box>
           <Stack direction={"row"} spacing={7}>
-            <Link to={"/home"}>
-              <Button colorScheme={"teal"} size={"md"}>
+            <NextLink href={"/train"}>
+              <ChakraLink
+                to={"/train"}
+                backgroundColor="teal"
+                as={Button}
+                size={"md"}
+              >
                 Attendance & Learn
-              </Button>
-            </Link>
-            <Link to={"/home"}>
-              <Button colorScheme={"green"} size={"md"}>
+              </ChakraLink>
+            </NextLink>
+            <NextLink href={"/home"}>
+              <ChakraLink
+                to={"/account/signup"}
+                backgroundColor="signUpRed"
+                as={Button}
+                size={"md"}
+              >
                 Sign Up
-              </Button>
-            </Link>
+              </ChakraLink>
+            </NextLink>
           </Stack>
         </Box>
       </Center>
