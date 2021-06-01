@@ -30,7 +30,7 @@ export default function TrainPage(props: { user: User }) {
       <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
         <Box style={{ flexBasis: 300, flexGrow: 1 }}>
           <AtdField user={props.user} />
-          {/* <Box>
+          <Box>
             <CourseDropdown
               index={index}
               setIndex={setIndex}
@@ -41,7 +41,7 @@ export default function TrainPage(props: { user: User }) {
               assignment={assignment}
               setAssignment={setAssignment}
             />
-          </Box> */}
+          </Box>
         </Box>
         <AssignmentContent assignment={assignment} />
       </div>
