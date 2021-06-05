@@ -1,32 +1,30 @@
 import { Button, Badge, Avatar, Heading, Text, Flex } from "@chakra-ui/react";
-import { authProvider, AuthProvider } from "../../../providers/auth";
-import { User, UserRole } from "../../../services/userold";
+import { useAuth } from "../../../services/auth";
+import { User, UserRole } from "../../../objects/user";
 
-export default function ProfilePage(props: { user: User }) {
+export default function ProfilePage() {
+  const { auth, user } = useAuth();
+
   return (
     <div style={{ maxWidth: 500 }}>
-      {props.user === null ? (
-        <Button colorScheme="blue" onClick={AuthProvider.signIn}>
+      {user === null ? (
+        <Button colorScheme="blue" onClick={auth.signIn}>
           Sign In
         </Button>
       ) : (
         <>
           <div>
             <Flex gridGap={5} flexWrap="wrap">
-              <Avatar
-                name={props.user?.displayName}
-                src={props.user?.photoURL}
-                size="xl"
-              />
+              <Avatar name={user?.name} src={user?.photoURL} size="xl" />
               <div>
-                <Heading size="md">{props.user?.displayName}</Heading>
-                <Text>{props.user?.email}</Text>
-                <Text>{props.user?.buff}</Text>
-                <Badge colorScheme="red">{UserRole[props.user?.role]}</Badge>
+                <Heading size="md">{user?.name}</Heading>
+                <Text>{user?.email}</Text>
+                <Badge colorScheme="red">{UserRole[user?.role]}</Badge>
+                <Text>{user?.points}</Text>
               </div>
             </Flex>
           </div>
-          <Button colorScheme="red" onClick={AuthProvider.signOut}>
+          <Button colorScheme="red" onClick={auth.signOut}>
             Sign Out
           </Button>
         </>

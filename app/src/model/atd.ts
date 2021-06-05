@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import { User } from "../services/userold";
+import { User } from "../objects/user";
 
 export class Atd {
   readonly firestore = "atd";
@@ -14,11 +14,11 @@ export class Atd {
       .collection(this.firestore)
       .doc(
         `${jsDate.getDay()}-${jsDate.getMonth() + 1}-${jsDate.getFullYear()}-${
-          user.displayName
+          user.name
         }`
       )
       .set({
-        displayName: user.displayName,
+        displayName: user.name,
         email: user.email,
         timestamp: ts,
         iid: user.iid,

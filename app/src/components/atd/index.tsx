@@ -27,16 +27,18 @@ import {
   Box,
 } from "@chakra-ui/react";
 
-import { User, UserRole } from "../../services/userold";
+import { User, UserRole } from "../../objects/user";
 import { provider } from "../../model/provider";
 import { useColor, useCustomColor } from "../../hooks/color";
+import { useAuth } from "../../services/auth";
 
-export default function AtdField(props: { user: User }) {
+export default function AtdField() {
   const [time, setTime] = useState(0);
   const [key, setKey] = useState(getKeyCode());
   const [code, setCode] = useState("");
   const [status, setStatus] = useState("Confirm");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useAuth();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -66,7 +68,7 @@ export default function AtdField(props: { user: User }) {
     if (code === getKeyCode()) {
       /** Handle after writing to Firestore */
       provider.atd
-        .checkIn(props.user)
+        .checkIn(user)
         .then(() => {
           setStatus("Success");
         })
@@ -166,7 +168,7 @@ export default function AtdField(props: { user: User }) {
             >
               {status}
             </Button>
-            {props.user?.role >= UserRole.ExCo ? (
+            {user?.role >= UserRole.ExCo ? (
               <IconButton
                 onClick={onOpen}
                 aria-label="View Key Code"

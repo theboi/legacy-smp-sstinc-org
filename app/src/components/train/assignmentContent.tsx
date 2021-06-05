@@ -1,6 +1,6 @@
 import { Box, Center, CSSReset, Heading } from "@chakra-ui/react";
 import { useColor } from "../../hooks/color";
-import { Assignment } from "../../services/train";
+import { Assignment } from "../../objects/train";
 import MarkdownIt from "markdown-it";
 
 export default function AssignmentContent(props: { assignment: Assignment }) {
