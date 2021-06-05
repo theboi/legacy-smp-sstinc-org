@@ -1,118 +1,105 @@
-import { Dispatch, SetStateAction } from "react";
-import { TrainProvider } from "../providers/train";
+import { Octokit } from "@octokit/core";
+import { Endpoints } from "@octokit/types";
+import { Assignment, Course, Lesson, SetCourseType } from "../objects/train";
 
-export type SetCourseType = Dispatch<SetStateAction<{ [cid: string]: Course }>>;
+// https://docs.github.com/en/rest/reference/repos#get-repository-content
+export const getRepoContentPath = "GET /repos/{owner}/{repo}/contents/{path}";
+export const getCommits = "GET /repos/{owner}/{repo}/commits";
 
-enum CourseSubject {
-  ios = "iOS",
-  and = "Android",
-  rct = "React",
-}
+const octokit = new Octokit();
 
-class Course {
-  setCourse: SetCourseType;
-  readonly cid: string;
-  #lessons: { [lid: string]: Lesson };
+// const res = await octokit.request(getCommits, {
+//   owner: "theboi",
+//   repo: "smp-sstinc-org",
+//   path: ``,
+//   per_page: 1
+// });
 
-  set lessons(v: { [lid: string]: Lesson }) {
-    this.#lessons = v;
+export type OctokitRepoContentDataType =
+  Endpoints[typeof getRepoContentPath]["response"]["data"] & {
+    length: number /* Octokit typing missing length property */;
+  };
+
+class TrainProvider {
+  static async getCourses(setCourse: SetCourseType) {
+    const res = await octokit.request(getRepoContentPath, {
+      owner: "theboi",
+      repo: "smp-sstinc-org",
+      path: `/data/train`,
+    });
+    const data = Object.fromEntries(
+      Array.from(
+        res.data as OctokitRepoContentDataType,
+        (e) => new Course(setCourse, e.name)
+      ).map((d) => [d.cid, d])
+    );
+    setCourse(data);
   }
 
-  get lessons(): { [lid: string]: Lesson } {
-    if (this.#lessons === undefined)
-      TrainProvider.getLessons(this.setCourse, this.cid);
-    return this.#lessons ?? {};
-  }
+  static async getLessons(setCourse: SetCourseType, cid: string) {
+    const res = await octokit.request(getRepoContentPath, {
+      owner: "theboi",
+      repo: "smp-sstinc-org",
+      path: `/data/train/${cid}`,
+    });
+    const data = Object.fromEntries(
+      Array.from(
+        res.data as OctokitRepoContentDataType,
+        (e) => new Lesson(setCourse, cid, e.name)
+      ).map((d) => [d.lid, d])
+    );
 
-  get subject(): CourseSubject {
-    return CourseSubject[this.cid];
-  }
-
-  constructor(setCourse: SetCourseType, cid: string) {
-    this.setCourse = setCourse;
-    this.cid = cid;
-  }
-}
-
-class Lesson {
-  setCourse: SetCourseType;
-  readonly cid: string;
-  readonly lid: string;
-  #assignments: { [aid: string]: Assignment };
-
-  set assignments(v: { [aid: string]: Assignment }) {
-    this.#assignments = v;
-  }
-
-  get assignments(): { [aid: string]: Assignment } {
-    if (this.#assignments === undefined)
-      TrainProvider.getAssignments(this.setCourse, this.cid, this.lid);
-    return this.#assignments ?? {};
-  }
-
-  get title(): string {
-    return this.lid.split("_")[1];
-  }
-
-  constructor(setCourse: SetCourseType, cid: string, lid: string) {
-    this.setCourse = setCourse;
-    this.cid = cid;
-    this.lid = lid;
-  }
-}
-
-enum AssignmentType {
-  sld = "slides",
-  qui = "quiz",
-  art = "article",
-}
-
-class Assignment {
-  setCourse: SetCourseType;
-  readonly cid: string;
-  readonly lid: string;
-  readonly aid: string; // also the file name including extension
-  readonly url: string;
-  #content: string;
-
-  set content(v: string) {
-    this.#content = v;
-  }
-
-  get content(): string {
-    if (this.#content === undefined)
-      TrainProvider.getContent(
-        this.setCourse,
-        this.cid,
-        this.lid,
-        this.aid,
-        this.url
+    setCourse((c) => {
+      const n: { [cid: string]: Course } = Object.assign(
+        Object.create(Object.getPrototypeOf(c)),
+        c
       );
-    return this.#content ?? "";
+      n[cid].lessons = data;
+      return n;
+    });
   }
 
-  get title(): string {
-    return this.aid.split("_")[1];
+  static async getAssignments(
+    setCourse: SetCourseType,
+    cid: string,
+    lid: string
+  ) {
+    const res = await octokit.request(getRepoContentPath, {
+      owner: "theboi",
+      repo: "smp-sstinc-org",
+      path: `/data/train/${cid}/${lid}`,
+    });
+    const data = Object.fromEntries(
+      Array.from(
+        res.data as OctokitRepoContentDataType,
+        (e) => new Assignment(setCourse, cid, lid, e.name, e.download_url)
+      ).map((d) => [d.aid, d])
+    );
+
+    setCourse((c) => {
+      const n = Object.assign(Object.create(Object.getPrototypeOf(c)), c);
+      n[cid].lessons[lid].assignments = data;
+      return n;
+    });
   }
 
-  get type(): AssignmentType {
-    console.log("hi", this.aid.split(".")[1]);
-    return AssignmentType[this.aid.split(".")[1]];
-  }
-
-  constructor(
+  static async getContent(
     setCourse: SetCourseType,
     cid: string,
     lid: string,
     aid: string,
     url: string
   ) {
-    this.setCourse = setCourse;
-    this.cid = cid;
-    this.lid = lid;
-    this.aid = aid;
-    this.url = url;
+    const res = await octokit.request("GET {url}", {
+      url: url,
+    });
+
+    setCourse((c) => {
+      const n = Object.assign(Object.create(Object.getPrototypeOf(c)), c);
+      n[cid].lessons[lid].assignments[aid].content = res.data;
+      return n;
+    });
   }
 }
 
-export { Course, CourseSubject, Lesson, Assignment, AssignmentType };
+export { TrainProvider };

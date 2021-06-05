@@ -21,8 +21,8 @@ import {
   FaGoogle,
   FaQuestionCircle,
 } from "react-icons/fa";
-import { AuthProvider } from "../../../providers/auth";
-import { User } from "../../../services/userold";
+import { AuthProvider } from "../../../services/auth";
+import { User } from "../../../objects/user";
 import { useColor } from "../../../hooks/color";
 
 interface SignUpOption {
@@ -43,7 +43,7 @@ export default function SignUpPage(props: { user: User }) {
   const [privacy, setPrivacy] = useState("");
 
   useEffect(() => {
-    AuthProvider.getPrivacyPolicy().then((pp) => setPrivacy(pp));
+    // AuthProvider.getPrivacyPolicy().then((pp) => setPrivacy(pp));
   });
 
   const signUpOptions: SignUpOption[] = [

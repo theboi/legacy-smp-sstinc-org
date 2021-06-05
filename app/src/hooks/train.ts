@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { TrainProvider } from "../providers/train";
-import { Course } from "../services/train";
+import { TrainProvider } from "../services/train";
+import { Course } from "../objects/train";
 
 export function useTrain() {
   const [courses, setCourse] = useState<{ [cid: string]: Course }>();

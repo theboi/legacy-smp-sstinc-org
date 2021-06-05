@@ -14,13 +14,13 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Dispatch, SetStateAction, useState } from "react";
-import { User } from "../../services/userold";
-import { Assignment, Course, Lesson } from "../../services/train";
+import { User } from "../../objects/user";
+import { Assignment, Course, Lesson } from "../../objects/train";
 import AtdField from "../../components/atd";
 import AssignmentContent from "../../components/train/assignmentContent";
 import { useTrain } from "../../hooks/train";
 
-export default function TrainPage(props: { user: User }) {
+export default function TrainPage() {
   const [index, setIndex] = useState(0);
   const [assignment, setAssignment] = useState<Assignment>();
   const courses = useTrain();
@@ -29,7 +29,7 @@ export default function TrainPage(props: { user: User }) {
     <div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
         <Box style={{ flexBasis: 300, flexGrow: 1 }}>
-          <AtdField user={props.user} />
+          <AtdField />
           <Box>
             <CourseDropdown
               index={index}

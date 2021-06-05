@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   OctokitRepoContentDataType,
   getRepoContentPath,
-} from "../providers/train";
+} from "../services/train";
 
 const octokit = new Octokit();
 
