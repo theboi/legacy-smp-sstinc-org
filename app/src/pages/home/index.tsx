@@ -10,6 +10,7 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useColor } from "../../hooks/color";
 
 const HomePage = () => {
   return (
@@ -34,7 +35,7 @@ const Header = () => {
             <NextLink href={"/train"}>
               <ChakraLink
                 to={"/train"}
-                backgroundColor="teal"
+                backgroundColor={useColor("teal")}
                 as={Button}
                 size={"md"}
               >
@@ -44,7 +45,7 @@ const Header = () => {
             <NextLink href={"/home"}>
               <ChakraLink
                 to={"/account/signup"}
-                backgroundColor="signUpRed"
+                backgroundColor={useColor("signUpRed")}
                 as={Button}
                 size={"md"}
               >

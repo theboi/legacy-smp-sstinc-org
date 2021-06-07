@@ -18,6 +18,9 @@ Variables
 
 	--l-link: var(--chakra-colors-blue-500);
 
+	--l-teal: var(--chakra--colors-teal-300);
+	--l-signUpRed: var(--chakra--colors-red-300);
+
 	/* dark */
 	--d-bg1: var(--chakra-colors-gray-800);
 	--d-bg2: var(--chakra-colors-gray-900);
@@ -25,7 +28,10 @@ Variables
 	--d-tx1: var(--chakra-colors-whiteAlpha-900);
 	--d-bd1: var(--chakra-colors-whiteAlpha-300);
 
-	--d-link: var(--chakra-colors-blue-200)
+	--d-link: var(--chakra-colors-blue-200);
+
+	--d-teal: var(--chakra--colors-teal-400);
+	--d-signUpRed: var(--chakra--colors-red-400);
 }
 
 /* /////////////////////////////////////////////////////////////////////////////
