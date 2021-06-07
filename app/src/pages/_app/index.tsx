@@ -11,14 +11,13 @@ import style from "./style.module.css";
 
 import theme from "../../model/theme";
 
-import { User, UserRole } from "../../objects/user";
+import { UserRole } from "../../objects/user";
 import ErrorPage from "../404";
-import ProfilePage from "../account/profile";
 import { AuthProvider, useAuth } from "../../services/auth";
 import { NavBar } from "../../components/app/navBar";
 import { Credits } from "../../components/app/credits";
-import { GetServerSidePropsContext } from "next";
-import useSWR from "swr";
+import { SWRConfig } from "swr";
+import axios from "axios";
 
 export const authPaths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
@@ -101,8 +100,8 @@ export default function App({ Component, pageProps }: AppProps) {
               switch (true) {
                 case authPaths[router.pathname] === undefined:
                   return <Component {...pageProps} user={user} />;
-                case user?.role === undefined:
-                  return <ProfilePage />;
+                // case user?.role === undefined:
+                //   return <ProfilePage />;
                 case user?.role >= authPaths[router.pathname]: // isAuth
                   return <Component {...pageProps} user={user} />;
                 default:
@@ -118,9 +117,13 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 
 const AppProviders = ({ children }) => (
-  <ChakraProvider theme={theme} resetCSS={false}>
-    <AuthProvider>{children}</AuthProvider>
-  </ChakraProvider>
+  <SWRConfig
+    value={{ fetcher: (url: string) => axios.get(url).then((res) => res.data) }}
+  >
+    <ChakraProvider theme={theme} resetCSS={false}>
+      <AuthProvider>{children}</AuthProvider>
+    </ChakraProvider>
+  </SWRConfig>
 );
 
 const LoadingOverlay = React.forwardRef(
@@ -157,7 +160,7 @@ const LoadingOverlay = React.forwardRef(
   )
 );
 
-const AppScaffold = (props: { children: React.ReactNode }) => {
+const AppScaffold = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className={style.main}>
       <div className={style.headnav}>
@@ -178,7 +181,7 @@ const AppScaffold = (props: { children: React.ReactNode }) => {
           <NavBar />
         </nav>
       </div>
-      {props.children}
+      {children}
       <Credits />
     </div>
   );

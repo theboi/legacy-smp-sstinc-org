@@ -1,5 +1,7 @@
 import firebase from "firebase/app";
 
+require("firebase/firestore");
+
 export class Url {
   readonly firestore = "url";
 
