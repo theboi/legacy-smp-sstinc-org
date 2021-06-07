@@ -107,7 +107,7 @@ export default function JoinPage() {
     // 1
     <Box>
       <Heading>Connect your internet accounts</Heading>
-      <Stack maxWidth={500}>
+      <Stack maxWidth={500} mt={2}>
         <FormControl isRequired>
           {isInc ? (
             <>

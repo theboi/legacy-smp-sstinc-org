@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest --verbose --coverage",
+    "test": "jest --verbose --coverage --passWithNoTests",
     "test:update": "jest --verbose --coverage --updateSnapshot",
     "test:watch": "jest --verbose --watch",
     "coverage": "jest --verbose --coverage && open ./coverage/lcov-report/index.html"
