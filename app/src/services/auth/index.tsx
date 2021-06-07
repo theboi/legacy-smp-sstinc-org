@@ -2,8 +2,8 @@ import { Page } from "@notionhq/client/build/src/api-types";
 import firebase from "firebase/app";
 import { createContext, useContext, useEffect, useState } from "react";
 import useSWR from "swr";
-import { firebaseConfig } from "../model/provider";
-import { User } from "../objects/user";
+import { firebaseConfig } from "../../model/provider";
+import { User } from "../../objects/user";
 import axios from "axios";
 
 require("firebase/auth");

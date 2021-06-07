@@ -1,7 +1,7 @@
 import { Page } from "@notionhq/client/build/src/api-types";
 import axios from "axios";
 import useSWR from "swr";
-import { User } from "../objects/user";
+import { User } from "../../objects/user";
 
 async function takeAttendance(email, code) {
   axios.get("/api/v1/atd").then((res) => res.data);
