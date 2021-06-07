@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { TrainProvider } from "../providers/train";
+import { TrainProvider } from "../services/train";
 
 export type SetCourseType = Dispatch<SetStateAction<{ [cid: string]: Course }>>;
 

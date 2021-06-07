@@ -6,12 +6,19 @@ import { Link as ChakraLink } from "@chakra-ui/react";
 import { IconButton } from "@chakra-ui/react";
 import { MenuDivider } from "@chakra-ui/react";
 import { Menu } from "@chakra-ui/react";
-import { User, UserRole } from "../../services/userold";
+import { User, UserRole } from "../../objects/user";
 import NextLink from "next/link";
-import { FaBook, FaBug, FaLink, FaSignInAlt, FaSun } from "react-icons/fa";
+import {
+  FaBook,
+  FaBug,
+  FaCog,
+  FaLink,
+  FaSignInAlt,
+  FaSun,
+} from "react-icons/fa";
 import { useColorMode } from "@chakra-ui/react";
 import { authPaths } from "../../pages/_app";
-import { AuthProvider } from "../../providers/auth";
+import { AuthProvider, useAuth } from "../../services/auth";
 
 interface NavLink {
   minRole?: UserRole;
@@ -22,19 +29,21 @@ interface NavLink {
   action?: (() => void) | string;
 }
 
-export const NavBar = (props: { user: User }) => {
+export const NavBar = () => {
   const { toggleColorMode } = useColorMode();
+
+  const { auth, user } = useAuth();
 
   const links: NavLink[] = [
     {
-      name: props.user === null ? "Sign In" : props.user.displayName,
+      name: user === null ? "Sign In" : user?.name,
       icon:
-        props.user === null ? (
+        user === null ? (
           <FaSignInAlt />
         ) : (
-          <Avatar src={props.user?.photoURL} size="sm" />
+          <Avatar src={user?.photoURL} size="sm" />
         ),
-      action: props.user === null ? AuthProvider.signIn : "/profile",
+      action: user === null ? auth.signIn : `/@${user?.handle}`,
     },
     {
       name: "Train",
@@ -48,9 +57,9 @@ export const NavBar = (props: { user: User }) => {
       minRole: authPaths["/url"],
     },
     {
-      name: "Toggle Theme",
-      icon: <FaSun />,
-      action: () => toggleColorMode(),
+      name: "Settings",
+      icon: <FaCog />,
+      action: "/settings",
     },
     {
       name: "Bug Report",
@@ -66,17 +75,17 @@ export const NavBar = (props: { user: User }) => {
         style={{ borderRadius: 100 }}
         as={IconButton}
         aria-label="Menu"
-        icon={<Avatar src={props.user?.photoURL} size="md" />}
+        icon={<Avatar src={user?.photoURL} size="md" />}
         variant="outline"
       />
       <MenuList>
         {links.map((e, i) => {
-          if (props.user?.role < e.minRole) return null;
+          if (user?.role < e.minRole) return null;
           else if (e.isDivider) return <MenuDivider key={i} />;
           if (typeof e.action === "string" || e.action instanceof String) {
             return (
-              <NextLink href={e.action as string}>
-                <MenuItem key={i} icon={e.icon}>
+              <NextLink key={i} href={e.action as string}>
+                <MenuItem icon={e.icon}>
                   <ChakraLink>{e.name}</ChakraLink>
                 </MenuItem>
               </NextLink>

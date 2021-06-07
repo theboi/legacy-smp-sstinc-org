@@ -1,13 +1,14 @@
 import { Box, Center, CSSReset, Heading } from "@chakra-ui/react";
 import { useColor } from "../../hooks/color";
-import { Assignment } from "../../services/train";
+import { Assignment } from "../../objects/train";
 import MarkdownIt from "markdown-it";
 
-export default function AssignmentContent(props: { assignment: Assignment }) {
+export default function AssignmentContent({
+  assignment,
+}: {
+  assignment: Assignment;
+}) {
   const md = new MarkdownIt();
-  console.log(props.assignment?.type);
-
-  const x = CSSReset();
 
   return (
     <Box
@@ -23,13 +24,13 @@ export default function AssignmentContent(props: { assignment: Assignment }) {
           <Box
             dangerouslySetInnerHTML={{
               __html: `<md>${md.render(
-                props.assignment?.content ?? "No Content"
+                assignment?.content ?? "No Content"
               )}</md>`,
             }}
           />
         ),
         slide: <div></div>,
-      }[props.assignment?.type] ?? <Center height="100%">No Selection</Center>}
+      }[assignment?.type] ?? <Center height="100%">No Selection</Center>}
     </Box>
   );
 }

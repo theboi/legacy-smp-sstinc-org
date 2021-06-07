@@ -5,7 +5,7 @@ import { FaClipboard } from "react-icons/fa";
 
 import style from "./style.module.css";
 
-export default function SuccessPage(props: {}) {
+export default function SuccessPage() {
   let copiedPopupRef: HTMLDivElement;
 
   const router = useRouter();
