@@ -21,32 +21,43 @@ import {
   FaGoogle,
   FaQuestionCircle,
 } from "react-icons/fa";
-import { AuthProvider } from "../../../services/auth";
-import { User } from "../../../objects/user";
-import { useColor } from "../../../hooks/color";
+import { User } from "../../objects/user";
+import { useColor } from "../../hooks/color";
+import { useGithubRawData } from "../../hooks/github";
+import MarkdownIt from "markdown-it";
+import { useAuth } from "../../services/auth";
+import { useRouter } from "next/router";
 
-interface SignUpOption {
+interface JoinOption {
   description: string;
   emoji: string;
   isInc: boolean;
 }
 
-interface SignUpField {
+interface JoinField {
   placeholder: string;
   regex: RegExp;
 }
 
-export default function SignUpPage(props: { user: User }) {
+export default function JoinPage() {
+  const { user } = useAuth();
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [isInc, setIsInc] = useState(false);
   const [verified, setVerified] = useState(false);
-  const [privacy, setPrivacy] = useState("");
+  const [checkedPP, setCheckedPP] = useState(false);
+  const [newUser, setNewUser] = useState(new User());
+
+  const { data: privacy, error: privacyError } =
+    useGithubRawData("/user/PRIVACY.md");
 
   useEffect(() => {
-    // AuthProvider.getPrivacyPolicy().then((pp) => setPrivacy(pp));
-  });
+    console.log(user);
+    if (user != null) router.replace("");
+  }, [user]);
+  const md = new MarkdownIt();
 
-  const signUpOptions: SignUpOption[] = [
+  const joinOptions: JoinOption[] = [
     {
       description: "I am a member of SST Inc",
       emoji: "😄",
@@ -59,7 +70,10 @@ export default function SignUpPage(props: { user: User }) {
     },
   ];
 
+  const getStepsAllowed = () => [true, verified, checkedPP];
+
   const steps = [
+    // 0
     <Box>
       <Heading>Let's get you ready to use SMP!</Heading>
       <Text>
@@ -73,7 +87,7 @@ export default function SignUpPage(props: { user: User }) {
         </Link>
       </Text>
       <SimpleGrid columns={2} minChildWidth={300} gap={10}>
-        {signUpOptions.map((e) => (
+        {joinOptions.map((e) => (
           <Button
             variant="outline"
             height={150}
@@ -90,6 +104,7 @@ export default function SignUpPage(props: { user: User }) {
         ))}
       </SimpleGrid>
     </Box>,
+    // 1
     <Box>
       <Heading>Connect your internet accounts</Heading>
       <Stack maxWidth={500}>
@@ -106,7 +121,7 @@ export default function SignUpPage(props: { user: User }) {
               </Button>
             </>
           ) : null}
-          <FormLabel>Verify your humanity</FormLabel>
+          <FormLabel>Verify you are not a bot</FormLabel>
           <Box display="flex" flexDir="row">
             <Button leftIcon={<FaGithub />} colorScheme="gray">
               Verify with GitHub
@@ -132,13 +147,23 @@ export default function SignUpPage(props: { user: User }) {
         </FormControl>
       </Stack>
     </Box>,
+    // 2
     <Box>
       <Heading>Just a little note.</Heading>
-      <Skeleton isLoaded={privacy != ""} height={100}>
-        <Text>{privacy}</Text>
+      <Skeleton isLoaded={privacy != ""} height={300} overflow="scroll">
+        <Box
+          dangerouslySetInnerHTML={{
+            __html: `<md>${md.render(privacy ?? "")}</md>`,
+          }}
+        />
       </Skeleton>
       <Stack>
-        <Checkbox>I have read and acknowledged.</Checkbox>
+        <Checkbox
+          onChange={(e) => setCheckedPP(e.target.checked)}
+          isChecked={checkedPP}
+        >
+          I have read and acknowledged.
+        </Checkbox>
       </Stack>
     </Box>,
     <Box>
@@ -152,7 +177,7 @@ export default function SignUpPage(props: { user: User }) {
   };
 
   const goForward = () => {
-    setStep((s) => s + 1);
+    if (getStepsAllowed()[step]) setStep((s) => s + 1);
   };
 
   return (
@@ -166,10 +191,15 @@ export default function SignUpPage(props: { user: User }) {
         />
       ) : null}
       {steps[step]}
-      {step > 0 ? <Button colorScheme="green">Next</Button> : null}
+      {step > 0 ? (
+        <Button
+          colorScheme="green"
+          disabled={!getStepsAllowed()[step]}
+          onClick={goForward}
+        >
+          Next
+        </Button>
+      ) : null}
     </Box>
   );
 }
-
-// nonsstinc: email, github, profile
-// sstinc: class, email + sign in, github

@@ -27,11 +27,7 @@ export const useAuth = () => {
   const [user, setUser] = useState<User>();
   const [email, setEmail] = useState<string>();
 
-  const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-  const { data, error } = useSWR<Page, Error>(
-    `/api/v1/users/${email}`,
-    fetcher
-  );
+  const { data, error } = useSWR<Page, Error>(`/api/v1/user/${email}`);
 
   useEffect(() => {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);

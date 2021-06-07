@@ -6,7 +6,7 @@ interface ErrorCode {
   cap: string;
 }
 
-export default function ErrorPage(props: { status: number }) {
+export default function ErrorPage({ status = 404 }: { status: number }) {
   const { colorMode } = useColorMode();
 
   const codes: { [key: number]: ErrorCode } = {
@@ -19,7 +19,7 @@ export default function ErrorPage(props: { status: number }) {
       cap: "Oops",
     },
   };
-  const status = props.status ?? 404;
+
   const imageSrc = `/assets/errors/${status}-${
     1 + Math.floor(Math.random() * 4)
   }.png`;
@@ -40,7 +40,9 @@ export default function ErrorPage(props: { status: number }) {
             alt={`${status}: ${codes[status].msg}`}
             className={style.img}
           />
-          <figcaption className={style.cap}>{codes[status].cap}</figcaption>
+          <figcaption className={style.cap} color="black">
+            {codes[status].cap}
+          </figcaption>
         </figure>
       </Box>
       <Heading className={style.errorCode} size="4xl" style={{ lineHeight: 1 }}>

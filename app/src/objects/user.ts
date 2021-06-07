@@ -75,7 +75,7 @@ export class User {
     return this.#rawUser?.photoURL;
   }
 
-  constructor(rawUser: firebase.User, rawData: Page) {
+  constructor(rawUser?: firebase.User, rawData?: Page) {
     this.#rawUser = rawUser;
     this.#rawData = rawData;
   }

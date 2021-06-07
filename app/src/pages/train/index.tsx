@@ -18,12 +18,19 @@ import { User } from "../../objects/user";
 import { Assignment, Course, Lesson } from "../../objects/train";
 import AtdField from "../../components/atd";
 import AssignmentContent from "../../components/train/assignmentContent";
-import { useTrain } from "../../hooks/train";
+import { TrainProvider } from "../../services/train";
+import { useStateWithCallback } from "../../hooks/state";
 
 export default function TrainPage() {
   const [index, setIndex] = useState(0);
   const [assignment, setAssignment] = useState<Assignment>();
-  const courses = useTrain();
+
+  const [courses, setCourse] = useStateWithCallback<{ [cid: string]: Course }>(
+    undefined,
+    () => {
+      if (courses === undefined) TrainProvider.getCourses(setCourse);
+    }
+  );
 
   return (
     <div>
@@ -34,10 +41,12 @@ export default function TrainPage() {
             <CourseDropdown
               index={index}
               setIndex={setIndex}
-              courses={courses}
+              courses={Object.values(courses ?? {})}
             />
             <TrainingSelectBar
-              lessons={Object.values(courses[index]?.lessons ?? {})}
+              lessons={Object.values(
+                Object.values(courses ?? {})[index]?.lessons ?? {}
+              )}
               assignment={assignment}
               setAssignment={setAssignment}
             />
@@ -105,7 +114,7 @@ function CourseDropdown(props: {
   return (
     <Menu>
       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-        Course: {props.courses[props.index]?.subject}
+        Course: {props.courses?.[props.index]?.subject}
       </MenuButton>
       <MenuList>
         {props.courses.map((e, i) => (

@@ -8,7 +8,14 @@ import { MenuDivider } from "@chakra-ui/react";
 import { Menu } from "@chakra-ui/react";
 import { User, UserRole } from "../../objects/user";
 import NextLink from "next/link";
-import { FaBook, FaBug, FaLink, FaSignInAlt, FaSun } from "react-icons/fa";
+import {
+  FaBook,
+  FaBug,
+  FaCog,
+  FaLink,
+  FaSignInAlt,
+  FaSun,
+} from "react-icons/fa";
 import { useColorMode } from "@chakra-ui/react";
 import { authPaths } from "../../pages/_app";
 import { AuthProvider, useAuth } from "../../services/auth";
@@ -36,7 +43,7 @@ export const NavBar = () => {
         ) : (
           <Avatar src={user?.photoURL} size="sm" />
         ),
-      action: user === null ? auth.signIn : "/profile",
+      action: user === null ? auth.signIn : `/@${user?.handle}`,
     },
     {
       name: "Train",
@@ -50,9 +57,9 @@ export const NavBar = () => {
       minRole: authPaths["/url"],
     },
     {
-      name: "Toggle Theme",
-      icon: <FaSun />,
-      action: () => toggleColorMode(),
+      name: "Settings",
+      icon: <FaCog />,
+      action: "/settings",
     },
     {
       name: "Bug Report",
