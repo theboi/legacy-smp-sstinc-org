@@ -34,7 +34,6 @@ const Header = () => {
           <Stack direction={"row"} spacing={7}>
             <NextLink href={"/train"}>
               <ChakraLink
-                to={"/train"}
                 backgroundColor={useColor("teal")}
                 as={Button}
                 size={"md"}
@@ -42,9 +41,8 @@ const Header = () => {
                 Attendance & Learn
               </ChakraLink>
             </NextLink>
-            <NextLink href={"/home"}>
+            <NextLink href={"/account/signup"}>
               <ChakraLink
-                to={"/account/signup"}
                 backgroundColor={useColor("signUpRed")}
                 as={Button}
                 size={"md"}
