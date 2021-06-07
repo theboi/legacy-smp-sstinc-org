@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/core";
 import { Endpoints } from "@octokit/types";
-import { Assignment, Course, Lesson, SetCourseType } from "../services/train";
+import { Assignment, Course, Lesson, SetCourseType } from "../../objects/train";
 
 // https://docs.github.com/en/rest/reference/repos#get-repository-content
 export const getRepoContentPath = "GET /repos/{owner}/{repo}/contents/{path}";

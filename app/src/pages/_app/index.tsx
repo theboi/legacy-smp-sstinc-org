@@ -11,12 +11,13 @@ import style from "./style.module.css";
 
 import theme from "../../model/theme";
 
-import { User, UserRole } from "../../services/userold";
+import { UserRole } from "../../objects/user";
 import ErrorPage from "../404";
-import ProfilePage from "../account/profile";
-import { AuthProvider } from "../../providers/auth";
+import { AuthProvider, useAuth } from "../../services/auth";
 import { NavBar } from "../../components/app/navBar";
 import { Credits } from "../../components/app/credits";
+import { SWRConfig } from "swr";
+import axios from "axios";
 
 export const authPaths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
@@ -28,7 +29,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const loadingOverlayRef = useRef(null);
 
-  const [curUser, setCurUser] = useState<User>(null);
+  const { auth, user } = useAuth();
+
   const [hostname, setHostname] = useState("");
 
   useEffect(() => {
@@ -36,22 +38,14 @@ export default function App({ Component, pageProps }: AppProps) {
       setHostname(window.location.hostname);
     }
   });
-  useEffect(() => {
-    AuthProvider.addIdTokenChangedListener((user: User) => {
-      setCurUser(user);
-      // console.log(user)
-      // if (user?.iid !== undefined && user?.role === UserRole.Alien) {
-      //   router.replace('/update')
-      // }
-    });
-  }, []);
 
   useEffect(() => {
     (async () => {
-      await AuthProvider.checkForAuth();
+      console.log(auth);
+      // await auth.checkForAuth();
       loadingOverlayRef.current.style.display = "none";
     })();
-  }, [curUser]);
+  }, []);
 
   // function genRandAlias() {
   //   const characters =
@@ -86,7 +80,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
-      <ChakraProvider theme={theme} resetCSS={false}>
+      <AppProviders>
         {hostname === "go.sstinc.org" || hostname === "qr.sstinc.org" ? (
           <div className={style.alert}>
             <p>
@@ -100,16 +94,16 @@ export default function App({ Component, pageProps }: AppProps) {
             </p>
           </div>
         ) : null}
-        <AppScaffold user={curUser}>
+        <AppScaffold>
           <div className={style.content}>
             {(() => {
               switch (true) {
                 case authPaths[router.pathname] === undefined:
-                  return <Component {...pageProps} user={curUser} />;
-                case curUser?.role === undefined:
-                  return <ProfilePage user={curUser} />;
-                case curUser?.role >= authPaths[router.pathname]: // isAuth
-                  return <Component {...pageProps} user={curUser} />;
+                  return <Component {...pageProps} user={user} />;
+                // case user?.role === undefined:
+                //   return <ProfilePage />;
+                case user?.role >= authPaths[router.pathname]: // isAuth
+                  return <Component {...pageProps} user={user} />;
                 default:
                   return <ErrorPage status={403} />;
               }
@@ -117,10 +111,20 @@ export default function App({ Component, pageProps }: AppProps) {
             <LoadingOverlay ref={loadingOverlayRef} />
           </div>
         </AppScaffold>
-      </ChakraProvider>
+      </AppProviders>
     </>
   );
 }
+
+const AppProviders = ({ children }) => (
+  <SWRConfig
+    value={{ fetcher: (url: string) => axios.get(url).then((res) => res.data) }}
+  >
+    <ChakraProvider theme={theme} resetCSS={false}>
+      <AuthProvider>{children}</AuthProvider>
+    </ChakraProvider>
+  </SWRConfig>
+);
 
 const LoadingOverlay = React.forwardRef(
   (_, ref: React.MutableRefObject<HTMLDivElement>) => (
@@ -156,7 +160,7 @@ const LoadingOverlay = React.forwardRef(
   )
 );
 
-const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
+const AppScaffold = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className={style.main}>
       <div className={style.headnav}>
@@ -174,10 +178,10 @@ const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
               height={100}
             />
           </a>
-          <NavBar user={props.user} />
+          <NavBar />
         </nav>
       </div>
-      {props.children}
+      {children}
       <Credits />
     </div>
   );
