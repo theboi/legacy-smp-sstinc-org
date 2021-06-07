@@ -13,7 +13,7 @@ import { User, UserRole } from "../../../services/userold";
 
 export default function ProfilePage(props: { user: User }) {
   return (
-    <div style={{ maxWidth: "5=700px" }}>
+    <div style={{ maxWidth: "700px" }}>
       {props.user === null ? (
         <Button colorScheme="blue" onClick={authProvider.signIn}>
           Sign In
