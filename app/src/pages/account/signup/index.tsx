@@ -72,7 +72,7 @@ export default function SignUpPage(props: { user: User }) {
           What is SST Inc?
         </Link>
       </Text>
-      <SimpleGrid columns={2} minChildWidth={300} gap={10}>
+      <SimpleGrid mt={3} columns={2} minChildWidth={300} gap={10}>
         {signUpOptions.map((e) => (
           <Button
             variant="outline"
@@ -92,7 +92,7 @@ export default function SignUpPage(props: { user: User }) {
     </Box>,
     <Box>
       <Heading>Connect your internet accounts</Heading>
-      <Stack maxWidth={500}>
+      <Stack maxWidth={500} mt={2}>
         <FormControl isRequired>
           {isInc ? (
             <>
