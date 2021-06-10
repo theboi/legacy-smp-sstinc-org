@@ -1,4 +1,5 @@
 import { Box, Heading, useColorMode } from "@chakra-ui/react";
+import { GetStaticProps, GetStaticPropsResult } from "next";
 import style from "./style.module.css";
 
 interface ErrorCode {
@@ -6,7 +7,13 @@ interface ErrorCode {
   cap: string;
 }
 
-export default function ErrorPage({ status = 404 }: { status: number }) {
+export default function ErrorPage({
+  status = 404,
+  randomNum,
+}: {
+  status: number;
+  randomNum: number;
+}) {
   const { colorMode } = useColorMode();
 
   const codes: { [key: number]: ErrorCode } = {
@@ -20,9 +27,7 @@ export default function ErrorPage({ status = 404 }: { status: number }) {
     },
   };
 
-  const imageSrc = `/assets/errors/${status}-${
-    1 + Math.floor(Math.random() * 4)
-  }.png`;
+  const imageSrc = `/assets/errors/${status}-${randomNum}.png`;
 
   return (
     <div className={style.main}>
@@ -51,4 +56,10 @@ export default function ErrorPage({ status = 404 }: { status: number }) {
       <Heading size="md">{codes[status].msg}</Heading>
     </div>
   );
+}
+
+export async function getStaticProps() {
+  return {
+    props: { randomNum: 1 + Math.floor(Math.random() * 4) },
+  };
 }
