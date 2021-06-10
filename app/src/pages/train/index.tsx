@@ -36,7 +36,6 @@ export default function TrainPage() {
     <div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
         <Box style={{ flexBasis: 300, flexGrow: 1 }}>
-          <AtdField />
           <Box>
             <CourseDropdown
               index={index}

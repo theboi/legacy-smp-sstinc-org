@@ -126,56 +126,58 @@ export default function AtdField() {
       </Modal>
       <Alert status="info">
         <Box style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <AlertTitle>Attendance</AlertTitle>
+          <AlertTitle fontSize={"xl"} >Attendance</AlertTitle>
           <AlertDescription display="block">
             Kindly enter the 4 digit code provided to check-in to SST Inc.
           </AlertDescription>
-          <Box>
-            <HStack onKeyDown={onCodeKeyDown}>
-              <PinInput
-                otp
-                type="alphanumeric"
-                size="xl"
-                value={code}
-                onChange={onCodeChange}
-                isInvalid={status === "Invalid"}
+          <Box style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <Box>
+              <HStack onKeyDown={onCodeKeyDown}>
+                <PinInput
+                    otp
+                    type="alphanumeric"
+                    size="xl"
+                    value={code}
+                    onChange={onCodeChange}
+                    isInvalid={status === "Invalid"}
+                >
+                  {[...Array(4)].map((_, i) => (
+                      <PinInputField
+                          style={{ fontSize: "2em" }}
+                          borderColor={useCustomColor("blackAlpha.400", null)}
+                          _hover={{
+                            borderColor: useCustomColor(
+                                "blackAlpha.500",
+                                "whiteAlpha.500"
+                            ),
+                          }}
+                          key={i}
+                      />
+                  ))}
+                </PinInput>
+              </HStack>
+            </Box>
+            <ButtonGroup isAttached width="100%">
+              <Button
+                  isFullWidth
+                  onClick={confirmCode}
+                  disabled={status !== "Confirm" || code.length !== 4}
+                  colorScheme={
+                    { Error: "red", Invalid: "red", Success: "green" }[status] ??
+                    "blue"
+                  }
               >
-                {[...Array(4)].map((_, i) => (
-                  <PinInputField
-                    style={{ fontSize: "2em" }}
-                    borderColor={useCustomColor("blackAlpha.400", null)}
-                    _hover={{
-                      borderColor: useCustomColor(
-                        "blackAlpha.500",
-                        "whiteAlpha.500"
-                      ),
-                    }}
-                    key={i}
+                {status}
+              </Button>
+              {user?.role >= UserRole.ExCo ? (
+                  <IconButton
+                      onClick={onOpen}
+                      aria-label="View Key Code"
+                      icon={<FaKey />}
                   />
-                ))}
-              </PinInput>
-            </HStack>
+              ) : null}
+            </ButtonGroup>
           </Box>
-          <ButtonGroup isAttached width="100%">
-            <Button
-              isFullWidth
-              onClick={confirmCode}
-              disabled={status !== "Confirm" || code.length !== 4}
-              colorScheme={
-                { Error: "red", Invalid: "red", Success: "green" }[status] ??
-                "blue"
-              }
-            >
-              {status}
-            </Button>
-            {user?.role >= UserRole.ExCo ? (
-              <IconButton
-                onClick={onOpen}
-                aria-label="View Key Code"
-                icon={<FaKey />}
-              />
-            ) : null}
-          </ButtonGroup>
           {/* <Button disabled>Scan a QR Code instead</Button> */}
         </Box>
       </Alert>
