@@ -63,11 +63,13 @@ importers:
     specifiers:
       axios: ^0.21.1
       dotenv: ^10.0.0
+      moment: ^2.29.1
       telegraf: ^4.3.0
       typegram: ^3.2.3
     dependencies:
       axios: 0.21.1
       dotenv: 10.0.0
+      moment: 2.29.1
       telegraf: 4.3.0
     devDependencies:
       typegram: 3.2.3
@@ -7422,6 +7424,10 @@ packages:
 
   /module-alias/2.2.2:
     resolution: {integrity: sha512-A/78XjoX2EmNvppVWEhM2oGk3x4lLxnkEA4jTbaK97QKSDjkIoOsKQlfylt/d3kKKi596Qy3NP5XrXJ6fZIC9Q==}
+    dev: false
+
+  /moment/2.29.1:
+    resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==}
     dev: false
 
   /ms/2.0.0:
