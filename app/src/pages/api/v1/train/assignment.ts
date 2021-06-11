@@ -42,10 +42,6 @@ export const getAssignmentsAPI = async (
     const ss = e.path.split("/");
     const pas = e.path.slice("data".length).split("/");
 
-    console.log(
-      "oiJIOJIO",
-      "/" + pas.slice(1, -1).join("/") + "?a=" + pas[pas.length - 1]
-    );
     return {
       cid: ss[2],
       lid: ss[3],
