@@ -1,17 +1,42 @@
-import { Avatar, Box, HStack } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  HStack,
+  Image,
+  Link as ChakraLink,
+  LinkBox,
+  LinkOverlay,
+  Text,
+} from "@chakra-ui/react";
 import { getCoursesAPI, Course } from "../api/v1/train/course";
-import Link from "next/link";
+import NextLink from "next/link";
 
 export default function TrainPage({ courses }: { courses: Course[] }) {
   return (
     <Box>
       {courses.map((c) => (
-        <Link key={c.cid} href={c.path}>
-          <HStack>
-            <Avatar src="/assets/errors/" />
-            {c.name}
-          </HStack>
-        </Link>
+        <LinkBox
+          key={c.cid}
+          as="article"
+          maxW="sm"
+          p="5"
+          borderWidth="1px"
+          rounded="md"
+        >
+          <NextLink href={c.path}>
+            <LinkOverlay href={c.path}>
+              <HStack>
+                <Image
+                  borderRadius="full"
+                  boxSize="50px"
+                  src={`/assets/train/${c.cid}.png`}
+                  alt={c.name}
+                />
+                <Text>{c.name}</Text>
+              </HStack>
+            </LinkOverlay>
+          </NextLink>
+        </LinkBox>
       ))}
     </Box>
   );

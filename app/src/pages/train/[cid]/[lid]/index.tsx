@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import axios from "axios";
 import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import {
@@ -24,7 +25,7 @@ export default function CoursePage({
 }
 
 export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const { cid, lid } = ctx.params as { [k: string]: string };
+  const { cid, lid, a } = ctx.params as { [k: string]: string };
 
   return {
     props: { assignments: await getAssignmentsAPI(cid, lid) },
