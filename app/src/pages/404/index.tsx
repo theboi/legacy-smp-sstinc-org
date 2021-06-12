@@ -27,7 +27,9 @@ export default function ErrorPage({
     },
   };
 
-  const imageSrc = `/assets/errors/${status}-${randomNum}.png`;
+  const imageSrc = `/assets/errors/${status}-${
+    1 + Math.floor(randomNum * 4)
+  }.png`;
 
   return (
     <div className={style.main}>
@@ -60,6 +62,6 @@ export default function ErrorPage({
 
 export async function getStaticProps() {
   return {
-    props: { randomNum: 1 + Math.floor(Math.random() * 4) },
+    props: { randomNum: Math.random() },
   };
 }

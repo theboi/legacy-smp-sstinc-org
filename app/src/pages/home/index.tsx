@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { LinkButton } from "../../components/theme/linkButton";
 import { useColor } from "../../hooks/color";
 
 export default function HomePage() {
@@ -31,13 +32,9 @@ const Header = () => {
           <Text>Create. Code. Inspire.</Text>
         </Box>
         <HStack spacing={5}>
-          <ChakraLink
-            as={Button}
-            _hover={{ textDecoration: "none" }}
-            colorScheme="red"
-          >
-            <NextLink href="/join">Join Now</NextLink>
-          </ChakraLink>
+          <LinkButton href="/join" customButton={<Button colorScheme="red" />}>
+            Join Now
+          </LinkButton>
         </HStack>
       </VStack>
     </Center>

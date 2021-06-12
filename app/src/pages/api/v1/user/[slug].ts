@@ -10,22 +10,28 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 export const getUserAPI = async (slug: string): Promise<Page> => {
   const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
+  let pn = "";
+  if (slug[0] === "@") {
+    pn = "Handle";
+  } else if (slug.startsWith("fb_")) {
+    pn = "Firebase ID";
+  } else if (slug.startsWith("tgb_")) {
+    pn = "Telegram ID";
+  } else if (slug.startsWith("inc_")) {
+    pn = "Inc ID";
+  } else {
+    pn = "Email";
+  }
+
+  if (slug[0] === "@") slug = slug.slice(1);
   const response = await notion.databases.query({
     database_id: "c460fd270be44858a74395684f6e6897",
-    filter:
-      slug[0] === "@"
-        ? {
-            property: "Handle",
-            text: {
-              equals: slug.slice(1),
-            },
-          }
-        : {
-            property: "Email",
-            text: {
-              equals: slug,
-            },
-          },
+    filter: {
+      property: pn,
+      text: {
+        equals: slug,
+      },
+    },
   });
 
   return response.results[0];

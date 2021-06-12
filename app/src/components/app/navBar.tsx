@@ -85,9 +85,12 @@ export const NavBar = () => {
           if (typeof e.action === "string" || e.action instanceof String) {
             return (
               <NextLink key={i} href={e.action as string}>
-                <MenuItem icon={e.icon}>
-                  <ChakraLink>{e.name}</ChakraLink>
-                </MenuItem>
+                <ChakraLink
+                  href={e.action as string}
+                  _hover={{ textDecoration: "none" }}
+                >
+                  <MenuItem icon={e.icon}>{e.name}</MenuItem>
+                </ChakraLink>
               </NextLink>
             );
           } else {
