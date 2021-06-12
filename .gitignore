@@ -21,7 +21,7 @@ build
 # misc
 .DS_Store
 
-# Idea
+# idea
 .idea/
 
 # debug
@@ -32,3 +32,9 @@ build
 .env.development.local
 .env.test.local
 .env.production.local
+
+# slides
+sld/dist
+sld/*.local
+sld/index.html
+sld/components.d.ts
