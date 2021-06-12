@@ -4,7 +4,7 @@ import { AppProps } from "next/app";
 import "./styles.scss";
 import "./cssreset.scss";
 import Head from "next/head";
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider, Link, Text, useToast } from "@chakra-ui/react";
 
 import { useRouter } from "next/router";
 import style from "./style.module.css";
@@ -18,6 +18,7 @@ import { NavBar } from "../../components/app/navBar";
 import { Credits } from "../../components/app/credits";
 import { SWRConfig } from "swr";
 import axios from "axios";
+import { useColor } from "../../hooks/color";
 
 export const authPaths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
@@ -99,13 +100,13 @@ export default function App({ Component, pageProps }: AppProps) {
             {(() => {
               switch (true) {
                 case authPaths[router.pathname] === undefined:
-                  return <Component {...pageProps} user={user} />;
+                  return <Component {...pageProps} />;
                 // case user?.role === undefined:
                 //   return <ProfilePage />;
                 case user?.role >= authPaths[router.pathname]: // isAuth
-                  return <Component {...pageProps} user={user} />;
+                  return <Component {...pageProps} />;
                 default:
-                  return <ErrorPage status={403} />;
+                  return <ErrorPage randomNum={Math.random()} status={403} />;
               }
             })()}
             <LoadingOverlay ref={loadingOverlayRef} />
@@ -117,13 +118,9 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 
 const AppProviders = ({ children }) => (
-  <SWRConfig
-    value={{ fetcher: (url: string) => axios.get(url).then((res) => res.data) }}
-  >
-    <ChakraProvider theme={theme} resetCSS={false}>
-      <AuthProvider>{children}</AuthProvider>
-    </ChakraProvider>
-  </SWRConfig>
+  <ChakraProvider theme={theme} resetCSS={false}>
+    <AuthProvider>{children}</AuthProvider>
+  </ChakraProvider>
 );
 
 const LoadingOverlay = React.forwardRef(
@@ -161,28 +158,73 @@ const LoadingOverlay = React.forwardRef(
 );
 
 const AppScaffold = ({ children }: { children: React.ReactNode }) => {
+  const toast = useToast();
+  const linkColor = useColor("link");
+
   return (
-    <div className={style.main}>
-      <div className={style.headnav}>
-        <nav className={style.nav}>
-          <a
-            className={style.icon}
-            href="https://sstinc.org"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            <img
-              src="/assets/sstinc-icon.png"
-              alt="SST Inc Icon"
-              width={100}
-              height={100}
-            />
-          </a>
-          <NavBar />
-        </nav>
+    <SWRConfig
+      value={{
+        fetcher: (url: string) => axios.get(url).then((res) => res.data),
+        onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+          if (error.status === 404) return; // Never retry on 404.
+          if (retryCount >= 3) return; // Only retry up to 3 times.
+          setTimeout(() => revalidate({ retryCount }), 5000); // Retry after 5 seconds.
+        },
+        onError: (error, key) => {
+          if (
+            error.status !== 403 &&
+            error.status !== 404 &&
+            !toast.isActive(key)
+          ) {
+            toast({
+              id: key,
+              title: `An error occurred (${error.status ?? "Unknown"})`,
+              description: (
+                <Text>
+                  {{}?.[error.status]}
+                  Please help us by filing a bug report on{" "}
+                  <Link
+                    href="https://github.com/theboi/smp-sstinc-org/issues"
+                    target="_blank"
+                    color={linkColor}
+                  >
+                    GitHub
+                  </Link>{" "}
+                  😣
+                </Text>
+              ),
+              status: "error",
+              duration: 7000,
+              isClosable: true,
+              position: "bottom-left",
+              variant: "left-accent",
+            });
+          }
+        },
+      }}
+    >
+      <div className={style.main}>
+        <div className={style.headnav}>
+          <nav className={style.nav}>
+            <a
+              className={style.icon}
+              href="https://sstinc.org"
+              rel="noreferrer noopener"
+              target="_blank"
+            >
+              <img
+                src="/assets/sstinc-icon.png"
+                alt="SST Inc Icon"
+                width={100}
+                height={100}
+              />
+            </a>
+            <NavBar />
+          </nav>
+        </div>
+        {children}
+        <Credits />
       </div>
-      {children}
-      <Credits />
-    </div>
+    </SWRConfig>
   );
 };

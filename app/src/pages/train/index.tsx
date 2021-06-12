@@ -8,8 +8,9 @@ import {
   LinkOverlay,
   Text,
 } from "@chakra-ui/react";
-import { getCoursesAPI, Course } from "../api/v1/train/course";
+import { getTrainAPI } from "../api/v1/train/courses";
 import NextLink from "next/link";
+import { Course } from "../../typings/train";
 
 export default function TrainPage({ courses }: { courses: Course[] }) {
   return (
@@ -23,16 +24,16 @@ export default function TrainPage({ courses }: { courses: Course[] }) {
           borderWidth="1px"
           rounded="md"
         >
-          <NextLink href={c.path}>
-            <LinkOverlay href={c.path}>
+          <NextLink href={c.cpath}>
+            <LinkOverlay href={c.cpath}>
               <HStack>
                 <Image
                   borderRadius="full"
                   boxSize="50px"
                   src={`/assets/train/${c.cid}.png`}
-                  alt={c.name}
+                  alt={c.subject}
                 />
-                <Text>{c.name}</Text>
+                <Text>{c.subject}</Text>
               </HStack>
             </LinkOverlay>
           </NextLink>
@@ -78,57 +79,9 @@ export default function TrainPage({ courses }: { courses: Course[] }) {
 
 export async function getServerSideProps() {
   return {
-    props: { courses: await getCoursesAPI() },
+    props: { courses: await getTrainAPI() },
   };
 }
-
-// function TrainingSelectBar(props: {
-//   lessons: Lesson[];
-//   assignment: Assignment;
-//   setAssignment: Dispatch<SetStateAction<Assignment>>;
-// }) {
-//   return (
-//     <Accordion allowToggle>
-//       {props.lessons.map((l) => (
-//         <AccordionItem key={l.lid}>
-//           <h2>
-//             <AccordionButton
-//               onClick={() => props.setAssignment(null)}
-//               style={{ borderRadius: "var(--chakra-radii-md)" }}
-//               _expanded={{
-//                 color: "var(--chakra-colors-teal-200)",
-//                 bg: "rgba(48, 140, 122, 0.3)",
-//               }}
-//             >
-//               <Box flex="1" textAlign="left">
-//                 {l.title}
-//               </Box>
-//               <AccordionIcon />
-//             </AccordionButton>
-//           </h2>
-//           {Object.values(l.assignments ?? {}).map((a) => (
-//             <AccordionPanel
-//               onClick={() => props.setAssignment(a)}
-//               key={a.aid}
-//               pb={4}
-//               pl={10}
-//               style={
-//                 props.assignment?.aid === a.aid
-//                   ? {
-//                       color: "var(--chakra-colors-teal-200)",
-//                       background: "rgba(48, 140, 122, 0.3)",
-//                     }
-//                   : {}
-//               }
-//             >
-//               {a.title}
-//             </AccordionPanel>
-//           ))}
-//         </AccordionItem>
-//       ))}
-//     </Accordion>
-//   );
-// }
 
 // function CourseDropdown(props: {
 //   index: number;
