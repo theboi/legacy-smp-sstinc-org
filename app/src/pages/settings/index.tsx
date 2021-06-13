@@ -1,5 +1,19 @@
-import { VStack } from "@chakra-ui/react";
+import { VStack, Box, Heading, Text, Center } from "@chakra-ui/react";
 
-export default function JoinPage() {
-  return <VStack></VStack>;
+// export default function JoinPage() {
+//   return <VStack></VStack>;
+// }
+
+export default function Settings() {
+  return(
+      <Box>
+        <Heading>Settings</Heading>
+        <Center>
+            <VStack>
+                <Text fontSize={"2xl"}><b>Work in Progress</b></Text>
+                <Text>Check back Soon!</Text>
+            </VStack>
+        </Center>
+      </Box>
+  );
 }

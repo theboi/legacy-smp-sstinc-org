@@ -2,18 +2,32 @@ import { GetServerSidePropsContext } from "next";
 import { provider } from "../../model/provider";
 import { getUserAPI } from "../api/v1/user/[slug]";
 
-import { Button, Badge, Avatar, Heading, Text, VStack } from "@chakra-ui/react";
+import { Button, Avatar, Heading, Text, VStack, Box, HStack, Badge } from "@chakra-ui/react";
 import { useUserWithHandle } from "../../services/users";
 
 export default function ProfilePage({ handle }: { handle: string }) {
   const { user, error } = useUserWithHandle(handle);
-
-  return (
-    <VStack>
-      <Avatar name={user?.name} src={user?.photoURL} size="2xl" />
-      <Heading>{user?.name}</Heading>
-      <Text>@{user?.handle}</Text>
-    </VStack>
+  const roles = ["Banned","Member","Trainee","Employee","Associate","Alumni","ExCo","Consultant","BOD","Root"];
+  var roleColor = ""
+  if (roles[user?.role] == "Consultant" || roles[user?.role] == "BOD") {
+    roleColor = "red"
+  } else if (roles[user?.role] == "ExCo") {
+    roleColor = "green"
+  } else if (roles[user?.role] == "Root") {
+    roleColor = "purple"
+  }
+    return (
+      <VStack>
+        <Avatar name={user?.name} src={user?.photoURL} size="2xl" />
+        <HStack spacing={2}>
+          <Heading>{user?.name}</Heading>
+          <Badge colorScheme={roleColor}>{roles[user?.role]}</Badge>
+        </HStack>
+        <Text>@{user?.handle}</Text>
+        <HStack>
+          <Text><b>Points: </b>{user?.points}</Text>
+        </HStack>
+      </VStack>
   );
 }
 
