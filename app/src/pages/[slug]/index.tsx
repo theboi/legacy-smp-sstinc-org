@@ -79,7 +79,7 @@ const ScoreBox = ({testScore}) => {
       <Box border={"1px solid"} borderRadius={4} borderColor={"white"}>
         <VStack align={"stretch"} my={4} ml={4} mr={4} spacing={6}>
           <VStack align={"stretch"}>
-            <Text fontSize={"3xl"}><b>{(testScore.lang === "Swift") ? `iOS Course Assessment ${testScore.year}` : (textScore.lang === "Android") ? `Android Course Assessment ${testScore.year}` : `React Native Course Assessment ${testScore.year}`}</b></Text>
+            <Text fontSize={"3xl"}><b>{(testScore.lang === "Swift") ? `iOS Course Assessment ${testScore.year}` : (testScore.lang === "Android") ? `Android Course Assessment ${testScore.year}` : `React Native Course Assessment ${testScore.year}`}</b></Text>
             <Text fontSize={"xl"}><b>Score: </b>{`${testScore.score}/${testScore.total}`}</Text>
           </VStack>
           <VStack align={"stretch"}>
