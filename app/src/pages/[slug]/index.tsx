@@ -4,6 +4,7 @@ import { getUserAPI } from "../api/v1/user/[slug]";
 
 import { Button, Avatar, Heading, Text, VStack, Box, HStack, Badge } from "@chakra-ui/react";
 import { useUserWithHandle } from "../../services/users";
+import { useColor } from "../../hooks/color";
 
 export default function ProfilePage({ handle }: { handle: string }) {
   const { user, error } = useUserWithHandle(handle);
@@ -18,15 +19,18 @@ export default function ProfilePage({ handle }: { handle: string }) {
   }
     return (
       <VStack>
-        <Avatar name={user?.name} src={user?.photoURL} size="2xl" />
-        <HStack spacing={2}>
-          <Heading>{user?.name}</Heading>
-          <Badge colorScheme={roleColor}>{roles[user?.role]}</Badge>
+        <HStack spacing={3}>
+          <Avatar name={user?.name} src={user?.photoURL} size="2xl" />
+          <VStack align={"stretch"}>
+            <HStack spacing={2}>
+              <Heading>{user?.name}</Heading>
+              <Badge colorScheme={roleColor}>{roles[user?.role]}</Badge>
+            </HStack>
+            <Text>@{user?.handle}</Text>
+          </VStack>
         </HStack>
-        <Text>@{user?.handle}</Text>
-        <HStack>
-          <Text><b>Points: </b>{user?.points}</Text>
-        </HStack>
+        <Text><b>Points: </b>{user?.points}</Text>
+
       </VStack>
   );
 }
