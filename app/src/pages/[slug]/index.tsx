@@ -2,36 +2,50 @@ import { GetServerSidePropsContext } from "next";
 import { provider } from "../../model/provider";
 import { getUserAPI } from "../api/v1/user/[slug]";
 
-import { Button, Avatar, Heading, Text, VStack, Box, HStack, Badge } from "@chakra-ui/react";
+import { Avatar, Heading, Text, VStack, Box, HStack, Badge } from "@chakra-ui/react";
 import { useUserWithHandle } from "../../services/users";
-import { useColor } from "../../hooks/color";
 
 export default function ProfilePage({ handle }: { handle: string }) {
   const { user, error } = useUserWithHandle(handle);
   const roles = ["Banned","Member","Trainee","Employee","Associate","Alumni","ExCo","Consultant","BOD","Root"];
-  var roleColor = ""
-  if (roles[user?.role] == "Consultant" || roles[user?.role] == "BOD") {
-    roleColor = "red"
-  } else if (roles[user?.role] == "ExCo") {
-    roleColor = "green"
-  } else if (roles[user?.role] == "Root") {
-    roleColor = "purple"
-  }
-    return (
-      <VStack>
-        <HStack spacing={3}>
-          <Avatar name={user?.name} src={user?.photoURL} size="2xl" />
-          <VStack align={"stretch"}>
-            <HStack spacing={2}>
-              <Heading>{user?.name}</Heading>
-              <Badge colorScheme={roleColor}>{roles[user?.role]}</Badge>
-            </HStack>
-            <Text>@{user?.handle}</Text>
-          </VStack>
-        </HStack>
-        <Text><b>Points: </b>{user?.points}</Text>
 
-      </VStack>
+  // Temporary Test Score
+  const tempTestScore = [{
+    lang: "Swift",
+    year: "2021",
+    score: "10",
+    total: "10",
+    markersComments: "Placeholder"
+  },
+    {
+      lang: "Android",
+      year: "2021",
+      score: "10",
+      total: "10",
+      markersComments: "Placeholder"
+    }]
+
+  return (
+    <VStack spacing={70}>
+      <HStack spacing={3}>
+        <Avatar name={user?.name} src={user?.photoURL} size="2xl" />
+        <VStack align={"stretch"}>
+          <HStack spacing={2}>
+            <Heading>{user?.name}</Heading>
+            <Badge colorScheme={(roles[user?.role] == "Consultant" || roles[user?.role] == "BOD") ? "red" : (roles[user?.role] == "ExCo") ? "green" : (roles[user?.role] == "Root") ? "purple" : "default"}>{roles[user?.role]}</Badge>
+          </HStack>
+          <Text>@{user?.handle}</Text>
+          <Text><b>Points: </b>{user?.points}</Text>
+        </VStack>
+      </HStack>
+      <Box>
+        <HStack spacing={5}>
+          {tempTestScore.map((testScore) => (
+              <ScoreBox testScore={testScore} />
+          ))}
+        </HStack>
+      </Box>
+    </VStack>
   );
 }
 
@@ -58,4 +72,21 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   return {
     notFound: true,
   };
+}
+
+const ScoreBox = ({testScore}) => {
+  return(
+      <Box border={"1px solid"} borderRadius={4} borderColor={"white"}>
+        <VStack align={"stretch"} my={4} ml={4} mr={4} spacing={6}>
+          <VStack align={"stretch"}>
+            <Text fontSize={"3xl"}><b>{(testScore.lang === "Swift") ? `iOS Course Assessment ${testScore.year}` : (textScore.lang === "Android") ? `Android Course Assessment ${testScore.year}` : `React Native Course Assessment ${testScore.year}`}</b></Text>
+            <Text fontSize={"xl"}><b>Score: </b>{`${testScore.score}/${testScore.total}`}</Text>
+          </VStack>
+          <VStack align={"stretch"}>
+            <Text fontSize={"lg"}><b>Markers Comment:</b></Text>
+            <Text fontSize={"md"}>{testScore.markersComments}</Text>
+          </VStack>
+        </VStack>
+      </Box>
+  );
 }
