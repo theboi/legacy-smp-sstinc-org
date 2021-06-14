@@ -9,14 +9,18 @@ bot.start((ctx) =>
   ctx.telegram.sendMessage(
     ctx.chat.id,
     `Hey There, <b>${ctx.message.from.first_name} ${ctx.message.from.last_name}</b>!\nI'm <b>SST Inc. Bot</b>`,
-    { parse_mode: "HTML" }
+    {
+      parse_mode: "HTML",
+    }
   )
 ); // display Welcome text when we start bot
 bot.help((ctx) =>
   ctx.telegram.sendMessage(
     ctx.chat.id,
     "<b>SST Inc. Bot</b>\nUse /commands to see all commands available",
-    { parse_mode: "HTML" }
+    {
+      parse_mode: "HTML",
+    }
   )
 );
 //console.log(ctx.message.from.id);
@@ -29,7 +33,9 @@ bot.command("info", (ctx) => {
 bot.command("commands", (ctx) => {
   ctx.reply(
     "<b>SST Inc. Bot</b>\nCommands Available:\n - /start\n - /help\n - /send\n - /random\n - /dice\n - /points\n - /admin\nor type slash '/'",
-    { parse_mode: "HTML" }
+    {
+      parse_mode: "HTML",
+    }
   );
 });
 bot.command("send", (ctx) => {
@@ -55,9 +61,24 @@ bot.command("dice", (ctx) => {
 });
 
 var users = [
-  { firstName: "Ryan", lastName: "The", username: "theboii", points: 100 },
-  { firstName: "Granwyn", lastName: "Tan", username: "granwyntan", points: 50 },
-  { firstName: "Ethan", lastName: "Chew", username: "ethancheww", points: 20 },
+  {
+    firstName: "Ryan",
+    lastName: "The",
+    username: "theboii",
+    points: 100,
+  },
+  {
+    firstName: "Granwyn",
+    lastName: "Tan",
+    username: "granwyntan",
+    points: 50,
+  },
+  {
+    firstName: "Ethan",
+    lastName: "Chew",
+    username: "ethancheww",
+    points: 20,
+  },
   {
     firstName: "Joe",
     lastName: "Wong",
@@ -74,7 +95,10 @@ bot.command("points", function (ctx, next) {
       if (users[i].username == ctx.message.from.username) {
         ctx.reply(
           `<b>${users[i].firstName} ${users[i].lastName}</b> @${users[i].username}: ${users[i].points} Points`,
-          { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+          {
+            reply_to_message_id: ctx.message.message_id,
+            parse_mode: "HTML",
+          }
         );
         return;
       }
@@ -90,7 +114,10 @@ bot.command("points", function (ctx, next) {
       if (users[i].username == ctx.message.from.username) {
         ctx.reply(
           `<b>${users[i].firstName} ${users[i].lastName}</b> @${users[i].username}: ${users[i].points} Points`,
-          { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+          {
+            reply_to_message_id: ctx.message.message_id,
+            parse_mode: "HTML",
+          }
         );
         return;
       }
@@ -144,13 +171,18 @@ bot.command("points", function (ctx, next) {
           users[i].lastName
         }</b> @${users[i].username}: ${users[i].points} Points\n`;
       }
-      ctx.reply(final, { parse_mode: "HTML" });
+      ctx.reply(final, {
+        parse_mode: "HTML",
+      });
     } else if (second.startsWith("@")) {
       for (i = 0; i < users.length; i++) {
         if (users[i].username == second.replace("@", "")) {
           ctx.reply(
             `<b>${users[i].firstName} ${users[i].lastName}</b> @${users[i].username}: ${users[i].points} Points`,
-            { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+            {
+              reply_to_message_id: ctx.message.message_id,
+              parse_mode: "HTML",
+            }
           );
           return;
         }
@@ -166,7 +198,6 @@ bot.command("admin", function (ctx, next) {
   if (ctx.chat.type == "private") {
     return;
   }
-  console.log("came here");
   console.log(ctx.message.from);
   bot.telegram
     .getChatAdministrators(ctx.chat.id)
@@ -180,12 +211,18 @@ bot.command("admin", function (ctx, next) {
       if (ctx.from._is_in_admin_list) {
         ctx.reply(
           `<b>${ctx.message.from.first_name} ${ctx.message.from.last_name}</b> @${ctx.message.from.username} is an <b>admin</b>`,
-          { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+          {
+            reply_to_message_id: ctx.message.message_id,
+            parse_mode: "HTML",
+          }
         );
       } else {
         ctx.reply(
           `<b>${ctx.message.from.first_name} ${ctx.message.from.last_name}</b> @${ctx.message.from.username} is <i>not</i> an <b>admin</b>`,
-          { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+          {
+            reply_to_message_id: ctx.message.message_id,
+            parse_mode: "HTML",
+          }
         );
       }
     })
@@ -203,18 +240,26 @@ bot.command("absent", function (ctx, next) {
     if (length == 1) {
       ctx.reply(
         `<b>${ctx.message.from.first_name} ${ctx.message.from.last_name}</b> @${ctx.message.from.username} please provide a <b>valid date of absence</b> as well as a <b>valid reason for absence</b>\nThank you!`,
-        { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+        {
+          reply_to_message_id: ctx.message.message_id,
+          parse_mode: "HTML",
+        }
       );
     }
     if (length == 2) {
       ctx.reply(
         `<b>${ctx.message.from.first_name} ${ctx.message.from.last_name}</b> @${ctx.message.from.username} please provide a <b>valid date of absence</b> or a <b>valid reason for absence</b>.\nThank you!`,
-        { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+        {
+          reply_to_message_id: ctx.message.message_id,
+          parse_mode: "HTML",
+        }
       );
     }
     ctx.reply(
       `Usage is /absent "[name]" [date of absence (DD/MM or DD/MM/YYYY)]* [valid reason (to be approved, exco will contact you separately if rejected)]*\n* Denotes compulsory field`,
-      { parse_mode: "HTML" }
+      {
+        parse_mode: "HTML",
+      }
     );
   } else {
     if (length == 3) {
@@ -232,7 +277,10 @@ bot.command("absent", function (ctx, next) {
         } else {
           ctx.reply(
             `<b>${ctx.message.from.first_name} ${ctx.message.from.last_name}</b> @${ctx.message.from.username} Date must be in the format of DD/MM or DD/MM/YYYY`,
-            { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+            {
+              reply_to_message_id: ctx.message.message_id,
+              parse_mode: "HTML",
+            }
           );
           return;
         }
@@ -242,7 +290,10 @@ bot.command("absent", function (ctx, next) {
       dateobj = new Date(year, month - 1, day, 15, 30, 00, 0);
       ctx.reply(
         `Dear <b>${ctx.message.from.first_name} ${ctx.message.from.last_name}</b>,\nYour absence on ${dateobj} has been recorded.\nThe exco will contact you seperately if your application for absence gets rejected.\nThank you and have a nice day!`,
-        { reply_to_message_id: ctx.message.message_id, parse_mode: "HTML" }
+        {
+          reply_to_message_id: ctx.message.message_id,
+          parse_mode: "HTML",
+        }
       );
       console.log(moment("2021-06-12").toDate());
     } else {
@@ -266,7 +317,41 @@ bot.command("absent", function (ctx, next) {
 //     }
 // })
 
-bot.command("user", function (ctx, next) {});
+bot.command("user", function (ctx, next) {
+  msg = ctx.message.text;
+  if (msg.split(" ") > 1) {
+  }
+  bot.telegram
+    .getChatAdministrators(ctx.chat.id)
+    .then(function (data) {
+      if (!data || !data.length) return;
+      console.log("admin list:", data);
+      ctx.chat._admins = data;
+      ctx.from._is_in_admin_list = data.some(
+        (adm) => adm.user.username === username
+      );
+      if (ctx.from._is_in_admin_list) {
+        ctx.reply(
+          `<b>${ctx.message.from.first_name} ${ctx.message.from.last_name}</b> @${ctx.message.from.username} is an <b>admin</b>`,
+          {
+            reply_to_message_id: ctx.message.message_id,
+            parse_mode: "HTML",
+          }
+        );
+      } else {
+        ctx.reply(
+          `<b>${ctx.message.from.first_name} ${ctx.message.from.last_name}</b> @${ctx.message.from.username} is <i>not</i> an <b>admin</b>`,
+          {
+            reply_to_message_id: ctx.message.message_id,
+            parse_mode: "HTML",
+          }
+        );
+      }
+    })
+    .catch(console.log)
+    .then((_) => next(ctx));
+  console.log(ctx.from._is_in_admin_list);
+});
 
 // bot.command('inline_keyboard', (ctx) => {
 //     ctx.telegram.sendMessage(ctx.chat.id, `Multiple Choice Quiz (Points: ${String(points)})`, {
