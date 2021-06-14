@@ -25,7 +25,7 @@ export const getTrainAPI = async (): Promise<Course[]> => {
     (e): Course => ({
       cid: e.name,
       subject: CourseSubject[e.name],
-      path: e.path.slice("data".length),
+      cpath: e.path.slice("data".length),
     })
   );
 };

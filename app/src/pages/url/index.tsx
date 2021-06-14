@@ -122,7 +122,9 @@ export default function URLsPage() {
                   placeholder="sstinc"
                 />
               </InputGroup>
-              <Text size="xs">Leaving the field empty would create a randomly generated alias.</Text>
+              <Text size="xs">
+                Leaving the field empty would create a randomly generated alias.
+              </Text>
             </FormControl>
           </ModalBody>
 
@@ -187,3 +189,26 @@ export default function URLsPage() {
     </>
   );
 }
+
+// function genRandAlias() {
+//   const characters =
+//     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
+//   let randomAlias = "";
+//   for (var i = 0; i < 4; i++) {
+//     randomAlias += characters.charAt(
+//       Math.floor(Math.random() * characters.length)
+//     );
+//   }
+//   firebase
+//     .firestore()
+//     .collection("links")
+//     .get()
+//     .then((col) => {
+//       col.docs.map((doc) => {
+//         if (randomAlias === doc.data().suffix) {
+//           return genRandAlias();
+//         }
+//       });
+//     });
+//   return randomAlias;
+// }

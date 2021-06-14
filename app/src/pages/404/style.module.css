@@ -4,18 +4,12 @@
   place-items: center;
 }
 
-.img {
-  width: 100%;
-  max-width: 300px;
-  border-radius: 10px;
-}
-
 .fig {
   position: relative;
 }
 
 .cap {
-  background-color: #fff;
+  /* background-color: #fff; */
   position: absolute;
   top: 0;
   left: 0;
