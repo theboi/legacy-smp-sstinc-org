@@ -15,8 +15,7 @@ export const Credits = () => (
       rel="noreferrer"
     >
       Ryan The
-    </Link>{" "}
-    from SST Inc, 2021, v2.1.0. <br />
+    </Link>{" "} from SST Inc, 2021, v2.1.0. <br />
     Open sourced on{" "}
     <Link
       color={useColor("link")}

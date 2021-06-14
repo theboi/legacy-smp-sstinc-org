@@ -2,8 +2,10 @@ import { GetServerSidePropsContext } from "next";
 import { provider } from "../../model/provider";
 import { getUserAPI } from "../api/v1/user/[slug]";
 
-import { Avatar, Heading, Text, VStack, Box, HStack, Badge } from "@chakra-ui/react";
+import {Avatar, Heading, Text, VStack, Box, HStack, Badge, Link as ChakraLink, Button} from "@chakra-ui/react";
+import { LinkButton } from "../../components/theme/linkButton";
 import { useUserWithHandle } from "../../services/users";
+import { FaDownload } from "react-icons/fa";
 
 export default function ProfilePage({ handle }: { handle: string }) {
   const { user, error } = useUserWithHandle(handle);
@@ -15,14 +17,16 @@ export default function ProfilePage({ handle }: { handle: string }) {
     year: "2021",
     score: "10",
     total: "10",
-    markersComments: "Placeholder"
+    markersComments: "Placeholder",
+    dwnloadLink: "https://drive.google.com"
   },
     {
       lang: "Android",
       year: "2021",
       score: "10",
       total: "10",
-      markersComments: "Placeholder"
+      markersComments: "Placeholder",
+      dwnloadLink: "https://drive.google.com"
     }]
 
   return (
@@ -41,7 +45,7 @@ export default function ProfilePage({ handle }: { handle: string }) {
       <Box>
         <HStack spacing={5}>
           {tempTestScore.map((testScore) => (
-              <ScoreBox testScore={testScore} />
+              <ScoreBox key={Math.random()} testScore={testScore} />
           ))}
         </HStack>
       </Box>
@@ -80,7 +84,12 @@ const ScoreBox = ({testScore}) => {
         <VStack align={"stretch"} my={4} ml={4} mr={4} spacing={6}>
           <VStack align={"stretch"}>
             <Text fontSize={"3xl"}><b>{(testScore.lang === "Swift") ? `iOS Course Assessment ${testScore.year}` : (testScore.lang === "Android") ? `Android Course Assessment ${testScore.year}` : `React Native Course Assessment ${testScore.year}`}</b></Text>
-            <Text fontSize={"xl"}><b>Score: </b>{`${testScore.score}/${testScore.total}`}</Text>
+            <HStack spacing={10}>
+              <Text fontSize={"xl"}><b>Score: </b>{`${testScore.score}/${testScore.total}`}</Text>
+              <LinkButton href={testScore.dwnloadLink} customButton={<Button colorScheme="red" size={"sm"}  leftIcon={<FaDownload />} />}>
+                Download File
+              </LinkButton>
+            </HStack>
           </VStack>
           <VStack align={"stretch"}>
             <Text fontSize={"lg"}><b>Markers Comment:</b></Text>
