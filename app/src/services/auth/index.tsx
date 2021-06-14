@@ -8,7 +8,13 @@ import axios from "axios";
 
 require("firebase/auth");
 
-const AuthContext = createContext(null);
+interface AuthContent {
+  signIn: () => {};
+  signUp: () => {};
+  signOut: () => {};
+  checkForAuth: () => {};
+}
+const AuthContext = createContext<AuthContent>(null);
 
 export const AuthProvider = (props) => {
   const value = {

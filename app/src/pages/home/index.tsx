@@ -8,52 +8,36 @@ import {
   Text,
   Button,
   Link as ChakraLink,
+  VStack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { LinkButton } from "../../components/theme/linkButton";
 import { useColor } from "../../hooks/color";
 
-const HomePage = () => {
+export default function HomePage() {
   return (
     <Box>
       <Header />
+      {/* <Body /> */}
     </Box>
   );
-};
+}
 
 const Header = () => {
   return (
-    <Box mt={2} mb={20}>
-      <Center>
+    <Center>
+      <VStack spacing={5} align="left">
         <Box>
-          <Box mb={5}>
-            <Text fontSize={"4xl"}>
-              <b>SST Inc. Management Platform</b>
-            </Text>
-            <Text fontSize={"2xl"}>Manage, Learn, Develop</Text>
-          </Box>
-          <Stack direction={"row"} spacing={7}>
-            <NextLink href={"/train"}>
-              <ChakraLink
-                backgroundColor={useColor("teal")}
-                as={Button}
-                size={"md"}
-              >
-                Attendance & Learn
-              </ChakraLink>
-            </NextLink>
-            <NextLink href={"/account/signup"}>
-              <ChakraLink
-                backgroundColor={useColor("signUpRed")}
-                as={Button}
-                size={"md"}
-              >
-                Sign Up
-              </ChakraLink>
-            </NextLink>
-          </Stack>
+          <Heading size="xl">SST Inc Management Platform</Heading>
+          <Text>Create. Code. Inspire.</Text>
         </Box>
-      </Center>
-    </Box>
+        <HStack spacing={5}>
+          <LinkButton href="/join" customButton={<Button colorScheme="red" />}>
+            Join Now
+          </LinkButton>
+        </HStack>
+      </VStack>
+    </Center>
   );
 };
 
@@ -97,5 +81,3 @@ const BodyItem = ({ bodyContent }) => {
     </Box>
   );
 };
-
-export default HomePage;

@@ -1,4 +1,4 @@
-import TrainPage from ".";
+import TrainPage from "../../pages/train";
 
 describe("TrainPage", () => {
   it.todo("renders");
