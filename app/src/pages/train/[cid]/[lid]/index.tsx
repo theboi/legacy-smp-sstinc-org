@@ -103,32 +103,35 @@ const md = new MarkdownIt();
 const AssignmentPage = ({ assignment }: { assignment: Assignment }) => {
   const { data } = useSWR<string>(assignment.url);
 
-  if (data !== undefined) {
-    switch (assignment.type) {
-      case AssignmentType.art:
-        return (
-          <Box>
-            <Heading size="2xl">{assignment.title}</Heading>
-            <Box
-              dangerouslySetInnerHTML={{
-                __html: `<md>${md.render(data ?? "No Content")}</md>`,
-              }}
-            />
-          </Box>
-        );
-    }
-  }
-
   return (
-    <Alert status="error" variant="left-accent">
-      <AlertIcon />
-      <AlertTitle>An error occurred.</AlertTitle>
-      <AlertDescription>
-        Assignment content failed to load, please try reloading the page.
-      </AlertDescription>
-    </Alert>
+    <Skeleton isLoaded={!!data}>
+      {(() => {
+        switch (assignment.type) {
+          case AssignmentType.art:
+            return (
+              <Box>
+                <Heading size="2xl">{assignment.title}</Heading>
+                <Box
+                  dangerouslySetInnerHTML={{
+                    __html: `<md>${md.render(data ?? "No Content")}</md>`,
+                  }}
+                />
+              </Box>
+            );
+        }
+      })()}
+    </Skeleton>
   );
 };
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const { cid, lid } = ctx.params as { [k: string]: string };
+
+  return {
+    props: { lesson: await getLessonAPI(cid, lid) },
+  };
+}
+
 // function TrainingSelectBar(props: {
 //   lessons: Lesson[];
 //   assignment: Assignment;
@@ -176,11 +179,3 @@ const AssignmentPage = ({ assignment }: { assignment: Assignment }) => {
 //     </Accordion>
 //   );
 // }
-
-export async function getServerSideProps(ctx: GetServerSidePropsContext) {
-  const { cid, lid } = ctx.params as { [k: string]: string };
-
-  return {
-    props: { lesson: await getLessonAPI(cid, lid) },
-  };
-}

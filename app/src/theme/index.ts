@@ -1,4 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
+import components from "./components";
 
 export default extendTheme({
   config: {
@@ -28,4 +29,5 @@ export default extendTheme({
     // black: "#0D1821",
     // white: "#D8D4F2",
   },
+  components: components,
 });
