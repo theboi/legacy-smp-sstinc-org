@@ -46,5 +46,5 @@ This open sourced repository is licensed under the GNU General Public License v3
 
 ## Credits
 
-Made with :heart: by [Ryan The](https://ryanthe.com/) and [Ethan Chew](https://ethanchew.me/) using Next.js, React and TypeScript.
+Made with :heart: by [Ryan The](https://ryanthe.com/) and [Ethan Chew](https://ethanchew.me/) using Next.js, React and TypeScript.  
 Telegram Bot made with :heart: by [Granwyn Tan](https://granwyntan.github.io/)
