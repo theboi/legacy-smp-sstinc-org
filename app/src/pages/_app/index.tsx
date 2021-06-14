@@ -1,90 +1,77 @@
 import { useEffect, useRef, useState } from "react";
 import * as React from "react";
 import { AppProps } from "next/app";
-import "./styles.css";
+import "./styles.scss";
+import "./cssreset.scss";
 import Head from "next/head";
+import NextLink from "next/link";
+
 import {
-  Avatar,
   Box,
+  Center,
   ChakraProvider,
-  IconButton,
+  Code,
+  Heading,
+  Link as ChakraLink,
   Text,
-  useColorMode,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
+  useToast,
+  Spinner,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalBody,
+  ModalContent,
 } from "@chakra-ui/react";
-import { FaBook, FaBug, FaLink, FaSignInAlt, FaSun } from "react-icons/fa";
+
 import { useRouter } from "next/router";
 import style from "./style.module.css";
 
-import theme from "../../model/theme";
+import theme from "../../theme";
 
-import { provider } from "../../model/provider";
-import { User, UserRole } from "../../model/user";
+import { UserRole } from "../../objects/user";
 import ErrorPage from "../404";
-import ProfilePage from "../account/profile";
-import { authProvider } from "../../model/auth";
+import { AuthProvider, useAuth } from "../../services/auth";
+import NavBar from "../../components/_app/navBar";
+import { Credits } from "../../components/_app/credits";
+import { SWRConfig } from "swr";
+import axios from "axios";
+import { useColor } from "../../hooks/color";
 
-const paths: { [key: string]: UserRole } = {
+export const authPaths: { [key: string]: UserRole } = {
   "/url": UserRole.ExCo,
   "/train": UserRole.Trainee,
 };
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function _App(props: AppProps) {
+  return (
+    <ChakraProvider theme={theme} resetCSS={false}>
+      <AuthProvider>
+        <App {...props} />
+      </AuthProvider>
+    </ChakraProvider>
+  );
+}
+
+export function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
-  const loadingOverlayRef = useRef(null);
+  const { auth, user } = useAuth();
 
-  const [curUser, setCurUser] = useState<User>(null);
-  const [hostname, setHostname] = useState("");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  useEffect(() => {
-    if (window) {
-      setHostname(window.location.hostname);
-    }
-  });
-  useEffect(() => {
-    authProvider.addIdTokenChangedListener((user: User) => {
-      setCurUser(user);
-      // console.log(user)
-      // if (user?.iid !== undefined && user?.role === UserRole.Alien) {
-      //   router.replace('/update')
-      // }
-    });
-  }, []);
+  const [hostname, setHostname] = useState<string>();
 
   useEffect(() => {
+    if (globalThis) setHostname(globalThis.location.hostname);
+  }, [globalThis.location]);
+
+  useEffect(() => {
+    onOpen();
     (async () => {
-      await authProvider.checkForAuth();
-      loadingOverlayRef.current.style.display = "none";
+      await auth.checkForAuth();
+      onClose();
     })();
-  }, [curUser]);
-
-  // function genRandAlias() {
-  //   const characters =
-  //     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-";
-  //   let randomAlias = "";
-  //   for (var i = 0; i < 4; i++) {
-  //     randomAlias += characters.charAt(
-  //       Math.floor(Math.random() * characters.length)
-  //     );
-  //   }
-  //   firebase
-  //     .firestore()
-  //     .collection("links")
-  //     .get()
-  //     .then((col) => {
-  //       col.docs.map((doc) => {
-  //         if (randomAlias === doc.data().suffix) {
-  //           return genRandAlias();
-  //         }
-  //       });
-  //     });
-  //   return randomAlias;
-  // }
+  }, []);
 
   return (
     <>
@@ -96,206 +83,120 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
-      <ChakraProvider theme={theme}>
-        {hostname === "go.sstinc.org" || hostname === "qr.sstinc.org" ? (
-          <div className={style.alert}>
-            <p>
-              <code>go.sstinc.org</code> and
-              <code>qr.sstinc.org</code> will cease operation beginning June
-              2021. Please use the new unified{" "}
-              <a href="https://smp.sstinc.org">
-                <code>smp.sstinc.org</code>
-              </a>{" "}
-              instead.
-            </p>
-          </div>
-        ) : null}
-        <AppScaffold user={curUser}>
-          <div className={style.content}>
-            {(() => {
-              switch (true) {
-                case paths[router.pathname] === undefined:
-                  return <Component {...pageProps} user={curUser} />;
-                case curUser?.role === undefined:
-                  return <ProfilePage user={curUser} />;
-                case curUser?.role >= paths[router.pathname]: // isAuth
-                  return <Component {...pageProps} user={curUser} />;
-                default:
-                  return <ErrorPage status={403} />;
-              }
-            })()}
-            <LoadingOverlay ref={loadingOverlayRef} />
-          </div>
-        </AppScaffold>
-      </ChakraProvider>
+      {hostname === "go.sstinc.org" && (
+        <Center
+          sx={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bgColor: useColor("bg1"),
+            zIndex: 9999,
+            height: "100vh",
+          }}
+        >
+          <Heading size="lg">
+            Please use{" "}
+            <Code size="lg" colorScheme="blue">
+              <NextLink href="https://smp.sstinc.org">
+                <ChakraLink>smp.sstinc.org</ChakraLink>
+              </NextLink>
+            </Code>{" "}
+            instead.
+          </Heading>
+        </Center>
+      )}
+      <AppScaffold>
+        <div className={style.content}>
+          {(() => {
+            switch (true) {
+              case authPaths[router.pathname] === undefined:
+                return <Component {...pageProps} />;
+              // case user?.role === undefined:
+              //   return <ProfilePage />;
+              case user?.role >= authPaths[router.pathname]: // isAuth
+                return <Component {...pageProps} />;
+              default:
+                return <ErrorPage status={403} />;
+            }
+          })()}
+          <Modal
+            size="xs"
+            onClose={onClose}
+            isOpen={isOpen}
+            isCentered
+            closeOnEsc={false}
+            closeOnOverlayClick={false}
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalBody>
+                <Center height={100}>
+                  <Spinner size="xl" />
+                </Center>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        </div>
+      </AppScaffold>
     </>
   );
 }
 
-const Credits = () => (
-  <Text className={style.credits} color="">
-    Made with ♥&#xFE0E; by{" "}
-    <a
-      href="https://www.ryanthe.com"
-      target="_blank"
-      className={style.link}
-      rel="noreferrer"
-    >
-      Ryan The
-    </a>{" "}
-    from SST Inc, 2021, v2.1.0. <br />
-    Open sourced on{" "}
-    <a
-      href="https://github.com/theboi/smp-sstinc-org"
-      target="_blank"
-      className={style.link}
-      rel="noreferrer"
-    >
-      GitHub
-    </a>
-    .{" "}
-  </Text>
-);
-
-const LoadingOverlay = React.forwardRef(
-  (_, ref: React.MutableRefObject<HTMLDivElement>) => (
-    <Box ref={ref} className={style.loadingOverlay}>
-      <svg
-        width="100"
-        height="100"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="xMidYMid"
-        display="block"
-      >
-        <circle
-          cx="50"
-          cy="50"
-          fill="none"
-          stroke="#00a4ff"
-          strokeWidth="10"
-          r="35"
-          strokeDasharray="164.93361431346415 56.97787143782138"
-          transform="rotate(287.844 50 50)"
-        >
-          <animateTransform
-            attributeName="transform"
-            type="rotate"
-            repeatCount="indefinite"
-            dur="1s"
-            values="0 50 50;360 50 50"
-            keyTimes="0;1"
-          />
-        </circle>
-      </svg>
-    </Box>
-  )
-);
-
-const AppScaffold = (props: { children: React.ReactNode; user: User }) => {
-  const { toggleColorMode } = useColorMode();
+const AppScaffold = ({ children }: { children: React.ReactNode }) => {
+  const toast = useToast();
+  const linkColor = useColor("link");
+  const swrConfig = {
+    fetcher: async (url: string) => {
+      const res = await axios.get(url);
+      if (!(res.status >= 200 && res.status <= 299)) {
+        throw Error("A network error occurred");
+      }
+      return res.data;
+    },
+    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      if (error.status === 404) return; // Never retry on 404.
+      if (retryCount >= 3) return; // Only retry up to 3 times.
+      setTimeout(() => revalidate({ retryCount }), 5000); // Retry after 5 seconds.
+    },
+    onError: (error, key) => {
+      console.log(error);
+      if (
+        error.status !== 403 &&
+        error.status !== 404 &&
+        !toast.isActive(key)
+      ) {
+        toast({
+          id: key,
+          title: `An error occurred`,
+          description: (
+            <Text>
+              {error.message}. If this is a breaking issue, please help us by
+              filing a bug report on{" "}
+              <ChakraLink
+                href="https://github.com/theboi/smp-sstinc-org/issues"
+                target="_blank"
+                color={linkColor}
+              >
+                GitHub
+              </ChakraLink>{" "}
+              😣
+            </Text>
+          ),
+          status: "error",
+          duration: 7000,
+          isClosable: true,
+          position: "bottom-left",
+          variant: "left-accent",
+        });
+      }
+    },
+  };
 
   return (
-    <div className={style.main}>
-      <div className={style.headnav}>
-        <nav className={style.nav}>
-          <a
-            className={style.icon}
-            href="https://sstinc.org"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            <img
-              src="/assets/sstinc-icon.png"
-              alt="SST Inc Icon"
-              width={100}
-              height={100}
-            />
-          </a>
-          <NavBar
-            user={props.user}
-            links={[
-              {
-                name: props.user === null ? "Sign In" : props.user.displayName,
-                icon:
-                  props.user === null ? (
-                    <FaSignInAlt />
-                  ) : (
-                    <Avatar src={props.user?.photoURL} size="sm" />
-                  ),
-                action: props.user === null ? authProvider.signIn : "/profile",
-              },
-              {
-                name: "Train",
-                icon: <FaBook />,
-                action: "/train",
-              },
-              {
-                name: "URL Shortener",
-                icon: <FaLink />,
-                action: "/url",
-                minRole: paths["/url"],
-              },
-              {
-                name: "Toggle Theme",
-                icon: <FaSun />,
-                action: () => toggleColorMode(),
-              },
-              {
-                name: "Bug Report",
-                icon: <FaBug />,
-                action: "https://github.com/theboi/smp-sstinc-org/issues",
-              },
-            ]}
-          />
-        </nav>
-      </div>
-      {props.children}
+    <SWRConfig value={swrConfig}>
+      <NavBar />
+      {children}
       <Credits />
-    </div>
-  );
-};
-
-interface NavLink {
-  minRole?: UserRole;
-  isDivider?: boolean;
-  name?: string;
-  // Allows for any FontAwesome icon or other React element like images
-  icon?: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
-  action?: (() => void) | string;
-}
-
-const NavBar = (props: { user: User; links: NavLink[] }) => {
-  const router = useRouter();
-
-  return (
-    <Menu placement="bottom-end">
-      <MenuButton
-        boxSize="60px"
-        style={{ borderRadius: 100 }}
-        as={IconButton}
-        aria-label="Menu"
-        icon={<Avatar src={props.user?.photoURL} size="md" />}
-        variant="outline"
-      />
-      <MenuList>
-        {props.links.map((e, i) => {
-          if (props.user?.role < e.minRole) return null;
-          else if (e.isDivider) return <MenuDivider key={i} />;
-          return (
-            <MenuItem
-              key={i}
-              onClick={
-                typeof e.action === "string" || e.action instanceof String
-                  ? () => router.push(e.action as string)
-                  : e.action
-              }
-              icon={e.icon}
-            >
-              {e.name}
-            </MenuItem>
-          );
-        })}
-      </MenuList>
-    </Menu>
+    </SWRConfig>
   );
 };

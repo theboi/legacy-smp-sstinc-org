@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const {
-    query: { suffix },
-  } = req;
+  const { suffix } = req.query;
   res.status(200).json(suffix);
 };

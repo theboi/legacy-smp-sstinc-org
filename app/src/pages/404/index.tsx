@@ -1,13 +1,19 @@
-import { Box, Heading, useColorMode } from "@chakra-ui/react";
+import { Box, Heading, useColorMode, Image } from "@chakra-ui/react";
 import style from "./style.module.css";
+import { useState, useEffect } from "react";
 
 interface ErrorCode {
   msg: string;
   cap: string;
 }
 
-export default function ErrorPage(props: { status: number }) {
+export default function ErrorPage({ status = 404 }: { status: number }) {
   const { colorMode } = useColorMode();
+  const [imgNum, setImgNum] = useState<number>();
+
+  useEffect(() => {
+    if (!imgNum) setImgNum(1 + Math.floor(Math.random() * 4));
+  }, []);
 
   const codes: { [key: number]: ErrorCode } = {
     403: {
@@ -19,8 +25,6 @@ export default function ErrorPage(props: { status: number }) {
       cap: "Oops",
     },
   };
-  const status = props.status ?? 404;
-  const imageSrc = `/assets/errors/${status}-${1 + Math.floor(Math.random() * 4)}.png`;
 
   return (
     <div className={style.main}>
@@ -30,20 +34,23 @@ export default function ErrorPage(props: { status: number }) {
         border="1px solid"
         borderColor={colorMode === "dark" ? "transparent" : "gray.200"}
         rounded="2xl"
+        mb={2}
       >
         <figure className={style.fig}>
-          <img
-            src={imageSrc}
+          <Image
+            style={{ borderRadius: 10, maxWidth: 300 }}
+            src={`/assets/errors/${status}-${imgNum}.png`}
             alt={`${status}: ${codes[status].msg}`}
-            className={style.img}
           />
-          <figcaption className={style.cap}>{codes[status].cap}</figcaption>
+          <figcaption className={style.cap} style={{ color: "white" }}>
+            {codes[status].cap}
+          </figcaption>
         </figure>
       </Box>
       <Heading className={style.errorCode} size="4xl" style={{ lineHeight: 1 }}>
         {status}
       </Heading>
-      <Heading size="sm">{codes[status].msg}</Heading>
+      <Heading size="md">{codes[status].msg}</Heading>
     </div>
   );
 }

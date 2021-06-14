@@ -2,6 +2,7 @@
 
 # dependencies
 package-lock.json
+pnpm-lock.yaml
 node_modules/
 .pnp
 .pnp.js
@@ -20,12 +21,22 @@ build
 # misc
 .DS_Store
 
+# idea
+.idea/
+
 # debug
 *.log
 
 # local env files
+.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
+# slides
+sld/dist
+sld/*.local
+sld/index.html
+sld/components.d.ts
 .env

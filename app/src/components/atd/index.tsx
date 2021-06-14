@@ -27,15 +27,18 @@ import {
   Box,
 } from "@chakra-ui/react";
 
-import { User, UserRole } from "../../model/user";
+import { User, UserRole } from "../../objects/user";
 import { provider } from "../../model/provider";
+import { useColor, useCustomColor } from "../../hooks/color";
+import { useAuth } from "../../services/auth";
 
-export default function AtdField(props: { user: User }) {
+export default function AtdField() {
   const [time, setTime] = useState(0);
   const [key, setKey] = useState(getKeyCode());
   const [code, setCode] = useState("");
   const [status, setStatus] = useState("Confirm");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useAuth();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -65,7 +68,7 @@ export default function AtdField(props: { user: User }) {
     if (code === getKeyCode()) {
       /** Handle after writing to Firestore */
       provider.atd
-        .checkIn(props.user)
+        .checkIn(user)
         .then(() => {
           setStatus("Success");
         })
@@ -93,7 +96,7 @@ export default function AtdField(props: { user: User }) {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalBody pt={10} pb={10}>
+          <ModalBody py={10}>
             <VStack>
               <Heading size="sm">
                 Enter this code at{" "}
@@ -106,7 +109,6 @@ export default function AtdField(props: { user: User }) {
                       style={{
                         fontSize: "2em",
                         opacity: 1,
-                        borderColor: "unset",
                       }}
                       key={i}
                     />
@@ -128,20 +130,32 @@ export default function AtdField(props: { user: User }) {
           <AlertDescription display="block">
             Kindly enter the 4 digit code provided to check-in to SST Inc.
           </AlertDescription>
-          <HStack onKeyDown={onCodeKeyDown}>
-            <PinInput
-              otp
-              type="alphanumeric"
-              size="xl"
-              value={code}
-              onChange={onCodeChange}
-              isInvalid={status === "Invalid"}
-            >
-              {[...Array(4)].map((_, i) => (
-                <PinInputField style={{ fontSize: "2em" }} key={i} />
-              ))}
-            </PinInput>
-          </HStack>
+          <Box>
+            <HStack onKeyDown={onCodeKeyDown}>
+              <PinInput
+                otp
+                type="alphanumeric"
+                size="xl"
+                value={code}
+                onChange={onCodeChange}
+                isInvalid={status === "Invalid"}
+              >
+                {[...Array(4)].map((_, i) => (
+                  <PinInputField
+                    style={{ fontSize: "2em" }}
+                    borderColor={useCustomColor("blackAlpha.400", null)}
+                    _hover={{
+                      borderColor: useCustomColor(
+                        "blackAlpha.500",
+                        "whiteAlpha.500"
+                      ),
+                    }}
+                    key={i}
+                  />
+                ))}
+              </PinInput>
+            </HStack>
+          </Box>
           <ButtonGroup isAttached width="100%">
             <Button
               isFullWidth
@@ -154,7 +168,7 @@ export default function AtdField(props: { user: User }) {
             >
               {status}
             </Button>
-            {props.user?.role >= UserRole.ExCo ? (
+            {user?.role >= UserRole.ExCo ? (
               <IconButton
                 onClick={onOpen}
                 aria-label="View Key Code"

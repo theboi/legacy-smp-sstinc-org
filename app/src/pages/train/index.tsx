@@ -1,139 +1,112 @@
 import {
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
+  Avatar,
   Box,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
+  HStack,
   Image,
-  Button,
-  Center,
-  Heading,
+  Link as ChakraLink,
+  LinkBox,
+  LinkOverlay,
+  Text,
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { User } from "../../model/user";
-import AtdField from "../../components/atd";
-import { useColor } from "../../extensions/chakra";
-import { Training, trainProvider, Vocation } from "../../model/train";
+import { getTrainAPI } from "../api/v1/train/courses";
+import NextLink from "next/link";
+import { Course } from "../../typings/train";
 
-export default function TrainPage(props: { user: User }) {
-  const [vocInd, setVocInd] = useState(0);
-  const [currentDid, setCurrentDid] = useState("");
-  const [voc, setVoc] = useState<Vocation[]>();
-
-  useEffect(() => {
-    (async () => {
-      setVoc(await trainProvider.vocations);
-    })();
-  });
-
-  const courseDropdown = (
-    <Menu>
-      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-        Course: {voc[vocInd].subject}
-      </MenuButton>
-      <MenuList>
-        {voc.map((e, i) => (
-          <MenuItem minH="48px" onClick={() => setVocInd(i)}>
-            <Image
-              boxSize="2rem"
-              borderRadius="full"
-              src="https://placekitten.com/100/100"
-              alt="Fluffybuns the destroyer"
-              mr="12px"
-            />
-            <span>{e.subject}</span>
-          </MenuItem>
-        ))}
-      </MenuList>
-    </Menu>
-  );
-
+export default function TrainPage({ courses }: { courses: Course[] }) {
   return (
-    <div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
-        <div style={{ flexBasis: 300, flexGrow: 1 }}>
-          <AtdField user={props.user} />
-          {courseDropdown}
-          <TrainingSelectBar
-            trainings={voc[vocInd].trainings}
-            currentAid={currentDid}
-            setCurrentAid={setCurrentDid}
-          />
-        </div>
-        <TheatreLessonContent />
-      </div>
-    </div>
-  );
-}
-
-function TrainingSelectBar(props: {
-  trainings: Training[];
-  currentAid: string;
-  setCurrentAid: Dispatch<SetStateAction<string>>;
-}) {
-  return (
-    <Accordion allowToggle>
-      {props.trainings.map((l) => (
-        <AccordionItem key={l.tid}>
-          <h2>
-            <AccordionButton
-              onClick={() => props.setCurrentAid(`${l.lid}_001`)}
-              style={{ borderRadius: "var(--chakra-radii-md)" }}
-              _expanded={{
-                color: "var(--chakra-colors-teal-200)",
-                bg: "rgba(48, 140, 122, 0.3)",
-              }}
-            >
-              <Box flex="1" textAlign="left">
-                {l.title}
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          {l.assignments.map((a) => (
-            <AccordionPanel
-              onClick={() => props.setCurrentAid(a.aid)}
-              key={a.aid}
-              pb={4}
-              pl={10}
-              style={
-                props.currentAid === a.aid
-                  ? {
-                      color: "var(--chakra-colors-teal-200)",
-                      background: "rgba(48, 140, 122, 0.3)",
-                    }
-                  : {}
-              }
-            >
-              {a.title}
-            </AccordionPanel>
-          ))}
-        </AccordionItem>
+    <Box>
+      {courses.map((c) => (
+        <LinkBox
+          key={c.cid}
+          as="article"
+          maxW="sm"
+          p="5"
+          borderWidth="1px"
+          rounded="md"
+        >
+          <NextLink href={c.cpath}>
+            <LinkOverlay href={c.cpath}>
+              <HStack>
+                <Image
+                  borderRadius="full"
+                  boxSize="50px"
+                  src={`/assets/train/${c.cid}.png`}
+                  alt={c.subject}
+                />
+                <Text>{c.subject}</Text>
+              </HStack>
+            </LinkOverlay>
+          </NextLink>
+        </LinkBox>
       ))}
-    </Accordion>
-  );
-}
-
-function TheatreLessonContent() {
-  return (
-    <Box
-      style={{
-        flexBasis: "50vw",
-        flexGrow: 9999,
-        aspectRatio: "1920/1080",
-        backgroundColor: useColor("bg2"),
-      }}
-    >
-      <Center style={{ height: "100%", flexDirection: "column" }}>
-        <Heading>🤫</Heading>
-        <Heading size="sm">Coming Soon...</Heading>
-      </Center>
     </Box>
   );
+  // const [index, setIndex] = useState(0);
+  // const [assignment, setAssignment] = useState<Assignment>();
+
+  // const [courses, setCourse] = useStateWithCallback<{ [cid: string]: Course }>(
+  //   undefined,
+  //   () => {
+  //     if (courses === undefined) TrainProvider.getCourses(setCourse);
+  //   }
+  // );
+
+  // return (
+  //   <div>
+  //     <div style={{ display: "flex", flexWrap: "wrap", gap: 20 }}>
+  //       <Box style={{ flexBasis: 300, flexGrow: 1 }}>
+  //         <AtdField />
+  //         <Box>
+  //           <CourseDropdown
+  //             index={index}
+  //             setIndex={setIndex}
+  //             courses={Object.values(courses ?? {})}
+  //           />
+  //           <TrainingSelectBar
+  //             lessons={Object.values(
+  //               Object.values(courses ?? {})[index]?.lessons ?? {}
+  //             )}
+  //             assignment={assignment}
+  //             setAssignment={setAssignment}
+  //           />
+  //         </Box>
+  //       </Box>
+  //       <AssignmentContent assignment={assignment} />
+  //     </div>
+  //   </div>
+  // );
 }
+
+export async function getServerSideProps() {
+  return {
+    props: { courses: await getTrainAPI() },
+  };
+}
+
+// function CourseDropdown(props: {
+//   index: number;
+//   setIndex: Dispatch<SetStateAction<number>>;
+//   courses: Course[];
+// }) {
+//   return (
+//     <Menu>
+//       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+//         Course: {props.courses?.[props.index]?.subject}
+//       </MenuButton>
+//       <MenuList>
+//         {props.courses.map((e, i) => (
+//           <MenuItem key={i} minH="48px" onClick={() => props.setIndex(i)}>
+//             <Image
+//               boxSize="2rem"
+//               borderRadius="full"
+//               src="https://placekitten.com/100/100"
+//               alt="Fluffybuns the destroyer"
+//               mr="12px"
+//             />
+//             <span>{e.subject}</span>
+//           </MenuItem>
+//         ))}
+//       </MenuList>
+//     </Menu>
+//   );
+// }
