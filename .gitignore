@@ -39,3 +39,4 @@ sld/dist
 sld/*.local
 sld/index.html
 sld/components.d.ts
+.env
