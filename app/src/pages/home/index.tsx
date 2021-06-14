@@ -10,7 +10,6 @@ import {
   Link as ChakraLink,
   VStack,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
 import { LinkButton } from "../../components/theme/linkButton";
 import { useColor } from "../../hooks/color";
 
