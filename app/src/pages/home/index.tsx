@@ -53,7 +53,7 @@ const Body = () => {
   return (
     <Box>
       {content.map((bodyContent) => (
-        <BodyItem bodyContent={bodyContent} key={bodyContent.id} />
+        <BodyItem bodyContent={bodyContent} key={String(bodyContent.id)} />
       ))}
     </Box>
   );
