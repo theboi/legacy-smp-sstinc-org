@@ -27,12 +27,17 @@ A custom URL shortener and portal for convenient sharing of long URLs by the SST
 
 By simply entering a dynamic 4-digit code (or static QR Code), SST Inc students can independently take their own attendance swiftly without much hassle.
 
+### Test Scores (WIP)
+
+View your Test Scores by going into your Profile.
+
 ## Development
 
 - Clone (or download) the project from GitHub.
 - Create a new Firebase project (console.firebase.google.com).
 - Create a `.env.local` file.
 - Set `GOOGLE_API_KEY='YOUR_API_KEY'`.
+- Set `NOTION_API_KEY='YOUR_API_KEY'`.
 - Run the project with `npm run dev` via CLI.
 
 ## License
@@ -41,4 +46,5 @@ This open sourced repository is licensed under the GNU General Public License v3
 
 ## Credits
 
-Made with :heart: by [Ryan The](https://ryanthe.com/) @theboi using Next.js, React and TypeScript.
+Made with :heart: by [Ryan The](https://ryanthe.com/) and [Ethan Chew](https://ethanchew.me/) using Next.js, React and TypeScript.
+Telegram Bot made with :heart: by [Granwyn Tan](https://granwyntan.github.io/)
