@@ -3,11 +3,11 @@ import { Page } from "@notionhq/client/build/src/api-types";
 import { NextApiResponse, NextApiRequest } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { [key: string]: string };
-  res.status(200).json(await putUserSignUp(slug));
+  const { slug } = req.query as { [k: string]: string };
+  res.status(200).json(await postUserSignUpAPI(slug));
 };
 
-export const putUserSignUp = async (slug: string): Promise<Page> => {
+export const postUserSignUpAPI = async (slug: string): Promise<Page> => {
   const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
   const response = await notion.databases.query({

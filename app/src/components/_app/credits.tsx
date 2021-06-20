@@ -12,7 +12,7 @@ import { ReactNode } from "react";
 interface ColorModeOption {
   icon: ReactNode;
   ariaLabel: string;
-  key: string;
+  k: string;
 }
 
 export const Credits = () => {
@@ -63,7 +63,7 @@ export const Credits = () => {
       {/* <ButtonGroup size="sm" isAttached variant="outline">
         {colorModeOptions.map((o) => (
           <IconButton
-          variant={o.key === colorMode && "solid"}
+          variant={o.key === colorMode ? "solid" : undefined}
           colorScheme="blue"
           onClick={toggleColorMode}
           aria-label={o.ariaLabel}

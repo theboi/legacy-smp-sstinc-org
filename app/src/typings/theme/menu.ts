@@ -41,11 +41,9 @@ class MenuItemOption extends MenuItem {
 
 class MenuItemGroup extends MenuItem {
   readonly element = Box;
-  title: string;
 
-  constructor(title: string, children: MenuItem[], minRole?: UserRole) {
+  constructor(children: MenuItem[], minRole?: UserRole) {
     super();
-    this.title = title;
     this.children = children;
     this.minRole = minRole;
   }

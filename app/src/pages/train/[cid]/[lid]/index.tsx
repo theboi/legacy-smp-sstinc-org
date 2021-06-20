@@ -1,39 +1,22 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Box,
   Button,
   Heading,
   Link as ChakraLink,
-  Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Skeleton,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  useDisclosure,
-  useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import MarkdownIt from "markdown-it";
 import { GetServerSidePropsContext } from "next";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import useSWR from "swr";
 import { LinkButton } from "../../../../components/theme/linkButton";
-import { useColor } from "../../../../hooks/color";
 import { useDesktopMediaQuery } from "../../../../hooks/mediaQuery";
 import { Assignment, AssignmentType, Lesson } from "../../../../typings/train";
 import { getLessonAPI } from "../../../api/v1/train/lesson";
@@ -64,20 +47,21 @@ export default function LessonPage({ lesson }: { lesson: Lesson }) {
           }
         >
           {lesson?.assignments.map((a, i) => (
-            <NextLink href={`?a=${i}`} shallow>
+            <NextLink key={a.aid} href={`?a=${i}`} shallow>
               <ChakraLink href={`?a=${i}`} _hover={{ textDecor: "none" }}>
                 <Tab
-                  key={a.aid}
                   sx={
-                    isDesktop && {
-                      width: "120%",
-                      display: "block",
-                      textAlign: "left",
-                      whiteSpace: "nowrap",
-                      borderLeftRadius: 0,
-                      ml: -10,
-                      pl: 10,
-                    }
+                    isDesktop
+                      ? {
+                          width: "120%",
+                          display: "block",
+                          textAlign: "left",
+                          whiteSpace: "nowrap",
+                          borderLeftRadius: 0,
+                          ml: -10,
+                          pl: 10,
+                        }
+                      : undefined
                   }
                 >
                   {a.title}
@@ -128,7 +112,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const { cid, lid } = ctx.params as { [k: string]: string };
 
   return {
-    props: { lesson: await getLessonAPI(cid, lid) },
+    props: { lesson: (await getLessonAPI({ cid, lid })).data },
   };
 }
 

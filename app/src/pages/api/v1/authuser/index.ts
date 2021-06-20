@@ -1,57 +1,29 @@
-import { Client } from "@notionhq/client/build/src";
 import {
   Page,
   URLPropertyValue,
+  EmailPropertyValue,
   NumberPropertyValue,
   TitlePropertyValue,
   RichTextPropertyValue,
   SelectPropertyValue,
 } from "@notionhq/client/build/src/api-types";
 import { NextApiResponse, NextApiRequest } from "next";
-import { User, UserRank, UserRole } from "../../../../typings/user";
+import { AuthUser, UserRank, UserRole } from "../../../../typings/user";
 import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import { handleAuth } from "../../../../utils/api";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug } = req.query as { [k: string]: string };
-  const data = await handleAuth(req, getUserAPI, { slug });
+  const data = await handleAuth(req, getAuthUserAPI);
   res.status(data.status.code).json(data.data);
 };
 
-type GetUserAPIResponse = User;
+type GetAuthUserAPIResponse = AuthUser;
 
-export const getUserAPI = async ({
-  slug,
+export const getAuthUserAPI = async ({
+  user,
 }: {
-  slug: string;
-}): Promise<APIResponse<GetUserAPIResponse>> => {
-  const notion = new Client({ auth: process.env.NOTION_API_KEY });
-
-  let pn = "";
-  if (slug[0] === "@") {
-    pn = "Handle";
-  } else if (slug.startsWith("fb_")) {
-    pn = "Firebase ID";
-  } else if (slug.startsWith("tgb_")) {
-    pn = "Telegram ID";
-  } else if (slug.startsWith("inc_")) {
-    pn = "Inc ID";
-  } else {
-    pn = "Email";
-  }
-
-  if (slug[0] === "@") slug = slug.slice(1);
-  const res = await notion.databases.query({
-    database_id: "c460fd270be44858a74395684f6e6897",
-    filter: {
-      property: pn,
-      text: {
-        equals: slug,
-      },
-    },
-  });
-
-  const user = res.results[0];
+  user: Page;
+}): Promise<APIResponse<GetAuthUserAPIResponse>> => {
   return {
     status: HTTPStatusCode._200,
     data: {
@@ -72,6 +44,14 @@ export const getUserAPI = async ({
       ],
       points: (user.properties["Points"] as NumberPropertyValue)?.number ?? 0,
       photoURL: (user.properties["Photo URL"] as URLPropertyValue)?.url ?? "",
+      email: (user.properties["Email"] as EmailPropertyValue)?.email ?? "",
+      batch: (user.properties["Points"] as NumberPropertyValue)?.number ?? 0,
+      firebaseId:
+        (user.properties["Firebase"] as RichTextPropertyValue)?.rich_text[0]
+          .plain_text ?? "",
+      telegramId:
+        (user.properties["Telegram"] as RichTextPropertyValue)?.rich_text[0]
+          .plain_text ?? "",
     },
   };
 };

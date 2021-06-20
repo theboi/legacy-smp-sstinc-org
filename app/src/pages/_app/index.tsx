@@ -28,16 +28,16 @@ import style from "./style.module.css";
 
 import theme from "../../theme";
 
-import { UserRole } from "../../objects/user";
 import ErrorPage from "../404";
-import { AuthProvider, useAuth } from "../../services/auth";
+import { AuthContent, AuthProvider, useAuth } from "../../hooks/auth";
 import NavBar from "../../components/_app/navBar";
 import { Credits } from "../../components/_app/credits";
 import { SWRConfig } from "swr";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useColor } from "../../hooks/color";
+import { UserRole } from "../../typings/user";
 
-export const authPaths: { [key: string]: UserRole } = {
+export const authPaths: { [k: string]: UserRole } = {
   "/url": UserRole.ExCo,
   "/train": UserRole.Trainee,
 };
@@ -69,6 +69,7 @@ export function App({ Component, pageProps }: AppProps) {
     onOpen();
     (async () => {
       await auth.checkForAuth();
+
       onClose();
     })();
   }, []);
@@ -83,7 +84,7 @@ export function App({ Component, pageProps }: AppProps) {
         <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
-      {hostname === "go.sstinc.org" && (
+      {hostname === "go.sstinc.org" ? (
         <Center
           sx={{
             position: "absolute",
@@ -104,15 +105,15 @@ export function App({ Component, pageProps }: AppProps) {
             instead.
           </Heading>
         </Center>
-      )}
+      ) : undefined}
       <AppScaffold>
         <div className={style.content}>
           {(() => {
             switch (true) {
               case authPaths[router.pathname] === undefined:
                 return <Component {...pageProps} />;
-              // case user?.role === undefined:
-              //   return <ProfilePage />;
+              case user?.role === undefined:
+                return <Box></Box>;
               case user?.role >= authPaths[router.pathname]: // isAuth
                 return <Component {...pageProps} />;
               default:
@@ -142,12 +143,31 @@ export function App({ Component, pageProps }: AppProps) {
   );
 }
 
+export const get = async (
+  url: string,
+  auth: AuthContent
+): Promise<AxiosResponse<any>> => {
+  const token = await auth.getToken();
+
+  const headers = url.startsWith("/api/v1")
+    ? {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
+    : {};
+
+  return await axios.get(url, headers);
+};
+
 const AppScaffold = ({ children }: { children: React.ReactNode }) => {
   const toast = useToast();
+  const { auth } = useAuth();
+
   const linkColor = useColor("link");
   const swrConfig = {
     fetcher: async (url: string) => {
-      const res = await axios.get(url);
+      const res = await get(url, auth);
       if (!(res.status >= 200 && res.status <= 299)) {
         throw Error("A network error occurred");
       }
@@ -200,3 +220,12 @@ const AppScaffold = ({ children }: { children: React.ReactNode }) => {
     </SWRConfig>
   );
 };
+
+// export async function getServerSideProps() {
+//   return {
+//     redirect: {
+//       destination: "/join",
+//       permanent: false,
+//     },
+//   }
+// }

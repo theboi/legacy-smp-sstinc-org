@@ -1,5 +1,5 @@
 import { Button, VStack } from "@chakra-ui/react";
-import { useAuth } from "../../services/auth";
+import { useAuth } from "../../hooks/auth";
 
 export default function JoinPage() {
   const { auth } = useAuth();

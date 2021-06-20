@@ -3,17 +3,18 @@ import firebase from "firebase/app";
 import { createContext, useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 import { firebaseConfig } from "../../model/provider";
-import { User } from "../../objects/user";
-import axios from "axios";
+import { User } from "../../typings/user";
 
 require("firebase/auth");
 
-interface AuthContent {
+export interface AuthContent {
   signIn: () => {};
   signUp: () => {};
   signOut: () => {};
   checkForAuth: () => {};
+  getToken: () => {};
 }
+
 const AuthContext = createContext<AuthContent>(null);
 
 export const AuthProvider = (props) => {
@@ -22,6 +23,7 @@ export const AuthProvider = (props) => {
     signUp: props.signUp || signUp,
     signOut: props.signOut || signOut,
     checkForAuth: props.checkForAuth || checkForAuth,
+    getToken: props.getToken || getToken,
   };
 
   return (
@@ -30,10 +32,10 @@ export const AuthProvider = (props) => {
 };
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User>();
-  const [email, setEmail] = useState<string>();
-
-  const { data, error } = useSWR<Page, Error>(`/api/v1/user/${email}`);
+  const [fbUser, setFbUser] = useState<firebase.User>();
+  const { data: user, error } = useSWR<User, Error>(
+    fbUser && "/api/v1/authuser/"
+  );
 
   useEffect(() => {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -41,14 +43,13 @@ export const useAuth = () => {
     const unsubscribe = firebase
       .auth()
       .onIdTokenChanged((fbUser: firebase.User) => {
-        setEmail(fbUser?.email);
-        setUser(fbUser === null ? null : new User(fbUser, data));
+        setFbUser(fbUser);
       });
 
     return unsubscribe;
-  }, [data]);
+  }, []);
 
-  return { auth: useContext(AuthContext), user: user, error: error };
+  return { auth: useContext(AuthContext), user, fbUser, error };
 };
 
 function signUp(email) {}
@@ -66,16 +67,6 @@ async function signIn(): Promise<void> {
     });
 }
 
-/** Call after signIn redirect */
-async function checkForAuth(): Promise<void> {
-  await firebase
-    .auth()
-    .getRedirectResult()
-    .catch((e) => {
-      console.warn(`${e.message} (getRedirectResult)`);
-    });
-}
-
 /**
  * Signs out of Google account
  * @returns Whether signOut successful
@@ -86,4 +77,13 @@ async function signOut(): Promise<boolean> {
     .signOut()
     .then(() => true)
     .catch(() => false);
+}
+
+/** Call after signIn redirect */
+async function checkForAuth(): Promise<void> {
+  await firebase.auth().getRedirectResult();
+}
+
+async function getToken(): Promise<string> {
+  return await firebase.auth().currentUser.getIdToken(true);
 }

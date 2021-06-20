@@ -5,7 +5,7 @@ import {
   MenuItemOption,
 } from "../../../typings/theme/menu";
 import { Box, MenuList as ChakraMenuList } from "@chakra-ui/react";
-import { useAuth } from "../../../services/auth";
+import { useAuth } from "../../../hooks/auth";
 import Link from "../link";
 
 export default function MenuList({ menuItems }: { menuItems: MenuItem[] }) {
@@ -14,15 +14,12 @@ export default function MenuList({ menuItems }: { menuItems: MenuItem[] }) {
   return (
     <ChakraMenuList>
       {menuItems.map(function mapNavItems(e, i) {
-        return user?.role < e.minRole ? null : (
-          <MenuListLinkWrapper e={e}>
+        return user?.role < e.minRole ? undefined : (
+          <MenuListLinkWrapper e={e} key={i}>
             <e.element
               key={i}
-              icon={e instanceof MenuItemOption && e.icon}
-              title={
-                (e instanceof MenuItemGroup || e instanceof MenuItemNest) &&
-                e.title
-              }
+              icon={e instanceof MenuItemOption ? e.icon : undefined}
+              title={e instanceof MenuItemNest ? e.title : undefined}
             >
               {e instanceof MenuItemGroup || e instanceof MenuItemNest
                 ? (e.children as MenuItem[]).map(mapNavItems)

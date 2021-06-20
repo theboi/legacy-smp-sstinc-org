@@ -1,12 +1,13 @@
 import { Avatar, IconButton, Menu, MenuButton } from "@chakra-ui/react";
 import { FaBook, FaBug, FaCog, FaLink, FaSignInAlt } from "react-icons/fa";
 import { authPaths } from "../../pages/_app";
-import { useAuth } from "../../services/auth";
+import { useAuth } from "../../hooks/auth";
 import {
   MenuItem,
   MenuItemDivider,
   MenuItemNest,
   MenuItemOption,
+  MenuItemGroup,
 } from "../../typings/theme/menu";
 import MenuList from "../theme/menuList";
 
@@ -30,6 +31,10 @@ export default function NavMenu() {
       "Bug Report",
       "https://github.com/theboi/smp-sstinc-org/issues",
       <FaBug />
+    ),
+    new MenuItemGroup(
+      [new MenuItemOption("URL Shortener", "/url", <FaLink />)],
+      authPaths["/url"]
     ),
     new MenuItemNest(
       "ExCo",

@@ -30,7 +30,7 @@ import {
 import { User, UserRole } from "../../objects/user";
 import { provider } from "../../model/provider";
 import { useColor, useCustomColor } from "../../hooks/color";
-import { useAuth } from "../../services/auth";
+import { useAuth } from "../../hooks/auth";
 
 export default function AtdField() {
   const [time, setTime] = useState(0);
@@ -126,7 +126,7 @@ export default function AtdField() {
       </Modal>
       <Alert status="info">
         <Box style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <AlertTitle fontSize={"xl"} >Attendance</AlertTitle>
+          <AlertTitle fontSize={"xl"}>Attendance</AlertTitle>
           <AlertDescription display="block">
             Kindly enter the 4 digit code provided to check-in to SST Inc.
           </AlertDescription>
@@ -134,47 +134,47 @@ export default function AtdField() {
             <Box>
               <HStack onKeyDown={onCodeKeyDown}>
                 <PinInput
-                    otp
-                    type="alphanumeric"
-                    size="xl"
-                    value={code}
-                    onChange={onCodeChange}
-                    isInvalid={status === "Invalid"}
+                  otp
+                  type="alphanumeric"
+                  size="xl"
+                  value={code}
+                  onChange={onCodeChange}
+                  isInvalid={status === "Invalid"}
                 >
                   {[...Array(4)].map((_, i) => (
-                      <PinInputField
-                          style={{ fontSize: "2em" }}
-                          borderColor={useCustomColor("blackAlpha.400", null)}
-                          _hover={{
-                            borderColor: useCustomColor(
-                                "blackAlpha.500",
-                                "whiteAlpha.500"
-                            ),
-                          }}
-                          key={i}
-                      />
+                    <PinInputField
+                      style={{ fontSize: "2em" }}
+                      borderColor={useCustomColor("blackAlpha.400", null)}
+                      _hover={{
+                        borderColor: useCustomColor(
+                          "blackAlpha.500",
+                          "whiteAlpha.500"
+                        ),
+                      }}
+                      key={i}
+                    />
                   ))}
                 </PinInput>
               </HStack>
             </Box>
             <ButtonGroup isAttached width="100%">
               <Button
-                  isFullWidth
-                  onClick={confirmCode}
-                  disabled={status !== "Confirm" || code.length !== 4}
-                  colorScheme={
-                    { Error: "red", Invalid: "red", Success: "green" }[status] ??
-                    "blue"
-                  }
+                isFullWidth
+                onClick={confirmCode}
+                disabled={status !== "Confirm" || code.length !== 4}
+                colorScheme={
+                  { Error: "red", Invalid: "red", Success: "green" }[status] ??
+                  "blue"
+                }
               >
                 {status}
               </Button>
               {user?.role >= UserRole.ExCo ? (
-                  <IconButton
-                      onClick={onOpen}
-                      aria-label="View Key Code"
-                      icon={<FaKey />}
-                  />
+                <IconButton
+                  onClick={onOpen}
+                  aria-label="View Key Code"
+                  icon={<FaKey />}
+                />
               ) : null}
             </ButtonGroup>
           </Box>

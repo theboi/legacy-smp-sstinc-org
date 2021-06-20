@@ -11,7 +11,7 @@ type DispatchWithCallback<A> = (value: A, callback: Callback<A>) => void;
 
 type Callback<S> = (state: S) => void | (() => void | undefined);
 
-export const useStateWithCallback = <S>(
+export const useStateWithCallback = <S,>(
   initialState: S,
   callback: Callback<S>
 ): [S, Dispatch<SetStateAction<S>>] => {
@@ -22,7 +22,7 @@ export const useStateWithCallback = <S>(
   return [state, setState];
 };
 
-export const useStateWithCallbackInstant = <S>(
+export const useStateWithCallbackInstant = <S,>(
   initialState: S,
   callback: Callback<S>
 ): [S, Dispatch<SetStateAction<S>>] => {
@@ -33,7 +33,7 @@ export const useStateWithCallbackInstant = <S>(
   return [state, setState];
 };
 
-export const useStateWithCallbackLazy = <S>(
+export const useStateWithCallbackLazy = <S,>(
   initialState: S
 ): [S, DispatchWithCallback<SetStateAction<S>>] => {
   const callbackRef = useRef(null);

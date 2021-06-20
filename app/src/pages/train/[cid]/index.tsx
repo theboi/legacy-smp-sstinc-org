@@ -20,6 +20,6 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const { cid } = ctx.params as { [k: string]: string };
 
   return {
-    props: { course: await getCourseAPI(cid) },
+    props: { course: (await getCourseAPI({ cid })).data },
   };
 }

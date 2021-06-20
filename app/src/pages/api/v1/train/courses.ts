@@ -5,13 +5,15 @@ import {
   getRepoContentPath,
   OctokitRepoContentDataType,
 } from "../../../../services/train";
+import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import { Course, CourseSubject } from "../../../../typings/train";
+import { handleAuth } from "../../../../utils/api";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  res.status(200).json(await getTrainAPI());
+  res.status(200).json(await handleAuth(req, getTrainAPI));
 };
 
-export const getTrainAPI = async (): Promise<Course[]> => {
+export const getTrainAPI = async (): Promise<APIResponse<Course[]>> => {
   const octokit = new Octokit();
 
   const res = await octokit.request(getRepoContentPath, {
@@ -20,12 +22,15 @@ export const getTrainAPI = async (): Promise<Course[]> => {
     path: `/data/train`,
   });
 
-  return Array.from(
-    res.data as OctokitRepoContentDataType,
-    (e): Course => ({
-      cid: e.name,
-      subject: CourseSubject[e.name],
-      cpath: e.path.slice("data".length),
-    })
-  );
+  return {
+    status: HTTPStatusCode._200,
+    data: Array.from(
+      res.data as OctokitRepoContentDataType,
+      (e): Course => ({
+        cid: e.name,
+        subject: CourseSubject[e.name],
+        cpath: e.path.slice("data".length),
+      })
+    ),
+  };
 };

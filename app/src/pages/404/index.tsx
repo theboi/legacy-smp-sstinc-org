@@ -15,7 +15,7 @@ export default function ErrorPage({ status = 404 }: { status: number }) {
     if (!imgNum) setImgNum(1 + Math.floor(Math.random() * 4));
   }, []);
 
-  const codes: { [key: number]: ErrorCode } = {
+  const codes: { [k: number]: ErrorCode } = {
     403: {
       msg: "For Biden",
       cap: "Not You",

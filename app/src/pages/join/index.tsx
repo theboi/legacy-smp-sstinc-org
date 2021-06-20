@@ -25,7 +25,7 @@ import { User } from "../../objects/user";
 import { useColor } from "../../hooks/color";
 import { useGithubRawData } from "../../hooks/github";
 import MarkdownIt from "markdown-it";
-import { useAuth } from "../../services/auth";
+import { useAuth } from "../../hooks/auth";
 import { useRouter } from "next/router";
 
 interface JoinOption {

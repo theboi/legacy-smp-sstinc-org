@@ -1,50 +1,57 @@
 import { Client } from "@notionhq/client/build/src";
-import { RichTextPropertyValue } from "@notionhq/client/build/src/api-types";
+import {
+  Page,
+  RichTextPropertyValue,
+} from "@notionhq/client/build/src/api-types";
 import { NextApiResponse, NextApiRequest } from "next";
-import { APIResponse } from "../../../../typings/api";
+import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import crypto from "crypto";
+import { handleAuth } from "../../../../utils/api";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { tid, handle, pid } = req.query as { [key: string]: string };
-  const { status, data } = await patchTelegramUserAPI(tid, handle, pid);
-  res.status(status).json(data);
+  const { tid, handle } = req.query as { [k: string]: string };
+  const data = await handleAuth(req, patchVerifyTelegramUserAPI, {
+    tid,
+    handle,
+  });
+  res.status(data.status.code).json(data);
 };
 
-interface PatchTelegramUserAPIResponse {
+interface PatchVerifyTelegramUserAPIResponse {
   tid: string;
   handle: string;
-  pid: string;
   telegram: { [k: string]: string };
 }
 
 /**
- * Patches database with verified Telegram Bot (tgb) user_id
+ * [PATCH] Verify database with verified Telegram Bot (tgb) user_id
  * @param tid Telegram ID obtained from telegram bot as 10 digit number
  * @param handle Telegram Handle obtained from telegram bot as "handle" (without "@")
- * @param pid Page ID obtained from /api/v1/user/[slug]
- * @returns tid, handle, pid, telegram
+ * @returns tid, handle, telegram
  */
-export const patchTelegramUserAPI = async (
-  tid: string,
-  handle: string,
-  pid: string
-): Promise<APIResponse<PatchTelegramUserAPIResponse>> => {
+export const patchVerifyTelegramUserAPI = async ({
+  user,
+  tid,
+  handle,
+}: {
+  user: Page;
+  tid: string;
+  handle: string;
+}): Promise<APIResponse<PatchVerifyTelegramUserAPIResponse>> => {
   const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
-  const nonce = crypto.randomBytes(16).toString("base64");
-
-  const retRes = await notion.pages.retrieve({ page_id: pid });
   const content: { [k: string]: string } = JSON.parse(
-    (retRes.properties["Telegram"] as RichTextPropertyValue).rich_text[0]
+    (user.properties["Telegram"] as RichTextPropertyValue).rich_text[0]
       ?.plain_text || "{}"
   );
+  const nonce = crypto.randomBytes(16).toString("base64");
   content[`*${tid}_${handle}`] = crypto
     .createHash("sha256")
     .update(`${nonce}${tid}`)
     .digest("base64");
 
   const updRes = await notion.pages.update({
-    page_id: pid,
+    page_id: user.id,
     properties: {
       Telegram: {
         type: "rich_text",
@@ -61,11 +68,10 @@ export const patchTelegramUserAPI = async (
   });
 
   return {
-    status: 200,
+    status: HTTPStatusCode._200,
     data: {
       tid: tid,
       handle: handle,
-      pid: pid,
       telegram: JSON.parse(
         (updRes.properties["Telegram"] as RichTextPropertyValue).rich_text[0]
           ?.plain_text || "{}"
