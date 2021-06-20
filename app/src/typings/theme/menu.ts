@@ -1,10 +1,10 @@
-import { UserRole } from "../../objects/user";
 import {
   MenuItem as ChakraMenuItem,
   MenuGroup,
   MenuDivider,
   Box,
 } from "@chakra-ui/react";
+import { UserRole } from "../user";
 
 abstract class MenuItem {
   readonly element;

@@ -6,6 +6,7 @@ import { Client } from "@notionhq/client/build/src";
 import * as admin from "firebase-admin";
 import { APIResponse, HTTPStatusCode } from "../../typings/api";
 import { NextApiRequest } from "next";
+import { random } from "../misc";
 
 export const getFirebaseToken = async (
   auth: string
@@ -34,7 +35,7 @@ export const handleAuth = async <T>(
 
   if (auth === undefined) return { status: HTTPStatusCode._401 };
 
-  const notion = new Client({ auth: process.env.NOTION_API_KEY1 });
+  const notion = new Client({ auth: getNotionAPIKey() });
 
   const pn = auth.startsWith("Basic") ? "Telegram" : "Firebase";
   const key = auth.startsWith("Basic")
@@ -71,22 +72,26 @@ export const handleAuth = async <T>(
     if (content[1] > 100) return { status: HTTPStatusCode._429 };
   }
 
-  const upd = await notion.pages.update({
-    page_id: res.results[0].id,
-    properties: {
-      "Rate Limit": {
-        type: "rich_text",
-        rich_text: [
-          {
-            type: "text",
-            text: {
-              content: JSON.stringify(content),
-            },
-          },
-        ],
-      },
-    },
-  });
+  // const upd = await notion.pages.update({
+  //   page_id: res.results[0].id,
+  //   properties: {
+  //     "Rate Limit": {
+  //       type: "rich_text",
+  //       rich_text: [
+  //         {
+  //           type: "text",
+  //           text: {
+  //             content: JSON.stringify(content),
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   },
+  // });
 
-  return callback({ user: upd as Page, ...args });
+  return callback({ user: res.results[0] as Page, notion, ...args });
+};
+
+export const getNotionAPIKey = (): string => {
+  return process.env[`NOTION_API_KEY${random(1, 6)}`];
 };

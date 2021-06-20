@@ -1,6 +1,7 @@
 import { Box, Heading, useColorMode, Image } from "@chakra-ui/react";
 import style from "./style.module.css";
 import { useState, useEffect } from "react";
+import { random } from "../../utils/misc";
 
 interface ErrorCode {
   msg: string;
@@ -12,7 +13,7 @@ export default function ErrorPage({ status = 404 }: { status: number }) {
   const [imgNum, setImgNum] = useState<number>();
 
   useEffect(() => {
-    if (!imgNum) setImgNum(1 + Math.floor(Math.random() * 4));
+    if (!imgNum) setImgNum(random(1, 5));
   }, []);
 
   const codes: { [k: number]: ErrorCode } = {

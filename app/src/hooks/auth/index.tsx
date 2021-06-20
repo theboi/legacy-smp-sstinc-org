@@ -1,8 +1,7 @@
-import { Page } from "@notionhq/client/build/src/api-types";
 import firebase from "firebase/app";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import useSWR from "swr";
-import { firebaseConfig } from "../../model/provider";
+import { getSWRFetcher } from "../../pages/_app";
 import { User } from "../../typings/user";
 
 require("firebase/auth");
@@ -11,79 +10,82 @@ export interface AuthContent {
   signIn: () => {};
   signUp: () => {};
   signOut: () => {};
-  checkForAuth: () => {};
-  getToken: () => {};
+  initializeApp: () => Promise<void>;
+  getToken: () => Promise<string>;
+  user: User;
+  fbUser: firebase.User;
 }
+
+export const firebaseConfig = {
+  apiKey: process.env.GOOGLE_API_KEY,
+  authDomain: "smp-sstinc-org.firebaseapp.com",
+  databaseURL: "",
+  projectId: "smp-sstinc-org",
+  storageBucket: "smp-sstinc-org.appspot.com",
+  messagingSenderId: "1044616085398",
+  appId: "1:1044616085398:web:bb1e2a3014c461597ba7b7",
+  measurementId: "G-TW0Z3KRJ2D",
+};
 
 const AuthContext = createContext<AuthContent>(null);
 
 export const AuthProvider = (props) => {
+  const [fbUser, setFbUser] = useState<firebase.User>();
+  const { data: user } = useSWR<User, Error>(
+    fbUser && "/api/v1/authuser/",
+    getSWRFetcher(getToken)
+  );
+
   const value = {
     signIn: props.signIn || signIn,
     signUp: props.signUp || signUp,
     signOut: props.signOut || signOut,
-    checkForAuth: props.checkForAuth || checkForAuth,
+    initializeApp: props.initializeApp || initializeApp,
     getToken: props.getToken || getToken,
+    user,
+    fbUser,
   };
+
+  function signUp(email) {}
+
+  /** Call method when sign in, remember to call initializeApp when loading page from redirect. */
+  async function signIn(): Promise<void> {
+    return firebase
+      .auth()
+      .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() =>
+        firebase
+          .auth()
+          .signInWithRedirect(new firebase.auth.GoogleAuthProvider())
+      )
+      .catch((e) => {
+        console.error(`${e.message} (signInWithRedirect)`);
+      });
+  }
+
+  async function signOut(): Promise<void> {
+    await firebase.auth().signOut();
+  }
+
+  /**
+   * Call once during app start-up
+   */
+  async function initializeApp(): Promise<void> {
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    await firebase.auth().getRedirectResult();
+    firebase.auth().onIdTokenChanged((fbUser: firebase.User) => {
+      setFbUser(fbUser);
+    });
+    setFbUser(firebase.auth().currentUser);
+  }
+
+  function getToken(): Promise<string> {
+    return firebase.auth().currentUser.getIdToken(true);
+  }
 
   return (
     <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const [fbUser, setFbUser] = useState<firebase.User>();
-  const { data: user, error } = useSWR<User, Error>(
-    fbUser && "/api/v1/authuser/"
-  );
-
-  useEffect(() => {
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-
-    const unsubscribe = firebase
-      .auth()
-      .onIdTokenChanged((fbUser: firebase.User) => {
-        setFbUser(fbUser);
-      });
-
-    return unsubscribe;
-  }, []);
-
-  return { auth: useContext(AuthContext), user, fbUser, error };
-};
-
-function signUp(email) {}
-
-/** Call method when sign in, remember to call checkForAuth when loading page from redirect. */
-async function signIn(): Promise<void> {
-  return firebase
-    .auth()
-    .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(() =>
-      firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
-    )
-    .catch((e) => {
-      console.error(`${e.message} (signInWithRedirect)`);
-    });
-}
-
-/**
- * Signs out of Google account
- * @returns Whether signOut successful
- */
-async function signOut(): Promise<boolean> {
-  return firebase
-    .auth()
-    .signOut()
-    .then(() => true)
-    .catch(() => false);
-}
-
-/** Call after signIn redirect */
-async function checkForAuth(): Promise<void> {
-  await firebase.auth().getRedirectResult();
-}
-
-async function getToken(): Promise<string> {
-  return await firebase.auth().currentUser.getIdToken(true);
-}
+export const useAuth = () => useContext(AuthContext);

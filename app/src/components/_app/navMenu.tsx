@@ -12,12 +12,12 @@ import {
 import MenuList from "../theme/menuList";
 
 export default function NavMenu() {
-  const { user, auth } = useAuth();
+  const { user, signIn } = useAuth();
 
   const navItems: MenuItem[] = [
     new MenuItemOption(
       user === null ? "Sign In" : user?.name,
-      user === null ? auth.signIn : `/@${user?.handle}`,
+      user === null ? signIn : `/@${user?.handle}`,
       user === null ? (
         <FaSignInAlt />
       ) : (

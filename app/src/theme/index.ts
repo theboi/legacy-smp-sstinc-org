@@ -26,8 +26,20 @@ export default extendTheme({
     }),
   },
   colors: {
+    gold: {
+      "50": "#FFFBE5",
+      "100": "#FFF4B8",
+      "200": "#FFED8A",
+      "300": "#FFE55C",
+      "400": "#FFDE2E",
+      "500": "#FFD700",
+      "600": "#CCAC00",
+      "700": "#998100",
+      "800": "#665600",
+      "900": "#332B00",
+    },
     // black: "#0D1821",
     // white: "#D8D4F2",
   },
-  components: components,
+  components,
 });

@@ -2,10 +2,11 @@
 
 import { Client } from "@notionhq/client";
 import { DatabasesQueryResponse } from "@notionhq/client/build/src/api-endpoints";
+import { getNotionAPIKey } from "../utils/api";
 
 export class Train {
   notion = new Client({
-    auth: process.env.NOTION_API_KEY,
+    auth: getNotionAPIKey(),
   });
 
   async checkIn(code: string) {

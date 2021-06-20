@@ -5,7 +5,6 @@ import "./styles.scss";
 import "./cssreset.scss";
 import Head from "next/head";
 import NextLink from "next/link";
-
 import {
   Box,
   Center,
@@ -29,7 +28,7 @@ import style from "./style.module.css";
 import theme from "../../theme";
 
 import ErrorPage from "../404";
-import { AuthContent, AuthProvider, useAuth } from "../../hooks/auth";
+import { AuthProvider, useAuth } from "../../hooks/auth";
 import NavBar from "../../components/_app/navBar";
 import { Credits } from "../../components/_app/credits";
 import { SWRConfig } from "swr";
@@ -55,7 +54,7 @@ export default function _App(props: AppProps) {
 export function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
-  const { auth, user } = useAuth();
+  const { user, initializeApp } = useAuth();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -67,12 +66,12 @@ export function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     onOpen();
-    (async () => {
-      await auth.checkForAuth();
-
-      onClose();
-    })();
+    initializeApp();
   }, []);
+
+  useEffect(() => {
+    if (user) onClose();
+  }, [user]);
 
   return (
     <>
@@ -145,10 +144,8 @@ export function App({ Component, pageProps }: AppProps) {
 
 export const get = async (
   url: string,
-  auth: AuthContent
+  token: string
 ): Promise<AxiosResponse<any>> => {
-  const token = await auth.getToken();
-
   const headers = url.startsWith("/api/v1")
     ? {
         headers: {
@@ -162,24 +159,18 @@ export const get = async (
 
 const AppScaffold = ({ children }: { children: React.ReactNode }) => {
   const toast = useToast();
-  const { auth } = useAuth();
+  const { getToken } = useAuth();
 
   const linkColor = useColor("link");
   const swrConfig = {
-    fetcher: async (url: string) => {
-      const res = await get(url, auth);
-      if (!(res.status >= 200 && res.status <= 299)) {
-        throw Error("A network error occurred");
-      }
-      return res.data;
-    },
+    fetcher: getSWRFetcher(getToken),
     onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
       if (error.status === 404) return; // Never retry on 404.
       if (retryCount >= 3) return; // Only retry up to 3 times.
       setTimeout(() => revalidate({ retryCount }), 5000); // Retry after 5 seconds.
     },
     onError: (error, key) => {
-      console.log(error);
+      console.error(key, error);
       if (
         error.status !== 403 &&
         error.status !== 404 &&
@@ -221,11 +212,12 @@ const AppScaffold = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// export async function getServerSideProps() {
-//   return {
-//     redirect: {
-//       destination: "/join",
-//       permanent: false,
-//     },
-//   }
-// }
+export const getSWRFetcher = (getToken: () => Promise<string>) => {
+  return async (url: string) => {
+    const res = await get(url, await getToken());
+    if (!(res.status >= 200 && res.status <= 299)) {
+      throw Error("A network error occurred");
+    }
+    return res.data;
+  };
+};

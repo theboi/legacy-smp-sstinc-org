@@ -22,11 +22,11 @@ type GetUserAPIResponse = User;
 
 export const getUserAPI = async ({
   slug,
+  notion,
 }: {
   slug: string;
+  notion: Client;
 }): Promise<APIResponse<GetUserAPIResponse>> => {
-  const notion = new Client({ auth: process.env.NOTION_API_KEY });
-
   let pn = "";
   if (slug[0] === "@") {
     pn = "Handle";

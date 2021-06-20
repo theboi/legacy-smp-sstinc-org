@@ -6,7 +6,7 @@ import {
 import { NextApiResponse, NextApiRequest } from "next";
 import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import crypto from "crypto";
-import { handleAuth } from "../../../../utils/api";
+import { getNotionAPIKey, handleAuth } from "../../../../utils/api";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { tid, handle } = req.query as { [k: string]: string };
@@ -33,13 +33,13 @@ export const patchVerifyTelegramUserAPI = async ({
   user,
   tid,
   handle,
+  notion,
 }: {
   user: Page;
   tid: string;
   handle: string;
+  notion: Client;
 }): Promise<APIResponse<PatchVerifyTelegramUserAPIResponse>> => {
-  const notion = new Client({ auth: process.env.NOTION_API_KEY });
-
   const content: { [k: string]: string } = JSON.parse(
     (user.properties["Telegram"] as RichTextPropertyValue).rich_text[0]
       ?.plain_text || "{}"

@@ -22,7 +22,7 @@
 //   tid: string,
 //   handle: string
 // }): Promise<APIResponse<PatchVerifyTelegramUserAPIResponse>> => {
-//   const notion = new Client({ auth: process.env.NOTION_API_KEY });
+//   const notion = new Client({ auth: getNotionAPIKey() });
 
 //   const content: { [k: string]: string } = JSON.parse(
 //     (user.properties["Telegram"] as RichTextPropertyValue).rich_text[0]

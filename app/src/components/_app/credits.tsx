@@ -12,7 +12,7 @@ import { ReactNode } from "react";
 interface ColorModeOption {
   icon: ReactNode;
   ariaLabel: string;
-  k: string;
+  key: string;
 }
 
 export const Credits = () => {

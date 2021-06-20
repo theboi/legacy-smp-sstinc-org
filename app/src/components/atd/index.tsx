@@ -26,11 +26,9 @@ import {
   Alert,
   Box,
 } from "@chakra-ui/react";
-
-import { User, UserRole } from "../../objects/user";
-import { provider } from "../../model/provider";
 import { useColor, useCustomColor } from "../../hooks/color";
 import { useAuth } from "../../hooks/auth";
+import { UserRole } from "../../typings/user";
 
 export default function AtdField() {
   const [time, setTime] = useState(0);

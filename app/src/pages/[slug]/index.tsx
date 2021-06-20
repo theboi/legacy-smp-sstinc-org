@@ -1,7 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import { provider } from "../../model/provider";
-import { getUserAPI } from "../api/v1/user/[slug]";
-
+import useSWR from "swr";
 import {
   Avatar,
   Heading,
@@ -10,27 +8,13 @@ import {
   Box,
   HStack,
   Badge,
-  Link as ChakraLink,
-  Button,
 } from "@chakra-ui/react";
-import { LinkButton } from "../../components/theme/linkButton";
-import { useUserWithHandle } from "../../hooks/users";
-import { FaDownload } from "react-icons/fa";
+import { User, UserRole } from "../../typings/user";
+import { useAuth } from "../../hooks/auth";
 
 export default function ProfilePage({ handle }: { handle: string }) {
-  const { user } = useUserWithHandle(handle);
-  const roles = [
-    "Banned",
-    "Member",
-    "Trainee",
-    "Employee",
-    "Associate",
-    "Alumni",
-    "ExCo",
-    "Consultant",
-    "BOD",
-    "Root",
-  ];
+  const { fbUser } = useAuth();
+  const { data: user } = useSWR<User>(fbUser && `/api/v1/user/${handle}`);
 
   // Temporary Test Score
   const tempTestScore = [
@@ -60,31 +44,36 @@ export default function ProfilePage({ handle }: { handle: string }) {
           <HStack spacing={2}>
             <Heading>{user?.name}</Heading>
             <Badge
-              colorScheme={
-                roles[user?.role] == "Consultant" || roles[user?.role] == "BOD"
-                  ? "red"
-                  : roles[user?.role] == "ExCo"
-                  ? "green"
-                  : roles[user?.role] == "Root"
-                  ? "purple"
-                  : "default"
-              }
+              colorScheme={(() => {
+                if (user?.role <= 0) {
+                  return "red";
+                } else if (user?.role === 1) {
+                  return "orange";
+                } else if (user?.role <= 2) {
+                  return "yellow";
+                } else if (user?.role <= 4) {
+                  return "green";
+                } else if (user?.role <= 6) {
+                  return "blue";
+                } else if (user?.role <= 8) {
+                  return "purple";
+                } else {
+                  return "gold";
+                }
+              })()}
             >
-              {roles[user?.role]}
+              {UserRole[user?.role]}
             </Badge>
           </HStack>
           <Text>@{user?.handle}</Text>
-          <Text>
-            <b>Points: </b>
-            {user?.points}
-          </Text>
+          <Heading size="sm">Points: {user?.points}</Heading>
         </VStack>
       </HStack>
       <Box>
         <HStack spacing={5}>
-          {tempTestScore.map((testScore) => (
-            <ScoreBox key={Math.random()} testScore={testScore} />
-          ))}
+          {/* {tempTestScore.map((s,i) => (
+            <ScoreBox key={i} testScore={s} />
+          ))} */}
         </HStack>
       </Box>
     </VStack>
@@ -95,9 +84,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const { slug } = ctx.params as { [k: string]: string };
 
   if (slug[0] !== "@") {
-    const url = await provider.url
-      .getURL(slug as string)
-      .then((doc): string | undefined => doc.data()?.url);
+    const url = false; //await provider.url
+    // .getURL(slug as string)
+    // .then((doc): string | undefined => doc.data()?.url);
     if (url) {
       return {
         redirect: {
@@ -115,42 +104,42 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   };
 }
 
-const ScoreBox = ({ testScore }) => {
-  return (
-    <Box border="1px solid" borderRadius={4} borderColor="white">
-      <VStack align="stretch" my={4} ml={4} mr={4} spacing={6}>
-        <VStack align="stretch">
-          <Text fontSize="3xl">
-            <b>
-              {testScore.lang === "Swift"
-                ? `iOS Course Assessment ${testScore.year}`
-                : testScore.lang === "Android"
-                ? `Android Course Assessment ${testScore.year}`
-                : `React Native Course Assessment ${testScore.year}`}
-            </b>
-          </Text>
-          <HStack spacing={10}>
-            <Text fontSize="xl">
-              <b>Score: </b>
-              {`${testScore.score}/${testScore.total}`}
-            </Text>
-            <LinkButton
-              href={testScore.dwnloadLink}
-              customButton={
-                <Button colorScheme="red" size="sm" leftIcon={<FaDownload />} />
-              }
-            >
-              Download File
-            </LinkButton>
-          </HStack>
-        </VStack>
-        <VStack align="stretch">
-          <Text fontSize="lg">
-            <b>Markers Comment:</b>
-          </Text>
-          <Text fontSize="md">{testScore.markersComments}</Text>
-        </VStack>
-      </VStack>
-    </Box>
-  );
-};
+// const ScoreBox = ({ testScore }) => {
+//   return (
+//     <Box border="1px solid" borderRadius={4} borderColor="white">
+//       <VStack align="stretch" my={4} ml={4} mr={4} spacing={6}>
+//         <VStack align="stretch">
+//           <Text fontSize="3xl">
+//             <b>
+//               {testScore.lang === "Swift"
+//                 ? `iOS Course Assessment ${testScore.year}`
+//                 : testScore.lang === "Android"
+//                 ? `Android Course Assessment ${testScore.year}`
+//                 : `React Native Course Assessment ${testScore.year}`}
+//             </b>
+//           </Text>
+//           <HStack spacing={10}>
+//             <Text fontSize="xl">
+//               <b>Score: </b>
+//               {`${testScore.score}/${testScore.total}`}
+//             </Text>
+//             <LinkButton
+//               href={testScore.dwnloadLink}
+//               customButton={
+//                 <Button colorScheme="red" size="sm" leftIcon={<FaDownload />} />
+//               }
+//             >
+//               Download File
+//             </LinkButton>
+//           </HStack>
+//         </VStack>
+//         <VStack align="stretch">
+//           <Text fontSize="lg">
+//             <b>Markers Comment:</b>
+//           </Text>
+//           <Text fontSize="md">{testScore.markersComments}</Text>
+//         </VStack>
+//       </VStack>
+//     </Box>
+//   );
+// };
