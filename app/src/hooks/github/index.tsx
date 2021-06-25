@@ -3,9 +3,9 @@ import { Endpoints } from "@octokit/types";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import {
-  OctokitRepoContentDataType,
   getRepoContentPath,
-} from "../services/train";
+  OctokitRepoContentDataType,
+} from "../../typings/train";
 
 const octokit = new Octokit();
 

@@ -14,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     tid,
     handle,
   });
-  res.status(data.status.code).json(data);
+  res.status(data.status.code).json(data.data);
 };
 
 interface PatchVerifyTelegramUserAPIResponse {

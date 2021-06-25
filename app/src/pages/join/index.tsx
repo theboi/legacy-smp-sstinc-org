@@ -21,7 +21,6 @@ import {
   FaGoogle,
   FaQuestionCircle,
 } from "react-icons/fa";
-import { User } from "../../objects/user";
 import { useColor } from "../../hooks/color";
 import { useGithubRawData } from "../../hooks/github";
 import MarkdownIt from "markdown-it";
@@ -46,7 +45,6 @@ export default function JoinPage() {
   const [isInc, setIsInc] = useState(false);
   const [verified, setVerified] = useState(false);
   const [checkedPP, setCheckedPP] = useState(false);
-  const [newUser, setNewUser] = useState(new User());
 
   const { data: privacy, error: privacyError } =
     useGithubRawData("/user/PRIVACY.md");

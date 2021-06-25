@@ -1,17 +1,20 @@
 import { Page } from "@notionhq/client/build/src/api-types";
 import { Octokit } from "@octokit/core";
 import { NextApiResponse, NextApiRequest } from "next";
+import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import {
   getRepoContentPath,
   OctokitRepoContentDataType,
-} from "../../../../services/train";
-import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
-import { Assignment, AssignmentType, Lesson } from "../../../../typings/train";
+  Assignment,
+  AssignmentType,
+  Lesson,
+} from "../../../../typings/train";
 import { handleAuth } from "../../../../utils/api";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { cid, lid } = req.query as { [k: string]: string };
-  res.status(200).json(await handleAuth(req, getLessonAPI, { cid, lid }));
+  const data = await handleAuth(req, getLessonAPI, { cid, lid });
+  res.status(data.status.code).json(data.data);
 };
 
 export const getLessonAPI = async ({

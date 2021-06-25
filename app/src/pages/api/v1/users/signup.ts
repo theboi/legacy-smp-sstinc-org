@@ -1,12 +1,13 @@
 import { Client } from "@notionhq/client/build/src";
 import { Page } from "@notionhq/client/build/src/api-types";
 import { NextApiResponse, NextApiRequest } from "next";
-import { APIResponse } from "../../../../typings/api";
+import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import { getNotionAPIKey, handleAuth } from "../../../../utils/api";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { [k: string]: string };
-  res.status(200).json(await handleAuth(req, postUserSignUpAPI, { slug }));
+  const data = await handleAuth(req, postUserSignUpAPI, { slug });
+  res.status(data.status.code).json(data.data);
 };
 
 export const postUserSignUpAPI = async ({
@@ -20,5 +21,8 @@ export const postUserSignUpAPI = async ({
     database_id: "c460fd270be44858a74395684f6e6897",
   });
 
-  return response.results[0];
+  return {
+    status: HTTPStatusCode._200,
+    data: response.results[0],
+  };
 };
