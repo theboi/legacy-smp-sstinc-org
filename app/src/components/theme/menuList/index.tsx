@@ -66,14 +66,7 @@ const MenuListLinkWrapper = ({
     e instanceof MenuItemOption &&
     (e.action instanceof String || typeof e.action === "string")
   ) {
-    return (
-      <Link
-        href={e.action as string}
-        target={(e.action as string).startsWith("/") ? "" : "_blank"}
-      >
-        {children}
-      </Link>
-    );
+    return <Link href={e.action as string}>{children}</Link>;
   }
   return (
     <Box

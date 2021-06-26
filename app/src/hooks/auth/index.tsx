@@ -56,19 +56,13 @@ export const AuthProvider = (props) => {
 
   function signUp(email) {}
 
-  /** Call method when sign in, remember to call initializeApp when loading page from redirect. */
-  async function signIn(): Promise<void> {
+  async function signIn(): Promise<firebase.auth.UserCredential> {
     return firebase
       .auth()
       .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(() =>
-        firebase
-          .auth()
-          .signInWithRedirect(new firebase.auth.GoogleAuthProvider())
-      )
-      .catch((e) => {
-        console.error(`${e.message} (signInWithRedirect)`);
-      });
+        firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      );
   }
 
   async function signOut(): Promise<void> {
@@ -80,7 +74,6 @@ export const AuthProvider = (props) => {
    */
   async function initializeApp(): Promise<void> {
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    await firebase.auth().getRedirectResult();
     firebase.auth().onIdTokenChanged((fbUser: firebase.User) => {
       setFbUser(fbUser);
     });

@@ -11,7 +11,6 @@ import {
   IconButton,
   Checkbox,
   Skeleton,
-  Link,
   Tooltip,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -26,6 +25,7 @@ import { useGithubRawData } from "../../hooks/github";
 import MarkdownIt from "markdown-it";
 import { useAuth } from "../../hooks/auth";
 import { useRouter } from "next/router";
+import Link from "../../components/theme/link";
 
 interface JoinOption {
   description: string;
@@ -72,15 +72,11 @@ export default function JoinPage() {
 
   const steps = [
     // 0
-    <Box>
+    <>
       <Heading>Let's get you ready to use SMP!</Heading>
       <Text>
         If you are a member of SST Inc, please do indicate.{" "}
-        <Link
-          color={useColor("link")}
-          target="_blank"
-          href="https://sstinc.org"
-        >
+        <Link inlineStyle href="https://sstinc.org">
           What is SST Inc?
         </Link>
       </Text>
@@ -101,52 +97,82 @@ export default function JoinPage() {
           </Button>
         ))}
       </SimpleGrid>
-    </Box>,
+    </>,
     // 1
-    <Box>
-      <Heading>Connect your internet accounts</Heading>
-      <Stack maxWidth={500} mt={2}>
-        <FormControl isRequired>
-          {isInc ? (
-            <>
-              <FormLabel>Verify your membership in SST Inc</FormLabel>
-              <Button
-                leftIcon={<FaGoogle />}
-                colorScheme="red"
-                disabled={verified}
-              >
-                {verified ? "Verified" : "Verify"} with Google
+    isInc ? (
+      <>
+        <Heading>Verify yourself 🧐</Heading>
+        <Stack maxWidth={500} spacing={5}>
+          <FormControl isRequired>
+            {isInc ? (
+              <>
+                <FormLabel>Verify your membership in SST Inc</FormLabel>
+                <Box display="flex" flexDir="row">
+                  <Button
+                    leftIcon={<FaGoogle />}
+                    colorScheme="red"
+                    disabled={verified}
+                  >
+                    {verified ? "Verified" : "Verify"} with Google
+                  </Button>
+                  <Tooltip
+                    shouldWrapChildren
+                    label="Your Google account information is used to verify that your email address is registered as an SST Inc account."
+                    fontSize="sm"
+                    placement="right"
+                  >
+                    <FaQuestionCircle />
+                  </Tooltip>
+                </Box>
+                <FormHelperText>
+                  Having problems? Ensure you are using your SST Google account
+                  to sign in.
+                </FormHelperText>
+              </>
+            ) : null}
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel>Verify you are not a bot</FormLabel>
+            <Box display="flex" flexDir="row">
+              <Button leftIcon={<FaGithub />} colorScheme="gray">
+                Verify with GitHub
               </Button>
-            </>
-          ) : null}
-          <FormLabel>Verify you are not a bot</FormLabel>
-          <Box display="flex" flexDir="row">
-            <Button leftIcon={<FaGithub />} colorScheme="gray">
-              Verify with GitHub
-            </Button>
-            <Tooltip
-              shouldWrapChildren
-              label="GitHub is used to ensure that your email is verified and content such as your profile picture does not contain inappropriate content"
-              fontSize="sm"
-            >
-              <FaQuestionCircle />
-            </Tooltip>
-          </Box>
-          <FormHelperText>
-            Don't have a GitHub account?{" "}
-            <Link
-              color={useColor("link")}
-              href="https://github.com/"
-              target="_blank"
-            >
-              Create one now!
-            </Link>
-          </FormHelperText>
-        </FormControl>
-      </Stack>
-    </Box>,
+              <Tooltip
+                shouldWrapChildren
+                label="Your GitHub account information is used to ensure that your email is verified and content such as your profile picture does not contain inappropriate content."
+                fontSize="sm"
+                placement="right"
+              >
+                <FaQuestionCircle />
+              </Tooltip>
+            </Box>
+            <FormHelperText>
+              Don't have a GitHub account?{" "}
+              <Link inlineStyle href="https://github.com/">
+                Create one now!
+              </Link>
+            </FormHelperText>
+          </FormControl>
+        </Stack>
+      </>
+    ) : (
+      <>
+        <Heading>Sorry! 😭😓😳😢🥺</Heading>
+        <Text>
+          As of now, support for account creation for non-SST Inc members is
+          still work in progress.
+        </Text>
+        <Text>
+          Why not{" "}
+          <Link inlineStyle href="https://sstinc.org">
+            join SST Inc
+          </Link>{" "}
+          instead?
+        </Text>
+      </>
+    ),
     // 2
-    <Box>
+    <>
       <Heading>Just a little note.</Heading>
       <Skeleton isLoaded={privacy != ""} height={300} overflow="scroll">
         <Box
@@ -163,11 +189,11 @@ export default function JoinPage() {
           I have read and acknowledged.
         </Checkbox>
       </Stack>
-    </Box>,
-    <Box>
+    </>,
+    <>
       <Heading>Great! One last step!</Heading>
       <Stack></Stack>
-    </Box>,
+    </>,
   ];
 
   const goBack = () => {
