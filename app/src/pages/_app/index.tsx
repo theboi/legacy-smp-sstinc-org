@@ -143,16 +143,49 @@ export function App({ Component, pageProps }: AppProps) {
 }
 
 const AppScaffold = ({ children }: { children: React.ReactNode }) => {
-  const toast = useToast();
-  const { getToken } = useAuth();
+  const swrConfig = useSWRConfig();
 
+  return (
+    <SWRConfig value={swrConfig}>
+      <NavBar />
+      {children}
+      <Credits />
+    </SWRConfig>
+  );
+};
+
+export const get = async (
+  url: string,
+  token: string
+): Promise<AxiosResponse<any>> => {
+  const config = url.startsWith("/api/v1")
+    ? {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
+    : {};
+
+  return await axios.get(url, config);
+};
+
+export const useSWRConfig = (getToken = useAuth().getToken) => {
+  const toast = useToast();
   const linkColor = useColor("link");
-  const swrConfig = {
-    fetcher: getSWRFetcher(getToken),
+
+  return {
+    fetcher: async (url: string) => {
+      const res = await get(url, await getToken());
+      if (!(res.status >= 200 && res.status <= 299)) {
+        throw Error("A network error occurred");
+      }
+      return res.data;
+    },
     onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+      console.log("rerwabdiu", error);
       if (error.status === 404) return; // Never retry on 404.
       if (retryCount >= 3) return; // Only retry up to 3 times.
-      setTimeout(() => revalidate({ retryCount }), 5000); // Retry after 5 seconds.
+      setTimeout(() => revalidate({ retryCount }), 500); // Retry after 5 seconds.
     },
     onError: (error, key) => {
       console.error(key, error);
@@ -186,38 +219,5 @@ const AppScaffold = ({ children }: { children: React.ReactNode }) => {
         });
       }
     },
-  };
-
-  return (
-    <SWRConfig value={swrConfig}>
-      <NavBar />
-      {children}
-      <Credits />
-    </SWRConfig>
-  );
-};
-
-export const get = async (
-  url: string,
-  token: string
-): Promise<AxiosResponse<any>> => {
-  const config = url.startsWith("/api/v1")
-    ? {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      }
-    : {};
-
-  return await axios.get(url, config);
-};
-
-export const getSWRFetcher = (getToken: () => Promise<string>) => {
-  return async (url: string) => {
-    const res = await get(url, await getToken());
-    if (!(res.status >= 200 && res.status <= 299)) {
-      throw Error("A network error occurred");
-    }
-    return res.data;
   };
 };

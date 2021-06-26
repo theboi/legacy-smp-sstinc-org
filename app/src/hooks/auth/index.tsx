@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import { createContext, useContext, useState } from "react";
 import useSWR from "swr";
-import { getSWRFetcher } from "../../pages/_app";
+import { get, useSWRConfig } from "../../pages/_app";
 import { User } from "../../typings/user";
 
 require("firebase/auth");
@@ -30,10 +30,18 @@ export const firebaseConfig = {
 const AuthContext = createContext<AuthContent>(null);
 
 export const AuthProvider = (props) => {
+  const swrConfig = useSWRConfig(getToken);
   const [fbUser, setFbUser] = useState<firebase.User>();
-  const { data: user } = useSWR<User, Error>(
+  const { data: user } = useSWR<User>(
     fbUser && "/api/v1/authuser/",
-    getSWRFetcher(getToken)
+    async (url: string) => {
+      const res = await get(url, await getToken());
+      if (!(res.status >= 200 && res.status <= 299)) {
+        throw Error("A network error occurred");
+      }
+      return res.data;
+    },
+    swrConfig
   );
 
   const value = {
