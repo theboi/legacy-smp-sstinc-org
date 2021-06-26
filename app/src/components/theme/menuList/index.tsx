@@ -14,7 +14,8 @@ export default function MenuList({ menuItems }: { menuItems: MenuItem[] }) {
   return (
     <ChakraMenuList>
       {menuItems.map(function mapNavItems(e, i) {
-        return user?.role < e.minRole ? undefined : (
+        if (e === undefined || null) return undefined;
+        return (user?.role ?? -1) < e.minRole ? undefined : (
           <MenuListLinkWrapper e={e} key={i}>
             <e.element
               key={i}
@@ -65,7 +66,14 @@ const MenuListLinkWrapper = ({
     e instanceof MenuItemOption &&
     (e.action instanceof String || typeof e.action === "string")
   ) {
-    return <Link href={e.action as string}>{children}</Link>;
+    return (
+      <Link
+        href={e.action as string}
+        target={(e.action as string).startsWith("/") ? "" : "_blank"}
+      >
+        {children}
+      </Link>
+    );
   }
   return (
     <Box

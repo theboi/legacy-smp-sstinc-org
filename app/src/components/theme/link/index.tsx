@@ -3,14 +3,20 @@ import { Link as ChakraLink } from "@chakra-ui/react";
 
 export default function Link({
   href,
+  target = "",
   children,
 }: {
   href: string;
+  target: string;
   children: React.ReactNode;
 }) {
   return (
     <NextLink href={href}>
-      <ChakraLink href={href} _hover={{ textDecoration: "none" }}>
+      <ChakraLink
+        href={href}
+        target={target}
+        _hover={{ textDecoration: "none" }}
+      >
         {children}
       </ChakraLink>
     </NextLink>

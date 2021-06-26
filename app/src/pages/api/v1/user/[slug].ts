@@ -55,6 +55,7 @@ export const getUserAPI = async ({
   else if (res.results.length > 1) return { status: HTTPStatusCode._300 };
 
   const user = res.results[0];
+  console.log(user);
   return {
     status: HTTPStatusCode._200,
     data: {

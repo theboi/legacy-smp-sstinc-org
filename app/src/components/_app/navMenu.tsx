@@ -1,5 +1,12 @@
 import { Avatar, IconButton, Menu, MenuButton } from "@chakra-ui/react";
-import { FaBook, FaBug, FaCog, FaLink, FaSignInAlt } from "react-icons/fa";
+import {
+  FaBook,
+  FaBug,
+  FaCog,
+  FaLink,
+  FaSignInAlt,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import { authPaths } from "../../pages/_app";
 import { useAuth } from "../../hooks/auth";
 import {
@@ -10,32 +17,35 @@ import {
   MenuItemGroup,
 } from "../../typings/theme/menu";
 import MenuList from "../theme/menuList";
+import { UserRole } from "../../typings/user";
 
 export default function NavMenu() {
-  const { user, signIn } = useAuth();
+  const { fbUser, user, signIn, signOut } = useAuth();
 
   const navItems: MenuItem[] = [
-    new MenuItemOption(
-      user === null ? "Sign In" : user?.name,
-      user === null ? signIn : `/@${user?.handle}`,
-      user === null ? (
-        <FaSignInAlt />
-      ) : (
-        <Avatar src={user?.photoURL} size="sm" />
-      )
-    ),
-    new MenuItemOption("Train", "/train", <FaBook />),
+    user === undefined
+      ? new MenuItemOption("Sign In", signIn, <FaSignInAlt />)
+      : new MenuItemOption(
+          user?.name,
+          `/@${user?.handle}`,
+          <Avatar src={user?.photoURL} size="sm" />
+        ),
     new MenuItemDivider(),
-    new MenuItemOption("Settings", "/settings", <FaCog />),
+    new MenuItemGroup(
+      [
+        new MenuItemOption("Train", "/train", <FaBook />),
+        new MenuItemOption("Settings", "/settings", <FaCog />),
+      ],
+      UserRole.Member
+    ),
     new MenuItemOption(
       "Bug Report",
       "https://github.com/theboi/smp-sstinc-org/issues",
       <FaBug />
     ),
-    new MenuItemGroup(
-      [new MenuItemOption("URL Shortener", "/url", <FaLink />)],
-      authPaths["/url"]
-    ),
+    user !== undefined
+      ? new MenuItemOption("Sign Out", signOut, <FaSignOutAlt />)
+      : undefined,
     new MenuItemNest(
       "ExCo",
       [new MenuItemOption("URL Shortener", "/url", <FaLink />)],

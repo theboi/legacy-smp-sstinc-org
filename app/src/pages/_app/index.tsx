@@ -67,12 +67,11 @@ export function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     onOpen();
-    initializeApp();
+    (async () => {
+      await initializeApp();
+      onClose();
+    })();
   }, []);
-
-  useEffect(() => {
-    if (user) onClose();
-  }, [user]);
 
   return (
     <>
