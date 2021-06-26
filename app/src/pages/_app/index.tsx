@@ -181,12 +181,6 @@ export const useSWRConfig = (getToken = useAuth().getToken) => {
       }
       return res.data;
     },
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      console.log("rerwabdiu", error);
-      if (error.status === 404) return; // Never retry on 404.
-      if (retryCount >= 3) return; // Only retry up to 3 times.
-      setTimeout(() => revalidate({ retryCount }), 500); // Retry after 5 seconds.
-    },
     onError: (error, key) => {
       console.error(key, error);
       if (

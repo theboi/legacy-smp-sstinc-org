@@ -54,7 +54,7 @@ export const handleAuth = async <T>(
     },
   });
 
-  if (res.results.length === 0) return { status: HTTPStatusCode._404 };
+  if (res.results.length === 0) return { status: HTTPStatusCode._403 };
   else if (res.results.length > 1) return { status: HTTPStatusCode._300 };
 
   // const content = JSON.parse(
