@@ -9,7 +9,7 @@ import {
   AssignmentType,
   Lesson,
 } from "../../../../typings/train";
-import { handleAuth } from "../../../../utils/api";
+import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { cid, lid } = req.query as { [k: string]: string };

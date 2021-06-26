@@ -35,6 +35,7 @@ import { SWRConfig } from "swr";
 import axios, { AxiosResponse } from "axios";
 import { useColor } from "../../hooks/color";
 import { UserRole } from "../../typings/user";
+// import { get } from "../../utils/api";
 
 export const authPaths: { [k: string]: UserRole } = {
   "/url": UserRole.ExCo,
@@ -142,21 +143,6 @@ export function App({ Component, pageProps }: AppProps) {
   );
 }
 
-export const get = async (
-  url: string,
-  token: string
-): Promise<AxiosResponse<any>> => {
-  const headers = url.startsWith("/api/v1")
-    ? {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      }
-    : {};
-
-  return await axios.get(url, headers);
-};
-
 const AppScaffold = ({ children }: { children: React.ReactNode }) => {
   const toast = useToast();
   const { getToken } = useAuth();
@@ -210,6 +196,21 @@ const AppScaffold = ({ children }: { children: React.ReactNode }) => {
       <Credits />
     </SWRConfig>
   );
+};
+
+export const get = async (
+  url: string,
+  token: string
+): Promise<AxiosResponse<any>> => {
+  const config = url.startsWith("/api/v1")
+    ? {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }
+    : {};
+
+  return await axios.get(url, config);
 };
 
 export const getSWRFetcher = (getToken: () => Promise<string>) => {

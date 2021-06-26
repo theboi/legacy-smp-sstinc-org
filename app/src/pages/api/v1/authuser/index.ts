@@ -10,7 +10,7 @@ import {
 import { NextApiResponse, NextApiRequest } from "next";
 import { AuthUser, UserRank, UserRole } from "../../../../typings/user";
 import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
-import { handleAuth } from "../../../../utils/api";
+import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const data = await handleAuth(req, getAuthUserAPI);

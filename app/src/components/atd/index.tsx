@@ -1,5 +1,5 @@
 import { KeyboardEvent, useEffect, useState } from "react";
-
+import axios from "axios";
 import hash from "crypto-js/sha256";
 
 import { FaKey } from "react-icons/fa";
@@ -65,15 +65,15 @@ export default function AtdField() {
   function confirmCode() {
     if (code === getKeyCode()) {
       /** Handle after writing to Firestore */
-      provider.atd
-        .checkIn(user)
-        .then(() => {
-          setStatus("Success");
-        })
-        .catch((e) => {
-          console.error(e);
-          setStatus("Error");
-        });
+      // provider.atd
+      //   .checkIn(user)
+      //   .then(() => {
+      //     setStatus("Success");
+      //   })
+      //   .catch((e) => {
+      //     console.error(e);
+      //     setStatus("Error");
+      //   });
     } else {
       setStatus("Invalid");
     }

@@ -10,7 +10,7 @@ import {
 import { NextApiResponse, NextApiRequest } from "next";
 import { User, UserRank, UserRole } from "../../../../typings/user";
 import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
-import { handleAuth } from "../../../../utils/api";
+import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { [k: string]: string };
@@ -50,6 +50,9 @@ export const getUserAPI = async ({
       },
     },
   });
+
+  if (res.results.length === 0) return { status: HTTPStatusCode._404 };
+  else if (res.results.length > 1) return { status: HTTPStatusCode._300 };
 
   const user = res.results[0];
   return {

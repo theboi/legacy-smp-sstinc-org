@@ -6,7 +6,7 @@ import {
 import { NextApiResponse, NextApiRequest } from "next";
 import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import crypto from "crypto";
-import { getNotionAPIKey, handleAuth } from "../../../../utils/api";
+import { getNotionAPIKey, handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { tid, handle } = req.query as { [k: string]: string };

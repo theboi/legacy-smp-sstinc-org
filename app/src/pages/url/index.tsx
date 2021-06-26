@@ -32,7 +32,6 @@ import {
 } from "@chakra-ui/react";
 
 import { FaEllipsisH, FaPlus, FaTrash } from "react-icons/fa";
-import { provider } from "../../model/provider";
 
 export default function URLsPage() {
   const [urls, setUrls] = useState([]);
@@ -44,23 +43,23 @@ export default function URLsPage() {
   const toast = useToast();
 
   useEffect(() => {
-    const unsubscribe = provider.url.getURLsSnapshot((snapshot) => {
-      setUrls(
-        snapshot.docs.map((e) => ({
-          url: e.data().url,
-          suffix: e.id,
-        }))
-      );
-    });
-    return () => {
-      unsubscribe();
-    };
+    // const unsubscribe = provider.url.getURLsSnapshot((snapshot) => {
+    //   setUrls(
+    //     snapshot.docs.map((e) => ({
+    //       url: e.data().url,
+    //       suffix: e.id,
+    //     }))
+    //   );
+    // });
+    // return () => {
+    //   unsubscribe();
+    // };
   }, []);
 
   function saveURL() {
     const valid = validateURL();
     if (valid !== undefined) {
-      provider.url.updateURL(valid.suffix, valid.url);
+      // provider.url.updateURL(valid.suffix, valid.url);
       onClose();
       toast({ title: "Shortened URL saved successfully!", status: "success" });
     }
@@ -86,7 +85,7 @@ export default function URLsPage() {
   }
 
   function deleteURL(suffix: string) {
-    provider.url.deleteURL(suffix);
+    // provider.url.deleteURL(suffix);
   }
 
   return (

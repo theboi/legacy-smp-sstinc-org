@@ -6,26 +6,24 @@ import { Client } from "@notionhq/client/build/src";
 import * as admin from "firebase-admin";
 import { APIResponse, HTTPStatusCode } from "../../typings/api";
 import { NextApiRequest } from "next";
-import { random } from "../misc";
-import axios, { AxiosResponse } from "axios";
+import getNotionAPIKey from "./getNotionAPIKey";
 
 export const getFirebaseToken = async (
   auth: string
 ): Promise<admin.auth.DecodedIdToken> => {
-  // const serviceAccount = require("../../../google.env.json");
+  const serviceAccount = require("../../../google.env.json");
 
-  // if (!admin.apps.length) {
-  //   admin.initializeApp({
-  //     credential: admin.credential.cert(serviceAccount),
-  //   });
-  // }
-  // try {
-  //   return await admin.auth().verifyIdToken(auth);
-  // } catch (e) {
-  //   console.error(e);
-  //   return undefined;
-  // }
-  return undefined;
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+  }
+  try {
+    return await admin.auth().verifyIdToken(auth);
+  } catch (e) {
+    console.error(e);
+    return undefined;
+  }
 };
 
 export const handleAuth = async <T>(
@@ -59,20 +57,20 @@ export const handleAuth = async <T>(
   if (res.results.length === 0) return { status: HTTPStatusCode._404 };
   else if (res.results.length > 1) return { status: HTTPStatusCode._300 };
 
-  const content = JSON.parse(
-    (res.results[0].properties["Rate Limit"] as RichTextPropertyValue)
-      ?.rich_text[0]?.plain_text ?? "[]"
-  );
+  // const content = JSON.parse(
+  //   (res.results[0].properties["Rate Limit"] as RichTextPropertyValue)
+  //     ?.rich_text[0]?.plain_text ?? "[]"
+  // );
 
-  const now = new Date().getTime();
-  if (content[0] === undefined || content[0] + 30000 < now) {
-    // 100 requests per 30 s
-    content[0] = now;
-    content[1] = 1;
-  } else {
-    content[1]++;
-    if (content[1] > 100) return { status: HTTPStatusCode._429 };
-  }
+  // const now = new Date().getTime();
+  // if (content[0] === undefined || content[0] + 30000 < now) {
+  //   // 100 requests per 30 s
+  //   content[0] = now;
+  //   content[1] = 1;
+  // } else {
+  //   content[1]++;
+  //   if (content[1] > 100) return { status: HTTPStatusCode._429 };
+  // }
 
   // const upd = await notion.pages.update({
   //   page_id: res.results[0].id,
@@ -92,39 +90,4 @@ export const handleAuth = async <T>(
   // });
 
   return callback({ user: res.results[0] as Page, notion, ...args });
-};
-
-export const getNotionAPIKey = (): string => {
-  return process.env[`NOTION_API_KEY${random(1, 6)}`];
-};
-
-export const get = async (
-  url: string,
-  token: string
-): Promise<AxiosResponse<any>> => {
-  const config = url.startsWith("/api/v1")
-    ? {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      }
-    : {};
-
-  return await axios.get(url, config);
-};
-
-export const post = async (
-  url: string,
-  token: string,
-  body: string
-): Promise<AxiosResponse<any>> => {
-  const config = url.startsWith("/api/v1")
-    ? {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      }
-    : {};
-
-  return await axios.post(url, body, config);
 };

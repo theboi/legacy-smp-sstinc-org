@@ -2,7 +2,7 @@ import { Client } from "@notionhq/client/build/src";
 import { Page } from "@notionhq/client/build/src/api-types";
 import { NextApiResponse, NextApiRequest } from "next";
 import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
-import { getNotionAPIKey, handleAuth } from "../../../../utils/api";
+import { getNotionAPIKey, handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { [k: string]: string };

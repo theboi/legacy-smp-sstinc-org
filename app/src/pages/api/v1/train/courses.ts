@@ -8,7 +8,7 @@ import {
   Course,
   CourseSubject,
 } from "../../../../typings/train";
-import { handleAuth } from "../../../../utils/api";
+import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const data = await handleAuth(req, getTrainAPI);

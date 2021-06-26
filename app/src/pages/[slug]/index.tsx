@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { User, UserRole } from "../../typings/user";
 import { useAuth } from "../../hooks/auth";
+import { getURLAPI } from "../api/v1/url/[slug]";
 
 export default function ProfilePage({ handle }: { handle: string }) {
   const { fbUser } = useAuth();
@@ -84,9 +85,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const { slug } = ctx.params as { [k: string]: string };
 
   if (slug[0] !== "@") {
-    const url = false; //await provider.url
-    // .getURL(slug as string)
-    // .then((doc): string | undefined => doc.data()?.url);
+    const url = (await getURLAPI({ slug })).data.url;
     if (url) {
       return {
         redirect: {

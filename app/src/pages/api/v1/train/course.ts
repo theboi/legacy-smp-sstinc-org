@@ -9,7 +9,7 @@ import {
   Lesson,
   OctokitRepoContentDataType,
 } from "../../../../typings/train";
-import { handleAuth } from "../../../../utils/api";
+import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { cid } = req.query as { [k: string]: string };
