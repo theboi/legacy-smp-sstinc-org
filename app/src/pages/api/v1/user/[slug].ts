@@ -15,7 +15,7 @@ import { handleAuth } from "../../../../utils/api/handleAuth";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { [k: string]: string };
   const data = await handleAuth(req, getUserAPI, { slug });
-  res.status(data.status.code).json(data.data);
+  res.status(data.status).json(data.data);
 };
 
 type GetUserAPIResponse = User;
@@ -51,13 +51,14 @@ export const getUserAPI = async ({
     },
   });
 
-  if (res.results.length === 0) return { status: HTTPStatusCode._404 };
-  else if (res.results.length > 1) return { status: HTTPStatusCode._300 };
+  if (res.results.length === 0) return { status: HTTPStatusCode.NotFound };
+  else if (res.results.length > 1)
+    return { status: HTTPStatusCode.MultipleChoice };
 
   const user = res.results[0];
   console.log(user);
   return {
-    status: HTTPStatusCode._200,
+    status: HTTPStatusCode.OK,
     data: {
       iid:
         (user.properties["Inc ID"] as TitlePropertyValue)?.title[0]

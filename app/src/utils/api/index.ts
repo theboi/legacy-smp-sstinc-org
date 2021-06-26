@@ -35,7 +35,7 @@ export const handleAuth = async <T>(
 ): Promise<APIResponse<T>> => {
   const { authorization: auth } = req.headers as { [k: string]: string };
 
-  if (auth === undefined) return { status: HTTPStatusCode._401 };
+  if (auth === undefined) return { status: HTTPStatusCode.Unauthorized };
 
   const notion = new Client({ auth: getNotionAPIKey() });
 
@@ -44,7 +44,7 @@ export const handleAuth = async <T>(
     ? auth.split(" ")[1]
     : (await getFirebaseToken(auth.split(" ")[1])).uid;
 
-  if (key === undefined) return { status: HTTPStatusCode._403 };
+  if (key === undefined) return { status: HTTPStatusCode.Forbidden };
 
   const res = await notion.databases.query({
     database_id: "c460fd270be44858a74395684f6e6897",
@@ -56,8 +56,9 @@ export const handleAuth = async <T>(
     },
   });
 
-  if (res.results.length === 0) return { status: HTTPStatusCode._404 };
-  else if (res.results.length > 1) return { status: HTTPStatusCode._300 };
+  if (res.results.length === 0) return { status: HTTPStatusCode.NotFound };
+  else if (res.results.length > 1)
+    return { status: HTTPStatusCode.MultipleChoice };
 
   const content = JSON.parse(
     (res.results[0].properties["Rate Limit"] as RichTextPropertyValue)
@@ -71,7 +72,7 @@ export const handleAuth = async <T>(
     content[1] = 1;
   } else {
     content[1]++;
-    if (content[1] > 100) return { status: HTTPStatusCode._429 };
+    if (content[1] > 100) return { status: HTTPStatusCode.TooManyRequests };
   }
 
   // const upd = await notion.pages.update({

@@ -14,7 +14,7 @@ import { handleAuth } from "../../../../utils/api/handleAuth";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { cid, lid } = req.query as { [k: string]: string };
   const data = await handleAuth(req, getLessonAPI, { cid, lid });
-  res.status(data.status.code).json(data.data);
+  res.status(data.status).json(data.data);
 };
 
 export const getLessonAPI = async ({
@@ -32,7 +32,7 @@ export const getLessonAPI = async ({
     path: `/data/train/${cid}/${lid}`,
   });
   return {
-    status: HTTPStatusCode._200,
+    status: HTTPStatusCode.OK,
     data: {
       cid: cid,
       lid: lid,

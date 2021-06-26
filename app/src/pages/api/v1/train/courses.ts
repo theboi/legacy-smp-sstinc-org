@@ -12,7 +12,7 @@ import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const data = await handleAuth(req, getTrainAPI);
-  res.status(data.status.code).json(data.data);
+  res.status(data.status).json(data.data);
 };
 
 export const getTrainAPI = async (): Promise<APIResponse<Course[]>> => {
@@ -25,7 +25,7 @@ export const getTrainAPI = async (): Promise<APIResponse<Course[]>> => {
   });
 
   return {
-    status: HTTPStatusCode._200,
+    status: HTTPStatusCode.OK,
     data: Array.from(
       res.data as OctokitRepoContentDataType,
       (e): Course => ({

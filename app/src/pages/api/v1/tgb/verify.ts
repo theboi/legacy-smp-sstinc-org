@@ -6,7 +6,7 @@ import {
 import { NextApiResponse, NextApiRequest } from "next";
 import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import crypto from "crypto";
-import { getNotionAPIKey, handleAuth } from "../../../../utils/api/handleAuth";
+import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { tid, handle } = req.query as { [k: string]: string };
@@ -14,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     tid,
     handle,
   });
-  res.status(data.status.code).json(data.data);
+  res.status(data.status).json(data.data);
 };
 
 interface PatchVerifyTelegramUserAPIResponse {
@@ -68,7 +68,7 @@ export const patchVerifyTelegramUserAPI = async ({
   });
 
   return {
-    status: HTTPStatusCode._200,
+    status: HTTPStatusCode.OK,
     data: {
       tid: tid,
       handle: handle,

@@ -14,7 +14,7 @@ import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const data = await handleAuth(req, getAuthUserAPI);
-  res.status(data.status.code).json(data.data);
+  res.status(data.status).json(data.data);
 };
 
 type GetAuthUserAPIResponse = AuthUser;
@@ -25,7 +25,7 @@ export const getAuthUserAPI = async ({
   user: Page;
 }): Promise<APIResponse<GetAuthUserAPIResponse>> => {
   return {
-    status: HTTPStatusCode._200,
+    status: HTTPStatusCode.OK,
     data: {
       iid:
         (user.properties["Inc ID"] as TitlePropertyValue)?.title[0]

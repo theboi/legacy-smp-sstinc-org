@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     tid,
     handle,
   });
-  res.status(data.status.code).json(data.data);
+  res.status(data.status).json(data.data);
 };
 
 interface PostAttendanceRecordAPIResponse {}
@@ -72,7 +72,7 @@ export const postAttendanceRecordAPI = async ({
   });
 
   return {
-    status: HTTPStatusCode._200,
+    status: HTTPStatusCode.OK,
     data: {},
   };
 };

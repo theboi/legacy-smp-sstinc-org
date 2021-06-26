@@ -14,7 +14,7 @@ import { handleAuth } from "../../../../utils/api/handleAuth";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { cid } = req.query as { [k: string]: string };
   const data = await handleAuth(req, getCourseAPI, { cid });
-  res.status(data.status.code).json(data.data);
+  res.status(data.status).json(data.data);
 };
 
 export const getCourseAPI = async ({
@@ -32,7 +32,7 @@ export const getCourseAPI = async ({
   const cpath = `/train/${cid}`;
 
   return {
-    status: HTTPStatusCode._200,
+    status: HTTPStatusCode.OK,
     data: {
       cid: cid,
       subject: CourseSubject[cid],
