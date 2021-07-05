@@ -7,18 +7,20 @@ export default function Link({
   children,
   target = "",
   inlineStyle = false,
+  shallow = false,
 }: {
   href: string;
   children: React.ReactNode;
   target?: string;
   inlineStyle?: boolean;
+  shallow?: boolean;
 }) {
   return (
-    <NextLink href={href}>
+    <NextLink href={href} shallow={shallow}>
       <ChakraLink
         color={inlineStyle ? useColor("link") : undefined}
         href={href}
-        target={target ?? href.startsWith("/") ? "" : "_blank"}
+        target={target ?? (href.startsWith("/") ? "" : "_blank")}
         _hover={{ textDecoration: inlineStyle ? "underline" : "none" }}
       >
         {children}

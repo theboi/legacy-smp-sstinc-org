@@ -172,9 +172,11 @@ export const get = async (
 export const useSWRConfig = (getToken = useAuth().getToken) => {
   const toast = useToast();
   const linkColor = useColor("link");
+  const auth = useAuth();
 
   return {
     fetcher: async (url: string) => {
+      await auth.initializeApp();
       const res = await get(url, await getToken());
       if (!(res.status >= 200 && res.status <= 299)) {
         throw Error("A network error occurred");
@@ -182,7 +184,7 @@ export const useSWRConfig = (getToken = useAuth().getToken) => {
       return res.data;
     },
     onError: (error, key) => {
-      console.error(key, error);
+      console.error(error, key);
       if (
         error.status !== 403 &&
         error.status !== 404 &&

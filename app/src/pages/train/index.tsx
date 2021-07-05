@@ -1,6 +1,7 @@
 import {
   Box,
   HStack,
+  VStack,
   Image,
   LinkBox,
   LinkOverlay,
@@ -9,35 +10,39 @@ import {
 import { getTrainAPI } from "../api/v1/train/courses";
 import NextLink from "next/link";
 import { Course } from "../../typings/train";
+import AtdField from "../../components/atd";
 
 export default function TrainPage({ courses }: { courses: Course[] }) {
   return (
-    <Box>
-      {courses.map((c) => (
-        <LinkBox
-          key={c.cid}
-          as="article"
-          maxW="sm"
-          p="5"
-          borderWidth="1px"
-          rounded="md"
-        >
-          <NextLink href={c.cpath}>
-            <LinkOverlay href={c.cpath}>
-              <HStack>
-                <Image
-                  borderRadius="full"
-                  boxSize="50px"
-                  src={`/assets/train/${c.cid}.png`}
-                  alt={c.subject}
-                />
-                <Text>{c.subject}</Text>
-              </HStack>
-            </LinkOverlay>
-          </NextLink>
-        </LinkBox>
-      ))}
-    </Box>
+    <HStack spacing={10}>
+      <VStack>
+        {courses.map((c) => (
+          <LinkBox
+            key={c.cid}
+            as="article"
+            maxW="sm"
+            p="5"
+            borderWidth="1px"
+            rounded="md"
+          >
+            <NextLink href={c.cpath}>
+              <LinkOverlay href={c.cpath}>
+                <HStack>
+                  <Image
+                    borderRadius="full"
+                    boxSize="50px"
+                    src={`/assets/train/${c.cid}.png`}
+                    alt={c.subject}
+                  />
+                  <Text>{c.subject}</Text>
+                </HStack>
+              </LinkOverlay>
+            </NextLink>
+          </LinkBox>
+        ))}
+      </VStack>
+      <AtdField />
+    </HStack>
   );
 
   // const [index, setIndex] = useState(0);

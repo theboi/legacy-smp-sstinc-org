@@ -2,20 +2,20 @@ import {
   Box,
   Button,
   Heading,
-  Link as ChakraLink,
   Skeleton,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  VStack,
 } from "@chakra-ui/react";
 import MarkdownIt from "markdown-it";
 import { GetServerSidePropsContext } from "next";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FaArrowLeft } from "react-icons/fa";
 import useSWR from "swr";
+import Link from "../../../../components/theme/link";
 import { LinkButton } from "../../../../components/theme/linkButton";
 import { useDesktopMediaQuery } from "../../../../hooks/mediaQuery";
 import { Assignment, AssignmentType, Lesson } from "../../../../typings/train";
@@ -27,7 +27,7 @@ export default function LessonPage({ lesson }: { lesson: Lesson }) {
   const isDesktop = useDesktopMediaQuery();
 
   return (
-    <Box>
+    <VStack align="stretch" gap={10}>
       <LinkButton
         href={lesson.cpath}
         customButton={<Button leftIcon={<FaArrowLeft />} />}
@@ -47,27 +47,25 @@ export default function LessonPage({ lesson }: { lesson: Lesson }) {
           }
         >
           {lesson?.assignments.map((a, i) => (
-            <NextLink key={a.aid} href={`?a=${i}`} shallow>
-              <ChakraLink href={`?a=${i}`} _hover={{ textDecor: "none" }}>
-                <Tab
-                  sx={
-                    isDesktop
-                      ? {
-                          width: "120%",
-                          display: "block",
-                          textAlign: "left",
-                          whiteSpace: "nowrap",
-                          borderLeftRadius: 0,
-                          ml: -10,
-                          pl: 10,
-                        }
-                      : undefined
-                  }
-                >
-                  {a.title}
-                </Tab>
-              </ChakraLink>
-            </NextLink>
+            <Link key={a.aid} href={`?a=${i}`} shallow>
+              <Tab
+                sx={
+                  isDesktop
+                    ? {
+                        width: "120%",
+                        display: "block",
+                        textAlign: "left",
+                        whiteSpace: "nowrap",
+                        borderLeftRadius: 0,
+                        ml: -10,
+                        pl: 10,
+                      }
+                    : undefined
+                }
+              >
+                {a.title}
+              </Tab>
+            </Link>
           ))}
         </TabList>
         <TabPanels>
@@ -78,7 +76,7 @@ export default function LessonPage({ lesson }: { lesson: Lesson }) {
           ))}
         </TabPanels>
       </Tabs>
-    </Box>
+    </VStack>
   );
 }
 
@@ -115,51 +113,3 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
     props: { lesson: (await getLessonAPI({ cid, lid })).data },
   };
 }
-
-// function TrainingSelectBar(props: {
-//   lessons: Lesson[];
-//   assignment: Assignment;
-//   setAssignment: Dispatch<SetStateAction<Assignment>>;
-// }) {
-//   return (
-//     <Accordion allowToggle>
-//       {props.lessons.map((l) => (
-//         <AccordionItem key={l.lid}>
-//           <h2>
-//             <AccordionButton
-//               onClick={() => props.setAssignment(null)}
-//               style={{ borderRadius: "var(--chakra-radii-md)" }}
-//               _expanded={{
-//                 color: "var(--chakra-colors-teal-200)",
-//                 bg: "rgba(48, 140, 122, 0.3)",
-//               }}
-//             >
-//               <Box flex="1" textAlign="left">
-//                 {l.title}
-//               </Box>
-//               <AccordionIcon />
-//             </AccordionButton>
-//           </h2>
-//           {Object.values(l.assignments ?? {}).map((a) => (
-//             <AccordionPanel
-//               onClick={() => props.setAssignment(a)}
-//               key={a.aid}
-//               pb={4}
-//               pl={10}
-//               style={
-//                 props.assignment?.aid === a.aid
-//                   ? {
-//                       color: "var(--chakra-colors-teal-200)",
-//                       background: "rgba(48, 140, 122, 0.3)",
-//                     }
-//                   : {}
-//               }
-//             >
-//               {a.title}
-//             </AccordionPanel>
-//           ))}
-//         </AccordionItem>
-//       ))}
-//     </Accordion>
-//   );
-// }

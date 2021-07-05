@@ -6,12 +6,6 @@
   padding: 40px 30px;
 }
 
-.content > div {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
 /* .errorCode {
   font-size: 100px;
 } */

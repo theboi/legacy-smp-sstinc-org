@@ -7,9 +7,9 @@ import { User } from "../../typings/user";
 require("firebase/auth");
 
 export interface AuthContent {
-  signIn: () => {};
-  signUp: () => {};
-  signOut: () => {};
+  signIn: () => void;
+  signUp: () => void;
+  signOut: () => void;
   initializeApp: () => Promise<void>;
   getToken: () => Promise<string>;
   user: User;
@@ -35,6 +35,7 @@ export const AuthProvider = (props) => {
   const { data: user } = useSWR<User>(
     fbUser && "/api/v1/authuser/",
     async (url: string) => {
+      await initializeApp();
       const res = await get(url, await getToken());
       if (!(res.status >= 200 && res.status <= 299)) {
         throw Error("A network error occurred");
@@ -73,11 +74,16 @@ export const AuthProvider = (props) => {
    * Call once during app start-up
    */
   async function initializeApp(): Promise<void> {
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    firebase.auth().onIdTokenChanged((fbUser: firebase.User) => {
-      setFbUser(fbUser);
+    if (!!firebase.apps.length) return;
+    firebase.initializeApp(firebaseConfig);
+    let promise = new Promise<void>((resolve) => {
+      firebase.auth().onIdTokenChanged((fbUser: firebase.User) => {
+        setFbUser(fbUser);
+        resolve();
+      });
     });
-    setFbUser(firebase.auth().currentUser);
+    return promise;
+    // setFbUser(firebase.auth().currentUser);
   }
 
   function getToken(): Promise<string> {

@@ -29,28 +29,6 @@ export default function MenuList({ menuItems }: { menuItems: MenuItem[] }) {
           </MenuListLinkWrapper>
         );
       })}
-      {/* {navItems.map((e, i) => {
-          if (user?.role < e.minRole) return null;
-          else if (e.isDivider) return <MenuDivider key={i} />;
-          if (typeof e.action === "string" || e.action instanceof String) {
-            return (
-              <NextLink key={i} href={e.action as string}>
-                <ChakraLink
-                  href={e.action as string}
-                  _hover={{ textDecoration: "none" }}
-                >
-                  <MenuItem icon={e.icon}>{e.name}</MenuItem>
-                </ChakraLink>
-              </NextLink>
-            );
-          } else {
-            return (
-              <MenuItem key={i} icon={e.icon} onClick={e.action}>
-                {e.name}
-              </MenuItem>
-            );
-          }
-        })} */}
     </ChakraMenuList>
   );
 }
