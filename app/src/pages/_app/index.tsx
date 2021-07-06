@@ -35,7 +35,8 @@ import { SWRConfig } from "swr";
 import axios, { AxiosResponse } from "axios";
 import { useColor } from "../../hooks/color";
 import { UserRole } from "../../typings/user";
-// import { get } from "../../utils/api";
+import { useHost } from "../../hooks/host";
+import { get } from "../../utils/api/httpMethods";
 
 export const authPaths: { [k: string]: UserRole } = {
   "/url": UserRole.ExCo,
@@ -59,11 +60,7 @@ export function App({ Component, pageProps }: AppProps) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [hostname, setHostname] = useState<string>();
-
-  useEffect(() => {
-    if (globalThis) setHostname(globalThis.location.hostname);
-  }, [globalThis.location]);
+  const host = useHost();
 
   useEffect(() => {
     onOpen();
@@ -83,7 +80,7 @@ export function App({ Component, pageProps }: AppProps) {
         <meta property="og:url" content="go.sstinc.org" />
         <meta name="twitter:card" content="/assets/sstinc-icon.png" />
       </Head>
-      {hostname === "go.sstinc.org" ? (
+      {host === "go.sstinc.org" ? (
         <Center
           sx={{
             position: "absolute",
@@ -154,21 +151,6 @@ const AppScaffold = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const get = async (
-  url: string,
-  token: string
-): Promise<AxiosResponse<any>> => {
-  const config = url.startsWith("/api/v1")
-    ? {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
-      }
-    : {};
-
-  return await axios.get(url, config);
-};
-
 export const useSWRConfig = (getToken = useAuth().getToken) => {
   const toast = useToast();
   const linkColor = useColor("link");
@@ -183,8 +165,8 @@ export const useSWRConfig = (getToken = useAuth().getToken) => {
       }
       return res.data;
     },
+    shouldRetryOnError: false,
     onError: (error, key) => {
-      console.error(error, key);
       if (
         error.status !== 403 &&
         error.status !== 404 &&

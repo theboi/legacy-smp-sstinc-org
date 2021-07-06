@@ -1,8 +1,9 @@
 import firebase from "firebase/app";
 import { createContext, useContext, useState } from "react";
 import useSWR from "swr";
-import { get, useSWRConfig } from "../../pages/_app";
+import { useSWRConfig } from "../../pages/_app";
 import { User } from "../../typings/user";
+import { get } from "../../utils/api/httpMethods";
 
 require("firebase/auth");
 

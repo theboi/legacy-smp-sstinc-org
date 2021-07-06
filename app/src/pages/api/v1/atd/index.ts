@@ -1,4 +1,5 @@
 import { Client } from "@notionhq/client/build/src";
+import hash from "crypto-js/sha256";
 import {
   Page,
   RichTextPropertyValue,
@@ -9,27 +10,51 @@ import { NextApiResponse, NextApiRequest } from "next";
 import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import { handleAuth } from "../../../../utils/api/handleAuth";
 
+export interface PostAttendanceRecordAPIResponse {
+  status: string;
+}
+
+export interface PostAttendanceRecordAPIBody {
+  code: string;
+}
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { tid, handle } = req.query as { [k: string]: string };
+  const { code } = req.body as PostAttendanceRecordAPIBody;
   const data = await handleAuth(req, postAttendanceRecordAPI, {
-    tid,
-    handle,
+    code,
   });
   res.status(data.status).json(data.data);
 };
 
-interface PostAttendanceRecordAPIResponse {}
-
 export const postAttendanceRecordAPI = async ({
   user,
   notion,
+  code,
 }: {
   user: Page;
   notion: Client;
+  code: string;
 }): Promise<APIResponse<PostAttendanceRecordAPIResponse>> => {
+  function getKeyCode(offset: number = 0) {
+    const epochSeconds = (new Date().getTime() + offset) / 1000;
+    return hash(`sstinc${epochSeconds - (epochSeconds % 20)}`)
+      .toString()
+      .slice(0, 4)
+      .toUpperCase();
+  }
+
+  if (code !== getKeyCode() && code !== getKeyCode(20000)) {
+    return {
+      status: HTTPStatusCode.OK,
+      data: {
+        status: "Invalid",
+      },
+    };
+  }
+
   const response = await notion.pages.create({
     parent: {
-      database_id: "448525b688ac4f0597210ebec4e53557",
+      database_id: "79df706a109546f798e74c0105752329",
     },
     properties: {
       "Inc ID": {
@@ -60,19 +85,22 @@ export const postAttendanceRecordAPI = async ({
         type: "email",
         email: (user.properties["Email"] as EmailPropertyValue)?.email,
       },
-      // User: {
-      //   type: "relation",
-      //   relation: [
-      //     {
-      //       id: user.id
-      //     }
-      //   ]
-      // }
+      User: {
+        // @ts-ignore-next Notion bug
+        type: "relation",
+        relation: [
+          {
+            id: user.id,
+          },
+        ],
+      },
     },
   });
 
   return {
     status: HTTPStatusCode.OK,
-    data: {},
+    data: {
+      status: "Success",
+    },
   };
 };

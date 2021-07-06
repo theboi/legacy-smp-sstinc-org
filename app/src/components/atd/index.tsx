@@ -1,4 +1,6 @@
 import { KeyboardEvent, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next";
 import axios from "axios";
 import hash from "crypto-js/sha256";
 
@@ -26,9 +28,15 @@ import {
   Alert,
   Box,
 } from "@chakra-ui/react";
-import { useColor, useCustomColor } from "../../hooks/color";
+import { useCustomColor } from "../../hooks/color";
 import { useAuth } from "../../hooks/auth";
 import { UserRole } from "../../typings/user";
+import { useHost } from "../../hooks/host";
+import {
+  PostAttendanceRecordAPIBody,
+  PostAttendanceRecordAPIResponse,
+} from "../../pages/api/v1/atd";
+import { post } from "../../utils/api/httpMethods";
 
 export default function AtdField() {
   const [time, setTime] = useState(0);
@@ -36,7 +44,8 @@ export default function AtdField() {
   const [code, setCode] = useState("");
   const [status, setStatus] = useState("Confirm");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user } = useAuth();
+  const { user, getToken } = useAuth();
+  const host = useHost();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -62,27 +71,22 @@ export default function AtdField() {
       .toUpperCase();
   }
 
-  function confirmCode() {
-    if (code === getKeyCode()) {
-      /** Handle after writing to Firestore */
-      // provider.atd
-      //   .checkIn(user)
-      //   .then(() => {
-      //     setStatus("Success");
-      //   })
-      //   .catch((e) => {
-      //     console.error(e);
-      //     setStatus("Error");
-      //   });
-    } else {
-      setStatus("Invalid");
-    }
+  const confirmCode = async () => {
+    setStatus("Loading");
+    const data = (
+      await post<PostAttendanceRecordAPIResponse, PostAttendanceRecordAPIBody>(
+        `http://${host}/api/v1/atd`,
+        await getToken(),
+        { code }
+      )
+    ).data;
+    setStatus(data.status);
     /** Code submission cooldown of 2 sec */
     setTimeout(() => {
       setCode("");
       setStatus("Confirm");
-    }, 2000);
-  }
+    }, 4000);
+  };
 
   function onCodeKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.keyCode === 13 && code.length === 4) confirmCode();
@@ -164,6 +168,7 @@ export default function AtdField() {
                   { Error: "red", Invalid: "red", Success: "green" }[status] ??
                   "blue"
                 }
+                isLoading={status === "Loading"}
               >
                 {status}
               </Button>
