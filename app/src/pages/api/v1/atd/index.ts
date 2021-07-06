@@ -43,7 +43,8 @@ export const postAttendanceRecordAPI = async ({
       .toUpperCase();
   }
 
-  if (code !== getKeyCode() && code !== getKeyCode(20000)) {
+  // 20s of leniency, allowing previous code to work as well
+  if (code !== getKeyCode() && code !== getKeyCode(-20000)) {
     return {
       status: HTTPStatusCode.OK,
       data: {

@@ -2,6 +2,7 @@ import { Avatar, IconButton, Menu, MenuButton } from "@chakra-ui/react";
 import {
   FaBook,
   FaBug,
+  FaClock,
   FaCog,
   FaLink,
   FaSignInAlt,
@@ -33,6 +34,7 @@ export default function NavMenu() {
     new MenuItemDivider(),
     new MenuItemGroup(
       [
+        new MenuItemOption("Attendance", "/atd", <FaClock />),
         new MenuItemOption("Train", "/train", <FaBook />),
         new MenuItemOption("Settings", "/settings", <FaCog />),
       ],
