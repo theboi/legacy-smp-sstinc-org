@@ -159,7 +159,10 @@ export const useSWRConfig = (getToken = useAuth().getToken) => {
   return {
     fetcher: async (url: string) => {
       await auth.initializeApp();
-      const res = await get(url, await getToken());
+      const res = await get(
+        url,
+        url.includes("/api/v1") ? await getToken() : undefined
+      );
       if (!(res.status >= 200 && res.status <= 299)) {
         throw Error("A network error occurred");
       }

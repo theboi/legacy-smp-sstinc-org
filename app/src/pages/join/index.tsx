@@ -12,20 +12,17 @@ import {
   Checkbox,
   Skeleton,
   Tooltip,
+  Input,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import {
-  FaArrowLeft,
-  FaGithub,
-  FaGoogle,
-  FaQuestionCircle,
-} from "react-icons/fa";
-import { useColor } from "../../hooks/color";
+import { FaArrowLeft, FaGoogle, FaQuestionCircle } from "react-icons/fa";
 import { useGithubRawData } from "../../hooks/github";
 import MarkdownIt from "markdown-it";
 import { useAuth } from "../../hooks/auth";
 import { useRouter } from "next/router";
 import Link from "../../components/theme/link";
+import useSWR from "swr";
+import { User } from "../../typings/user";
 
 interface JoinOption {
   description: string;
@@ -39,20 +36,14 @@ interface JoinField {
 }
 
 export default function JoinPage() {
-  const { user } = useAuth();
+  const { fbUser, signUp, signIn } = useAuth();
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [isInc, setIsInc] = useState(false);
-  const [verified, setVerified] = useState(false);
   const [checkedPP, setCheckedPP] = useState(false);
 
-  const { data: privacy, error: privacyError } =
-    useGithubRawData("/user/PRIVACY.md");
+  const { data: privacy } = useGithubRawData("/user/PRIVACY.md");
 
-  useEffect(() => {
-    console.log(user);
-    if (user != null) router.replace("");
-  }, [user]);
   const md = new MarkdownIt();
 
   const joinOptions: JoinOption[] = [
@@ -68,7 +59,7 @@ export default function JoinPage() {
     },
   ];
 
-  const getStepsAllowed = () => [true, verified, checkedPP];
+  const getStepsAllowed = () => [true, fbUser !== undefined, checkedPP];
 
   const steps = [
     // 0
@@ -101,7 +92,7 @@ export default function JoinPage() {
     // 1
     isInc ? (
       <>
-        <Heading>Verify yourself 🧐</Heading>
+        <Heading>Verification 🧐</Heading>
         <Stack maxWidth={500} spacing={5}>
           <FormControl isRequired>
             {isInc ? (
@@ -111,9 +102,9 @@ export default function JoinPage() {
                   <Button
                     leftIcon={<FaGoogle />}
                     colorScheme="red"
-                    disabled={verified}
+                    onClick={() => signIn()}
                   >
-                    {verified ? "Verified" : "Verify"} with Google
+                    Sign In with Google
                   </Button>
                   <Tooltip
                     shouldWrapChildren
@@ -125,13 +116,14 @@ export default function JoinPage() {
                   </Tooltip>
                 </Box>
                 <FormHelperText>
-                  Having problems? Ensure you are using your SST Google account
-                  to sign in.
+                  {fbUser !== undefined
+                    ? `Signed in with: ${fbUser.email}`
+                    : "Having problems? Ensure you are using your SST Google account to sign in."}
                 </FormHelperText>
               </>
             ) : null}
           </FormControl>
-          <FormControl isRequired>
+          {/* <FormControl isRequired>
             <FormLabel>Verify you are not a bot</FormLabel>
             <Box display="flex" flexDir="row">
               <Button leftIcon={<FaGithub />} colorScheme="gray">
@@ -152,7 +144,7 @@ export default function JoinPage() {
                 Create one now!
               </Link>
             </FormHelperText>
-          </FormControl>
+          </FormControl> */}
         </Stack>
       </>
     ) : (
@@ -190,11 +182,20 @@ export default function JoinPage() {
         </Checkbox>
       </Stack>
     </>,
+    // 3
     <>
       <Heading>Great! One last step!</Heading>
       <Stack></Stack>
+      <Button colorScheme="green" onClick={() => createAccount()}>
+        Create Account
+      </Button>
     </>,
   ];
+
+  const createAccount = async () => {
+    await signUp();
+    router.push("/");
+  };
 
   const goBack = () => {
     setStep((s) => s - 1);
@@ -205,7 +206,15 @@ export default function JoinPage() {
   };
 
   return (
-    <Box style={{ display: "flex", gap: 10, maxWidth: 800, margin: "0 auto" }}>
+    <Box
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        maxWidth: 800,
+        margin: "0 auto",
+      }}
+    >
       {step > 0 ? (
         <IconButton
           onClick={goBack}
@@ -215,7 +224,7 @@ export default function JoinPage() {
         />
       ) : null}
       {steps[step]}
-      {step > 0 ? (
+      {step > 0 && step < steps.length - 1 ? (
         <Button
           colorScheme="green"
           disabled={!getStepsAllowed()[step]}

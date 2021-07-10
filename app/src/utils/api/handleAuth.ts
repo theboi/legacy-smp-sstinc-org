@@ -38,6 +38,7 @@ export const handleAuth = async <T>(
   const notion = new Client({ auth: getNotionAPIKey() });
 
   const pn = auth.startsWith("Basic") ? "Telegram" : "Firebase";
+
   const key = auth.startsWith("Basic")
     ? auth.split(" ")[1]
     : (await getFirebaseToken(auth.split(" ")[1])).uid;

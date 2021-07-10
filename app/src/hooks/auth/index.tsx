@@ -1,16 +1,21 @@
 import firebase from "firebase/app";
 import { createContext, useContext, useState } from "react";
 import useSWR from "swr";
+import {
+  PostSignUpAPIBody,
+  PostSignUpAPIResponse,
+} from "../../pages/api/v1/signup";
 import { useSWRConfig } from "../../pages/_app";
 import { User } from "../../typings/user";
-import { get } from "../../utils/api/httpMethods";
+import { get, post } from "../../utils/api/httpMethods";
+import { useHost } from "../host";
 
 require("firebase/auth");
 
 export interface AuthContent {
-  signIn: () => void;
-  signUp: () => void;
-  signOut: () => void;
+  signIn: () => Promise<void>;
+  signUp: (handle?: string) => Promise<void>;
+  signOut: () => Promise<void>;
   initializeApp: () => Promise<void>;
   getToken: () => Promise<string>;
   user: User;
@@ -31,13 +36,17 @@ export const firebaseConfig = {
 const AuthContext = createContext<AuthContent>(null);
 
 export const AuthProvider = (props) => {
+  const host = useHost();
   const swrConfig = useSWRConfig(getToken);
   const [fbUser, setFbUser] = useState<firebase.User>();
   const { data: user } = useSWR<User>(
     fbUser && "/api/v1/authuser/",
     async (url: string) => {
       await initializeApp();
-      const res = await get(url, await getToken());
+      const res = await get(
+        url,
+        url.includes("/api/v1") ? await getToken() : undefined
+      );
       if (!(res.status >= 200 && res.status <= 299)) {
         throw Error("A network error occurred");
       }
@@ -56,7 +65,19 @@ export const AuthProvider = (props) => {
     fbUser,
   };
 
-  function signUp(email) {}
+  async function signUp(handle: string = undefined) {
+    const res = await post<PostSignUpAPIResponse, PostSignUpAPIBody>(
+      `http://${host}/api/v1/signup`,
+      await getToken(),
+      {
+        handle: handle ?? firebase.auth().currentUser.email.split("@")[0],
+        name: firebase.auth().currentUser.displayName,
+        email: firebase.auth().currentUser.email,
+        firebase: firebase.auth().currentUser.uid,
+        photoURL: firebase.auth().currentUser.photoURL,
+      }
+    );
+  }
 
   async function signIn(): Promise<firebase.auth.UserCredential> {
     return firebase

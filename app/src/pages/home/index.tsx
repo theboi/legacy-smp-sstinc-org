@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { LinkButton } from "../../components/theme/linkButton";
+import { useAuth } from "../../hooks/auth";
 import { useColor } from "../../hooks/color";
 
 export default function HomePage() {
@@ -23,17 +24,39 @@ export default function HomePage() {
 }
 
 const Header = () => {
+  const { signIn } = useAuth();
+
   return (
-    <Center>
+    <Center
+      sx={{ height: 400, position: "relative" }}
+      m="-140px -30px -40px -30px"
+      p="140px 30px 40px 30px"
+    >
+      <Box
+        sx={{
+          backgroundImage: `linear-gradient(to bottom, ${useColor(
+            "bg1"
+          )} 30%, rgba(0, 0, 0, 0) 70%), url(assets/sstinc-room.png)`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          filter: "brightness(0.8)",
+          position: "absolute",
+          inset: 0,
+          zIndex: -100,
+        }}
+      />
       <VStack spacing={5} align="left">
         <Box>
           <Heading size="xl">SST Inc Management Platform</Heading>
           <Text>Create. Code. Inspire.</Text>
         </Box>
         <HStack spacing={5}>
-          <LinkButton href="/join" customButton={<Button colorScheme="red" />}>
+          <LinkButton href="/join" customButton={<Button colorScheme="blue" />}>
             Join Now
           </LinkButton>
+          <Button colorScheme="blue" variant="outline" onClick={signIn}>
+            Sign In
+          </Button>
         </HStack>
       </VStack>
     </Center>

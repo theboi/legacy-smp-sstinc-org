@@ -7,6 +7,7 @@ import {
   FaLink,
   FaSignInAlt,
   FaSignOutAlt,
+  FaUser,
 } from "react-icons/fa";
 import { authPaths } from "../../pages/_app";
 import { useAuth } from "../../hooks/auth";
@@ -25,7 +26,10 @@ export default function NavMenu() {
 
   const navItems: MenuItem[] = [
     user === undefined
-      ? new MenuItemOption("Sign In", signIn, <FaSignInAlt />)
+      ? new MenuItemGroup([
+          new MenuItemOption("Join Now", "/join", <FaUser />),
+          new MenuItemOption("Sign In", signIn, <FaSignInAlt />),
+        ])
       : new MenuItemOption(
           user?.name,
           `/@${user?.handle}`,

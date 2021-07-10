@@ -2,17 +2,16 @@ import axios, { AxiosResponse } from "axios";
 
 export const get = async <T>(
   url: string,
-  token: string,
-  requiresIntAuth: boolean = true
+  token: string = undefined
 ): Promise<AxiosResponse<any>> => {
-  const config =
-    url.includes("/api/v1") && requiresIntAuth
-      ? {
-          headers: {
+  const config = {
+    headers:
+      token === undefined
+        ? {}
+        : {
             Authorization: `Token ${token}`,
           },
-        }
-      : {};
+  };
 
   return await axios.get(url, config);
 };

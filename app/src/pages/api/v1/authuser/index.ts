@@ -28,14 +28,14 @@ export const getAuthUserAPI = async ({
     status: HTTPStatusCode.OK,
     data: {
       iid:
-        (user.properties["Inc ID"] as TitlePropertyValue)?.title[0]
-          .plain_text ?? "",
+        (user.properties["Inc ID"] as TitlePropertyValue)?.title?.[0]
+          ?.plain_text ?? "",
       name:
-        (user.properties["Name"] as RichTextPropertyValue)?.rich_text[0]
-          .plain_text ?? "",
+        (user.properties["Name"] as RichTextPropertyValue)?.rich_text?.[0]
+          ?.plain_text ?? "",
       handle:
-        (user.properties["Handle"] as RichTextPropertyValue)?.rich_text[0]
-          .plain_text ?? "",
+        (user.properties["Handle"] as RichTextPropertyValue)?.rich_text?.[0]
+          ?.plain_text ?? "",
       rank: UserRank[
         (user.properties["Rank"] as SelectPropertyValue)?.select.name ?? "None"
       ],
@@ -47,11 +47,11 @@ export const getAuthUserAPI = async ({
       email: (user.properties["Email"] as EmailPropertyValue)?.email ?? "",
       batch: (user.properties["Points"] as NumberPropertyValue)?.number ?? 0,
       firebaseId:
-        (user.properties["Firebase"] as RichTextPropertyValue)?.rich_text[0]
-          .plain_text ?? "",
+        (user.properties["Firebase"] as RichTextPropertyValue)?.rich_text?.[0]
+          ?.plain_text ?? "",
       telegramId:
-        (user.properties["Telegram"] as RichTextPropertyValue)?.rich_text[0]
-          .plain_text ?? "",
+        (user.properties["Telegram"] as RichTextPropertyValue)?.rich_text?.[0]
+          ?.plain_text ?? "",
     },
   };
 };

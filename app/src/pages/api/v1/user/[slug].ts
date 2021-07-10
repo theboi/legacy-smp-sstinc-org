@@ -56,7 +56,7 @@ export const getUserAPI = async ({
     return { status: HTTPStatusCode.MultipleChoice };
 
   const user = res.results[0];
-  console.log(user);
+
   return {
     status: HTTPStatusCode.OK,
     data: {
