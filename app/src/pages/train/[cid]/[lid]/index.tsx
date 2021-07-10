@@ -27,7 +27,7 @@ export default function LessonPage({ lesson }: { lesson: Lesson }) {
   const isDesktop = useDesktopMediaQuery();
 
   return (
-    <VStack align="stretch" gap={10}>
+    <VStack align="flex-start" gap={10}>
       <LinkButton
         href={lesson.cpath}
         customButton={<Button leftIcon={<FaArrowLeft />} />}

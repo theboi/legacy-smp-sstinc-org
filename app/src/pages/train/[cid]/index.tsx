@@ -40,7 +40,12 @@ export default function CoursePage({ course }: { course: Course }) {
               <AccordionIcon />
             </AccordionButton>
             <AccordionPanel
-              sx={{ display: "flex", flexDir: "column", gap: 10 }}
+              sx={{
+                display: "flex",
+                alignItems: "flex-start",
+                flexDir: "column",
+                gap: 10,
+              }}
             >
               <Heading size="md">Content</Heading>
               <UnorderedList>

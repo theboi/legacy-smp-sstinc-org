@@ -41,7 +41,6 @@ export default function TrainPage({ courses }: { courses: Course[] }) {
           </LinkBox>
         ))}
       </VStack>
-      <AtdField />
     </HStack>
   );
 
