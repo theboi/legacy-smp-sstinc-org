@@ -100,7 +100,7 @@ export const AuthProvider = (props) => {
     firebase.initializeApp(firebaseConfig);
     let promise = new Promise<void>((resolve) => {
       firebase.auth().onIdTokenChanged((fbUser: firebase.User) => {
-        setFbUser(fbUser);
+        setFbUser(fbUser ?? undefined);
         resolve();
       });
     });

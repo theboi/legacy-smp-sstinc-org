@@ -12,17 +12,14 @@ import {
   Checkbox,
   Skeleton,
   Tooltip,
-  Input,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaArrowLeft, FaGoogle, FaQuestionCircle } from "react-icons/fa";
 import { useGithubRawData } from "../../hooks/github";
 import MarkdownIt from "markdown-it";
 import { useAuth } from "../../hooks/auth";
 import { useRouter } from "next/router";
 import Link from "../../components/theme/link";
-import useSWR from "swr";
-import { User } from "../../typings/user";
 
 interface JoinOption {
   description: string;
@@ -41,7 +38,7 @@ export default function JoinPage() {
   const [step, setStep] = useState(0);
   const [isInc, setIsInc] = useState(false);
   const [checkedPP, setCheckedPP] = useState(false);
-
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const { data: privacy } = useGithubRawData("/user/PRIVACY.md");
 
   const md = new MarkdownIt();
@@ -186,13 +183,18 @@ export default function JoinPage() {
     <>
       <Heading>Great! One last step!</Heading>
       <Stack></Stack>
-      <Button colorScheme="green" onClick={() => createAccount()}>
+      <Button
+        colorScheme="green"
+        onClick={() => createAccount()}
+        isLoading={isCreatingAccount}
+      >
         Create Account
       </Button>
     </>,
   ];
 
   const createAccount = async () => {
+    setIsCreatingAccount(true);
     await signUp();
     router.push("/");
   };
