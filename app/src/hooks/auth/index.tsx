@@ -67,7 +67,9 @@ export const AuthProvider = (props) => {
 
   async function signUp(handle: string = undefined) {
     const res = await post<PostSignUpAPIResponse, PostSignUpAPIBody>(
-      `http://${host}/api/v1/signup`,
+      `${
+        process.env.NODE_ENV === "production" ? "https" : "http"
+      }://${host}/api/v1/signup`,
       await getToken(),
       {
         handle: handle ?? firebase.auth().currentUser.email.split("@")[0],

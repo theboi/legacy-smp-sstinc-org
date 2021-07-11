@@ -75,7 +75,9 @@ export default function AtdField() {
     setStatus("Loading");
     const data = (
       await post<PostAttendanceRecordAPIResponse, PostAttendanceRecordAPIBody>(
-        `http://${host}/api/v1/atd`,
+        `${
+          process.env.NODE_ENV === "production" ? "https" : "http"
+        }://${host}/api/v1/atd`,
         await getToken(),
         { code }
       )
