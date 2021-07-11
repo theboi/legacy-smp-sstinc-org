@@ -175,29 +175,29 @@ export const useSWRConfig = (getToken = useAuth().getToken) => {
         error.status !== 404 &&
         !toast.isActive(key)
       ) {
-        toast({
-          id: key,
-          title: `An error occurred`,
-          description: (
-            <Text>
-              {error.message}. If this is a breaking issue, please help us by
-              filing a bug report on{" "}
-              <ChakraLink
-                href="https://github.com/theboi/smp-sstinc-org/issues"
-                target="_blank"
-                color={linkColor}
-              >
-                GitHub
-              </ChakraLink>{" "}
-              😣
-            </Text>
-          ),
-          status: "error",
-          duration: 7000,
-          isClosable: true,
-          position: "bottom-left",
-          variant: "left-accent",
-        });
+        // toast({
+        //   id: key,
+        //   title: `An error occurred`,
+        //   description: (
+        //     <Text>
+        //       {error.message}. If this is a breaking issue, please help us by
+        //       filing a bug report on{" "}
+        //       <ChakraLink
+        //         href="https://github.com/theboi/smp-sstinc-org/issues"
+        //         target="_blank"
+        //         color={linkColor}
+        //       >
+        //         GitHub
+        //       </ChakraLink>{" "}
+        //       😣
+        //     </Text>
+        //   ),
+        //   status: "error",
+        //   duration: 7000,
+        //   isClosable: true,
+        //   position: "bottom-left",
+        //   variant: "left-accent",
+        // });
       }
     },
   };
