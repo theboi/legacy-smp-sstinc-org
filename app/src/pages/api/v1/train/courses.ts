@@ -11,7 +11,7 @@ import {
 import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const data = await handleAuth(req, getTrainAPI);
+  const data = await handleAuth(req, res, getTrainAPI);
   res.status(data.status).json(data.data);
 };
 

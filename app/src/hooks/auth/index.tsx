@@ -40,7 +40,7 @@ export const AuthProvider = (props) => {
   const swrConfig = useSWRConfig(getToken);
   const [fbUser, setFbUser] = useState<firebase.User>();
   const { data: user } = useSWR<User>(
-    fbUser && "/api/v1/authuser/",
+    fbUser && "/api/v1/authuser",
     async (url: string) => {
       await initializeApp();
       const res = await get(

@@ -13,7 +13,7 @@ import { APIResponse, HTTPStatusCode } from "../../../../typings/api";
 import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const data = await handleAuth(req, getAuthUserAPI);
+  const data = await handleAuth(req, res, getAuthUserAPI);
   res.status(data.status).json(data.data);
 };
 

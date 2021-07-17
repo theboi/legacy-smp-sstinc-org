@@ -14,7 +14,7 @@ import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug } = req.query as { [k: string]: string };
-  const data = await handleAuth(req, getUserAPI, { slug });
+  const data = await handleAuth(req, res, getUserAPI, { slug });
   res.status(data.status).json(data.data);
 };
 

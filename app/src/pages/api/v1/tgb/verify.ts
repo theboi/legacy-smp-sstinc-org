@@ -10,7 +10,7 @@ import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { tid, handle } = req.query as { [k: string]: string };
-  const data = await handleAuth(req, patchVerifyTelegramUserAPI, {
+  const data = await handleAuth(req, res, patchVerifyTelegramUserAPI, {
     tid,
     handle,
   });

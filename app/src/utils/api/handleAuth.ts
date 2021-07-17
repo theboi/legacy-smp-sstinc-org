@@ -5,7 +5,7 @@ import {
 import { Client } from "@notionhq/client/build/src";
 import * as admin from "firebase-admin";
 import { APIResponse, HTTPStatusCode } from "../../typings/api";
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import getNotionAPIKey from "./getNotionAPIKey";
 
 export const getFirebaseToken = async (
@@ -28,11 +28,23 @@ export const getFirebaseToken = async (
 
 export const handleAuth = async <T>(
   req: NextApiRequest,
+  res: NextApiResponse,
   callback: (args: { [k: string]: any }) => Promise<APIResponse<T>>,
   args: { [k: string]: any } = {}
 ): Promise<APIResponse<T>> => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, HEAD, OPTIONS, POST, PUT"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization, access-control-allow-origin"
+  );
+
   const { authorization: auth } = req.headers as { [k: string]: string };
 
+  console.log(auth, req.headers);
   if (auth === undefined) return { status: HTTPStatusCode.Unauthorized };
 
   const notion = new Client({ auth: getNotionAPIKey() });
@@ -45,7 +57,7 @@ export const handleAuth = async <T>(
 
   if (key === undefined) return { status: HTTPStatusCode.Forbidden };
 
-  const res = await notion.databases.query({
+  const data = await notion.databases.query({
     database_id: "c460fd270be44858a74395684f6e6897",
     filter: {
       property: pn,
@@ -55,8 +67,8 @@ export const handleAuth = async <T>(
     },
   });
 
-  if (res.results.length === 0) return { status: HTTPStatusCode.Forbidden };
-  else if (res.results.length > 1)
+  if (data.results.length === 0) return { status: HTTPStatusCode.Forbidden };
+  else if (data.results.length > 1)
     return { status: HTTPStatusCode.MultipleChoice };
 
   // const content = JSON.parse(
@@ -91,5 +103,5 @@ export const handleAuth = async <T>(
   //   },
   // });
 
-  return callback({ user: res.results[0] as Page, notion, ...args });
+  return callback({ user: data.results[0] as Page, notion, ...args });
 };

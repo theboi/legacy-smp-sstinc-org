@@ -20,7 +20,7 @@ export interface PostAttendanceRecordAPIBody {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { code } = req.body as PostAttendanceRecordAPIBody;
-  const data = await handleAuth(req, postAttendanceRecordAPI, {
+  const data = await handleAuth(req, res, postAttendanceRecordAPI, {
     code,
   });
   res.status(data.status).json(data.data);

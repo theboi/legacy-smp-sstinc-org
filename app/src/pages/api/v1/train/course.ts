@@ -13,7 +13,7 @@ import { handleAuth } from "../../../../utils/api/handleAuth";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { cid } = req.query as { [k: string]: string };
-  const data = await handleAuth(req, getCourseAPI, { cid });
+  const data = await handleAuth(req, res, getCourseAPI, { cid });
   res.status(data.status).json(data.data);
 };
 
